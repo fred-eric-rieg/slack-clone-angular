@@ -5,8 +5,8 @@
   </div>
   <div class="login-container">
     <div class="headline">
-      <h2>Login into your account or create one!</h2>
-      <div class="line"></div>
+      <h2>Log into your account!</h2>
+      <!-- <div class="line"></div> -->
     </div>
     <div class="form-container">
       <form>
@@ -19,8 +19,13 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Password</mat-label>
-          <input matInput type="password" />
-          <mat-icon matIconSuffix>visibility</mat-icon>
+          <input matInput type="password" #passwordInput />
+          <mat-icon
+            style="cursor: pointer"
+            matIconSuffix
+            (click)="togglePwVisibility(passwordInput)"
+            >{{ visibiltyIcon }}</mat-icon
+          >
           <mat-error>Password is required</mat-error>
         </mat-form-field>
         <button mat-raised-button color="primary">Login</button>
@@ -36,6 +41,14 @@
         </button>
         <button mat-flat-button>Guest login</button>
       </form>
+      <!-- PW vergessen oder Registrieren -->
+      <div class="more-options">
+        <span class="frgt-pw">Forgot password?</span>
+        <div class="signup">
+          <span>Don't have an account?</span>
+          <span>Sign up here!</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>

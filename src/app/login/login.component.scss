@@ -20,7 +20,7 @@ button {
   padding: 20px 0 0 20px;
   img {
     height: 50px;
-    animation: spin 5s infinite;
+    animation: spin 8s infinite;
   }
   span {
     font-size: 2rem;
@@ -42,6 +42,7 @@ button {
     flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
+    padding: 0 10px 0 10px;
     h2 {
       text-align: center;
       font-family: 'os-light';
@@ -74,6 +75,37 @@ button {
       height: 20px;
       margin-right: 10px;
       transform: translateY(4px);
+    }
+  }
+}
+
+.more-options {
+  font-family: 'os-med';
+  color: #888;
+  margin-top: 20px;
+  padding-left: 20px;
+  .frgt-pw {
+      &:hover {
+        cursor: pointer;
+        filter: brightness(1.5);
+        text-decoration: underline;
+      }
+    }
+  .signup {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    
+    span {
+      width: fit-content;
+      &:last-child {
+        color: #c2185b;
+        &:hover {
+        cursor: pointer;
+        filter: brightness(1.5);
+        text-decoration: underline;
+        }
+      }
     }
   }
 }
