@@ -1,0 +1,84 @@
+.wrapper {
+  background-color: #111;
+  height: 100svh;
+}
+
+button {
+  height: 50px !important;
+}
+
+.line {
+  border-bottom: 1px solid #fff;
+  transform: translateY(-12px);
+  width: 80%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0 0 20px;
+  img {
+    height: 50px;
+  }
+  span {
+    font-size: 2rem;
+    font-family: 'os-ebold';
+  }
+}
+
+.login-container {
+  position: absolute;
+  top: 0;
+  height: 100svh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .headline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    h2 {
+      text-align: center;
+      font-family: 'os-light';
+      margin-bottom: 15px;
+    }
+  }
+}
+
+.form-container {
+  width: 350px;
+  form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+  .h-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 15px 0 15px 0;
+    span {
+      background-color: #111;
+      width: 30px;
+      text-align: center;
+      z-index: 1;
+    }
+  }
+  .google-btn {
+    img {
+      height: 20px;
+      margin-right: 10px;
+      transform: translateY(4px);
+    }
+  }
+}
+
+@media (width < 350px) {
+  .form-container {
+    width: 100%;
+  }
+}
