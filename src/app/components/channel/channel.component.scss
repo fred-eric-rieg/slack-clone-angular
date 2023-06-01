@@ -1,0 +1,46 @@
+/**
+* Title styles
+**/
+.title-container {
+    position: relative;
+    height: 200px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.blue {
+    color: #2196F3;
+}
+
+
+/**
+* Chat styles
+**/
+.chat-container {
+    position: relative;
+    height: calc(100vh - 400px);
+}
+
+
+/**
+* Message styles
+**/
+.message-container {
+    position: relative;
+    height: 200px;
+}
