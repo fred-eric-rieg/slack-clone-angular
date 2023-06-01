@@ -24,7 +24,7 @@ button {
   }
   span {
     font-size: 2rem;
-    font-family: 'os-ebold';
+    font-family: "os-ebold";
   }
 }
 
@@ -45,7 +45,7 @@ button {
     padding: 0 10px 0 10px;
     h2 {
       text-align: center;
-      font-family: 'os-light';
+      font-family: "os-light";
       margin-bottom: 15px;
     }
   }
@@ -54,10 +54,10 @@ button {
 .form-container {
   width: 350px;
   form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
   .h-div {
     display: flex;
     flex-direction: column;
@@ -80,30 +80,29 @@ button {
 }
 
 .more-options {
-  font-family: 'os-sbold';
+  font-family: "os-sbold";
   color: #888;
   margin-top: 20px;
   padding-left: 20px;
   .frgt-pw {
-      &:hover {
-        cursor: pointer;
-        filter: brightness(1.5);
-        text-decoration: underline;
-      }
+    &:hover {
+      cursor: pointer;
+      filter: brightness(1.5);
+      text-decoration: underline;
     }
+  }
   .signup {
     display: flex;
     flex-direction: column;
     margin-top: 10px;
-    
     span {
       width: fit-content;
       &:last-child {
         color: #c2185b;
         &:hover {
-        cursor: pointer;
-        filter: brightness(1.5);
-        text-decoration: underline;
+          cursor: pointer;
+          filter: brightness(1.5);
+          text-decoration: underline;
         }
       }
     }
