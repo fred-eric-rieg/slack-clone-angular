@@ -1,5 +1,5 @@
 .wrapper {
-  background-color: #111;
+  background: linear-gradient(#222, #101010);
   height: 100svh;
 }
 
@@ -20,6 +20,7 @@ button {
   padding: 20px 0 0 20px;
   img {
     height: 50px;
+    animation: spin 5s infinite;
   }
   span {
     font-size: 2rem;
@@ -62,7 +63,7 @@ button {
     align-items: center;
     margin: 15px 0 15px 0;
     span {
-      background-color: #111;
+      background-color: #171717;
       width: 30px;
       text-align: center;
       z-index: 1;
@@ -80,5 +81,19 @@ button {
 @media (width < 350px) {
   .form-container {
     width: 100%;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
   }
 }
