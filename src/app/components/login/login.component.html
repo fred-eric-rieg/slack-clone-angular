@@ -32,6 +32,7 @@
             matInput
             type="password"
             formControlName="password"
+            [minlength]="minLengthPassword"
             #passwordInput
           />
           <mat-icon
@@ -43,6 +44,9 @@
           <mat-error *ngIf="form.get('password')!.hasError('required')"
             >Password is required</mat-error
           >
+          <mat-error *ngIf="form.get('password')!.hasError('minlength')">
+            Password must contain at least {{ minLengthPassword }} characters.
+          </mat-error>
         </mat-form-field>
         <button
           mat-raised-button

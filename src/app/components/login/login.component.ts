@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   isPasswordVisible: boolean = false;
   visibiltyIcon: string = 'visibility';
   tokenName = 'logged-token';
+  minLengthPassword: number = 5;
   form!: FormGroup;
 
   constructor(
