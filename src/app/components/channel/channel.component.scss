@@ -62,6 +62,21 @@
     box-sizing: border-box;
     position: relative;
     height: calc(100vh - 452px);
+    
+    mat-card {
+        background-color: unset;
+        box-shadow: unset;
+
+        &:hover {
+            background-color: #424242;
+        }
+
+        mat-card-title {
+            padding-left: 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+    }
 }
 
 
@@ -89,6 +104,15 @@
             display: flex;
             flex-direction: row-reverse;
         }
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 1rem;
+        min-width: fit-content;
     }
 }
 
