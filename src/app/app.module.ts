@@ -16,14 +16,24 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { LoginComponent } from './components/login/login.component';
-import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+/** Firebase */
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideDatabase,getDatabase } from '@angular/fire/database';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+
+/** Components */
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { LoginComponent } from './components/login/login.component';
+import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
+
+/** Services */
+import { AuthService } from './shared/services/auth.service';
+
 
 
 @NgModule({
@@ -48,12 +58,15 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
     MatCardModule,
     MatMenuModule,
     BrowserAnimationsModule,
+    MatSnackBarModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
     provideFirestore(() => getFirestore())
   ],
-  providers: [],
+  providers: [
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
