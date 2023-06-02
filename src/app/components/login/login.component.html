@@ -13,11 +13,16 @@
         <!-- Erste login Sektion -->
         <mat-form-field>
           <mat-label>E-Mail</mat-label>
-          <input matInput type="email" formControlName="email" />
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
+          />
           <mat-error *ngIf="form.get('email')!.hasError('required')"
             >Email is required</mat-error
           >
-          <mat-error *ngIf="form.get('email')!.hasError('email')"
+          <mat-error *ngIf="form.get('email')!.hasError('pattern')"
             >Email is invalid</mat-error
           >
         </mat-form-field>
