@@ -16,6 +16,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
@@ -43,6 +44,7 @@ import { ChannelComponent } from './components/channel/channel.component';
     MatFormFieldModule,
     MatCardModule,
     MatMenuModule,
+    MatButtonToggleModule,
     BrowserAnimationsModule
   ],
   providers: [],

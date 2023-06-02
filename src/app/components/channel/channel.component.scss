@@ -11,6 +11,12 @@
 
 .scroll-wrapper {
     overflow-y: scroll;
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
 }
 
 /**
@@ -26,12 +32,6 @@
     h2 {
         font-size: 1rem;
     }
-}
-
-.row {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
 }
 
 .center {
@@ -56,7 +56,7 @@
 .chat-container {
     box-sizing: border-box;
     position: relative;
-    height: calc(100vh - 430px);
+    height: calc(100vh - 452px);
 }
 
 
@@ -66,8 +66,19 @@
 .message-container {
     box-sizing: border-box;
     position: relative;
-    height: 100px;
+    height: 122px;
     background: #303030;
+
+    .row {
+        display: flex;
+        flex-direction: row;
+
+        .position-right {
+            width: 100%;
+            display: flex;
+            flex-direction: row-reverse;
+        }
+    }
 }
 
 .message-outline {
