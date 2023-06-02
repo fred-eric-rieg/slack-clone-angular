@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/app/app.module.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1685719346826,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1685719360436,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,9 +16,9 @@\n import { MatFormFieldModule } from '@angular/material/form-field';\r\n import { MatCardModule } from '@angular/material/card';\r\n import { MatMenuModule } from '@angular/material/menu';\r\n import { DashboardComponent } from './components/dashboard/dashboard.component';\r\n-import { LoginComponent } from './login/login.component';\r\n+import { LoginComponent } from './components/login/login.component';\r\n import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';\r\n \r\n \r\n @NgModule({\r\n"
+                }
+            ],
+            "date": 1685719346826,
+            "name": "Commit-0",
+            "content": "import { NgModule } from '@angular/core';\r\nimport { BrowserModule } from '@angular/platform-browser';\r\nimport { AppRoutingModule } from './app-routing.module';\r\nimport { AppComponent } from './app.component';\r\nimport { BrowserAnimationsModule } from '@angular/platform-browser/animations';\r\n\r\n/** Material Modules */\r\nimport { MatToolbarModule } from '@angular/material/toolbar';\r\nimport { MatSidenavModule } from '@angular/material/sidenav';\r\nimport { MatIconModule } from '@angular/material/icon';\r\nimport { MatButtonModule } from '@angular/material/button';\r\nimport { MatTooltipModule } from '@angular/material/tooltip';\r\nimport { MatDialogModule } from '@angular/material/dialog';\r\nimport { MatInputModule } from '@angular/material/input';\r\nimport { MatProgressBarModule } from '@angular/material/progress-bar';\r\nimport { MatFormFieldModule } from '@angular/material/form-field';\r\nimport { MatCardModule } from '@angular/material/card';\r\nimport { MatMenuModule } from '@angular/material/menu';\r\nimport { DashboardComponent } from './components/dashboard/dashboard.component';\r\nimport { LoginComponent } from './login/login.component';\r\nimport { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';\r\n\r\n\r\n@NgModule({\r\n  declarations: [\r\n    AppComponent,\r\n    DashboardComponent,\r\n    LoginComponent,\r\n    ForgotPasswordComponent\r\n  ],\r\n  imports: [\r\n    BrowserModule,\r\n    AppRoutingModule,\r\n    MatToolbarModule,\r\n    MatSidenavModule,\r\n    MatIconModule,\r\n    MatButtonModule,\r\n    MatTooltipModule,\r\n    MatDialogModule,\r\n    MatInputModule,\r\n    MatProgressBarModule,\r\n    MatFormFieldModule,\r\n    MatCardModule,\r\n    MatMenuModule,\r\n    BrowserAnimationsModule\r\n  ],\r\n  providers: [],\r\n  bootstrap: [AppComponent]\r\n})\r\nexport class AppModule { }\r\n"
+        }
+    ]
+}
