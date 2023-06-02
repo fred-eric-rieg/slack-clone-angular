@@ -11,6 +11,11 @@
 
 .scroll-wrapper {
     overflow-y: scroll;
+    ::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 
     .row {
         display: flex;
@@ -66,12 +71,18 @@
 .message-container {
     box-sizing: border-box;
     position: relative;
-    height: 122px;
+    height: fit-content;
     background: #303030;
 
     .row {
         display: flex;
         flex-direction: row;
+        overflow-y: hidden;
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        -ms-overflow-style: none;
+        scrollbar-width: none;
 
         .position-right {
             width: 100%;
