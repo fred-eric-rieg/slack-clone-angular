@@ -85,6 +85,15 @@ export class LoginComponent implements OnInit {
     })
   }
 
+  guestLogin() {
+    localStorage.setItem(this.tokenName, 'guest-login');
+    this.router.navigate(['dashboard']);
+  }
+
+  signInWithGoogle() {
+    this.authService.signInWithGoogle();
+  }
+
   togglePwVisibility(passwordInput: HTMLInputElement) {
     this.isPasswordVisible = !this.isPasswordVisible;
     passwordInput.type = this.isPasswordVisible ? 'text' : 'password';

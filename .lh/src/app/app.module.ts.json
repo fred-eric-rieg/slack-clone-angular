@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 6,
+            "activePatchIndex": 7,
             "patches": [
                 {
                     "date": 1685719346826,
@@ -32,6 +32,10 @@
                 {
                     "date": 1685723942884,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,8 +15,9 @@\n import { MatProgressBarModule } from '@angular/material/progress-bar';\r\n import { MatFormFieldModule } from '@angular/material/form-field';\r\n import { MatCardModule } from '@angular/material/card';\r\n import { MatMenuModule } from '@angular/material/menu';\r\n+import { MatSnackBarModule } from '@angular/material/snack-bar';\r\n \r\n /** Firebase */\r\n import { initializeApp,provideFirebaseApp } from '@angular/fire/app';\r\n import { environment } from '../environments/environment';\r\n@@ -56,8 +57,9 @@\n     MatFormFieldModule,\r\n     MatCardModule,\r\n     MatMenuModule,\r\n     BrowserAnimationsModule,\r\n+    MatSnackBarModule,\r\n     provideFirebaseApp(() => initializeApp(environment.firebase)),\r\n     provideAuth(() => getAuth()),\r\n     provideDatabase(() => getDatabase()),\r\n     provideFirestore(() => getFirestore())\r\n"
+                },
+                {
+                    "date": 1685730942309,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,9 @@\n import { BrowserModule } from '@angular/platform-browser';\r\n import { AppRoutingModule } from './app-routing.module';\r\n import { AppComponent } from './app.component';\r\n import { BrowserAnimationsModule } from '@angular/platform-browser/animations';\r\n+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';\r\n \r\n /** Material Modules */\r\n import { MatToolbarModule } from '@angular/material/toolbar';\r\n import { MatSidenavModule } from '@angular/material/sidenav';\r\n@@ -58,8 +59,10 @@\n     MatCardModule,\r\n     MatMenuModule,\r\n     BrowserAnimationsModule,\r\n     MatSnackBarModule,\r\n+    FormsModule,\r\n+    ReactiveFormsModule,\r\n     provideFirebaseApp(() => initializeApp(environment.firebase)),\r\n     provideAuth(() => getAuth()),\r\n     provideDatabase(() => getDatabase()),\r\n     provideFirestore(() => getFirestore())\r\n"
                 }
             ],
             "date": 1685719346826,

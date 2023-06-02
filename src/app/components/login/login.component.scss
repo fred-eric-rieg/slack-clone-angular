@@ -79,6 +79,12 @@ button {
   }
 }
 
+.google-guest {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .more-options {
   font-family: "os-sbold";
   color: #888;
