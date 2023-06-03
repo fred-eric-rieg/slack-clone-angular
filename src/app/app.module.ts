@@ -18,13 +18,19 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { DialogHelpComponent } from './components/dialog-help/dialog-help.component';
+import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    LoginComponent
+    LoginComponent,
+    ToolbarComponent,
+    DialogHelpComponent,
+    DialogUserComponent
   ],
   imports: [
     BrowserModule,

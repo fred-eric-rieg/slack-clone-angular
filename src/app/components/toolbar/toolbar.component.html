@@ -1,0 +1,34 @@
+<div class="toolbar-container">
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+
+      <div class="toolbar-logo-container">
+        <button mat-icon-button aria-label="Example icon button with a menu icon">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span>Slack Logo</span>
+      </div>
+
+      <mat-form-field appearance="outline" class="toolbar-search-container" >
+        <mat-label>Search Channel</mat-label>
+        <input matInput>
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <div>
+        <button mat-icon-button (click)="openDialogHelp()">
+          <mat-icon>help</mat-icon>
+        </button>
+
+        <button mat-icon-button [matMenuTriggerFor]="menu" #menuTrigger>
+          <mat-icon>face</mat-icon>
+        </button>
+
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="openDialogUser()">My Profile</button>
+        </mat-menu>
+
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>

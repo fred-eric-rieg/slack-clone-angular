@@ -8,21 +8,12 @@
         <li routerLink="/user"><mat-icon >perm_identity</mat-icon>User</li>
       </ul>
     </mat-drawer>
-  
-    <div class="example-sidenav-content">
-      <mat-toolbar color="primary">
-        <mat-toolbar-row>
-          <button mat-icon-button aria-label="Example icon button with a menu icon" (click)="drawer.toggle()">
-            <mat-icon>menu</mat-icon>
-          </button>
-          <span>Simple CRM</span>
-        </mat-toolbar-row>
-      </mat-toolbar>
-  
-    </div>
-  
+
+    <!-- Anmerkung: drawer.toggle() wird noch an der richtigen Stelle eingefügt, sobald Side-Nav-Komponente verfügbar ist.-->
+    <app-toolbar (click)="drawer.toggle()"></app-toolbar>
+
     <div class="router-container">
       <router-outlet></router-outlet>
     </div>
-  
+
   </mat-drawer-container>
