@@ -34,6 +34,7 @@ import { ForgotPasswordComponent } from './components/auth/forgot-password/forgo
 
 /** Services */
 import { AuthService } from './shared/services/auth.service';
+import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 
 
 
@@ -42,7 +43,8 @@ import { AuthService } from './shared/services/auth.service';
     AppComponent,
     DashboardComponent,
     LoginComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule,
