@@ -51,41 +51,6 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  register() {
-    this.authService.signUp(
-      this.form.value.email,
-      this.form.value.password
-    ).subscribe({
-      next: () => {
-        this.snackBar.open("Account created! You can log in now.", "OK", {
-          duration: 5000
-        })
-      },
-      error: error => {
-        this.snackBar.open(error.message, "OK", {
-          duration: 5000
-        })
-      }
-    })
-  }
-
-  recoverPassword() {
-    this.authService.recoverPassword(
-      this.form.value.email
-    ).subscribe({
-      next: () => {
-        this.snackBar.open("You can recover your password in your email account.", "OK", {
-          duration: 5000
-        });
-      },
-      error: error => {
-        this.snackBar.open(error.message, "OK", {
-          duration: 5000
-        })
-      }
-    })
-  }
-
   guestLogin() {
     localStorage.setItem(this.tokenName, 'guest-login');
     this.router.navigate(['dashboard']);
