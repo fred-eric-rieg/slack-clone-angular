@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
@@ -8,14 +9,26 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss']
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnInit {
   form!: FormGroup;
+  isPasswordVisible: boolean = false;
+  visibiltyIcon: string = 'visibility';
+  minLengthPassword: number = 5;
 
   constructor(
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {
     
+  }
+
+  ngOnInit(): void {
+      this.form = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
+      })
   }
 
   register() {
@@ -24,6 +37,7 @@ export class SignUpComponent {
       this.form.value.password
     ).subscribe({
       next: () => {
+        this.router.navigate(['']);
         this.snackBar.open("Account created! You can log in now.", "OK", {
           duration: 5000
         })
@@ -34,6 +48,12 @@ export class SignUpComponent {
         })
       }
     })
+  }
+
+  togglePwVisibility(passwordInput: HTMLInputElement) {
+    this.isPasswordVisible = !this.isPasswordVisible;
+    passwordInput.type = this.isPasswordVisible ? 'text' : 'password';
+    this.visibiltyIcon = this.isPasswordVisible ? 'visibility_off' : 'visibility';
   }
 
 }
