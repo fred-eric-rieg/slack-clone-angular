@@ -29,7 +29,7 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
 /** Components */
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './components/auth/login/login.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 
 /** Services */

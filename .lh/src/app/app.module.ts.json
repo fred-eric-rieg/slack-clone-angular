@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 7,
+            "activePatchIndex": 8,
             "patches": [
                 {
                     "date": 1685719346826,
@@ -36,6 +36,10 @@
                 {
                     "date": 1685730942309,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,9 @@\n import { BrowserModule } from '@angular/platform-browser';\r\n import { AppRoutingModule } from './app-routing.module';\r\n import { AppComponent } from './app.component';\r\n import { BrowserAnimationsModule } from '@angular/platform-browser/animations';\r\n+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';\r\n \r\n /** Material Modules */\r\n import { MatToolbarModule } from '@angular/material/toolbar';\r\n import { MatSidenavModule } from '@angular/material/sidenav';\r\n@@ -58,8 +59,10 @@\n     MatCardModule,\r\n     MatMenuModule,\r\n     BrowserAnimationsModule,\r\n     MatSnackBarModule,\r\n+    FormsModule,\r\n+    ReactiveFormsModule,\r\n     provideFirebaseApp(() => initializeApp(environment.firebase)),\r\n     provideAuth(() => getAuth()),\r\n     provideDatabase(() => getDatabase()),\r\n     provideFirestore(() => getFirestore())\r\n"
+                },
+                {
+                    "date": 1685864230235,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,22 +28,24 @@\n import { FIREBASE_OPTIONS } from '@angular/fire/compat';\r\n \r\n /** Components */\r\n import { DashboardComponent } from './components/dashboard/dashboard.component';\r\n-import { LoginComponent } from './components/login/login.component';\r\n+import { LoginComponent } from './components/auth/login/login.component';\r\n import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';\r\n \r\n /** Services */\r\n import { AuthService } from './shared/services/auth.service';\r\n+import { SignUpComponent } from './components/auth/sign-up/sign-up.component';\r\n \r\n \r\n \r\n @NgModule({\r\n   declarations: [\r\n     AppComponent,\r\n     DashboardComponent,\r\n     LoginComponent,\r\n-    ForgotPasswordComponent\r\n+    ForgotPasswordComponent,\r\n+    SignUpComponent\r\n   ],\r\n   imports: [\r\n     BrowserModule,\r\n     AppRoutingModule,\r\n"
                 }
             ],
             "date": 1685719346826,

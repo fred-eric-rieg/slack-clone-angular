@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1685719346826,
@@ -12,6 +12,10 @@
                 {
                     "date": 1685719360433,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import { NgModule } from '@angular/core';\r\n import { RouterModule, Routes } from '@angular/router';\r\n-import { LoginComponent } from './login/login.component';\r\n+import { LoginComponent } from './components/login/login.component';\r\n import { DashboardComponent } from './components/dashboard/dashboard.component';\r\n import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';\r\n \r\n const routes: Routes = [\r\n"
+                },
+                {
+                    "date": 1685864206836,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import { NgModule } from '@angular/core';\r\n import { RouterModule, Routes } from '@angular/router';\r\n-import { LoginComponent } from './components/login/login.component';\r\n+import { LoginComponent } from './components/auth/login/login.component';\r\n import { DashboardComponent } from './components/dashboard/dashboard.component';\r\n import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';\r\n \r\n const routes: Routes = [\r\n"
                 }
             ],
             "date": 1685719346826,
