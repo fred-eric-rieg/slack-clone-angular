@@ -29,4 +29,8 @@ export class ToolbarComponent {
     // dialogRef.afterClosed().subscribe(() => this.menuTrigger.focus());
   }
 
+  logoutUser() {
+    // tbd
+  }
+
 }

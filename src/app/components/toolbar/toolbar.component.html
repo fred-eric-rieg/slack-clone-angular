@@ -4,7 +4,7 @@
 
       <div class="toolbar-logo-container">
         <button mat-icon-button aria-label="Example icon button with a menu icon">
-          <mat-icon>menu</mat-icon>
+          <mat-icon>swap_horiz</mat-icon>
         </button>
         <span>Slack Logo</span>
       </div>
@@ -26,6 +26,7 @@
 
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="openDialogUser()">My Profile</button>
+          <button mat-menu-item (click)="logoutUser()">Logout</button>
         </mat-menu>
 
       </div>
