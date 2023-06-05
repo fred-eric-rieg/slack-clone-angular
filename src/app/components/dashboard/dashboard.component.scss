@@ -17,6 +17,7 @@ mat-toolbar, mat-toolbar-row {
 
 
 .router-container {
-    position: relative;
+    box-sizing: border-box;
     padding: 1rem;
+    position: relative;
 }
