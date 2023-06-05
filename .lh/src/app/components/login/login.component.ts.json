@@ -1,0 +1,34 @@
+{
+    "sourceFile": "src/app/components/login/login.component.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1685723547681,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1685723668646,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,13 +55,14 @@\n       this.form.value.email,\r\n       this.form.value.password\r\n     ).subscribe({\r\n       next: () => {\r\n-        localStorage.setItem(this.tokenName, 'logged-token');\r\n-        this.router.navigate(['dashboard'])\r\n+        this.snackBar.open(\"Account created! You can log in now.\", \"OK\", {\r\n+          duration: 5000\r\n+        })\r\n       },\r\n       error: error => {\r\n-        this.snackBar.open(\"Account created! You can log in now.\", \"OK\", {\r\n+        this.snackBar.open(error.message, \"OK\", {\r\n           duration: 5000\r\n         })\r\n       }\r\n     })\r\n"
+                },
+                {
+                    "date": 1685723983223,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import { Component, OnInit } from '@angular/core';\r\n import { Firestore } from '@angular/fire/firestore';\r\n import { FormBuilder, FormGroup, Validators } from '@angular/forms';\r\n-import { MatSnackBar } from '@angular/material/snack-bar';\r\n+// import { MatSnackBar } from '@angular/material/snack-bar';\r\n import { Router } from '@angular/router';\r\n import { AuthService } from 'src/app/shared/services/auth.service';\r\n \r\n @Component({\r\n"
+                },
+                {
+                    "date": 1685731398939,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import { Component, OnInit } from '@angular/core';\r\n import { Firestore } from '@angular/fire/firestore';\r\n import { FormBuilder, FormGroup, Validators } from '@angular/forms';\r\n-// import { MatSnackBar } from '@angular/material/snack-bar';\r\n+import { MatSnackBar } from '@angular/material/snack-bar';\r\n import { Router } from '@angular/router';\r\n import { AuthService } from 'src/app/shared/services/auth.service';\r\n \r\n @Component({\r\n@@ -84,8 +84,17 @@\n       }\r\n     })\r\n   }\r\n \r\n+  guestLogin() {\r\n+    localStorage.setItem(this.tokenName, 'guest-login');\r\n+    this.router.navigate(['dashboard']);\r\n+  }\r\n+\r\n+  signInWithGoogle() {\r\n+    this.authService.signInWithGoogle();\r\n+  }\r\n+\r\n   togglePwVisibility(passwordInput: HTMLInputElement) {\r\n     this.isPasswordVisible = !this.isPasswordVisible;\r\n     passwordInput.type = this.isPasswordVisible ? 'text' : 'password';\r\n     this.visibiltyIcon = this.isPasswordVisible ? 'visibility_off' : 'visibility';\r\n"
+                },
+                {
+                    "date": 1685733874208,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,8 +13,9 @@\n export class LoginComponent implements OnInit {\r\n   isPasswordVisible: boolean = false;\r\n   visibiltyIcon: string = 'visibility';\r\n   tokenName = 'logged-token';\r\n+  minLengthPassword: number = 5;\r\n   form!: FormGroup;\r\n \r\n   constructor(\r\n     private authService: AuthService,\r\n"
+                }
+            ],
+            "date": 1685723547681,
+            "name": "Commit-0",
+            "content": "import { Component, OnInit } from '@angular/core';\r\nimport { Firestore } from '@angular/fire/firestore';\r\nimport { FormBuilder, FormGroup, Validators } from '@angular/forms';\r\nimport { MatSnackBar } from '@angular/material/snack-bar';\r\nimport { Router } from '@angular/router';\r\nimport { AuthService } from 'src/app/shared/services/auth.service';\r\n\r\n@Component({\r\n  selector: 'app-login',\r\n  templateUrl: './login.component.html',\r\n  styleUrls: ['./login.component.scss']\r\n})\r\nexport class LoginComponent implements OnInit {\r\n  isPasswordVisible: boolean = false;\r\n  visibiltyIcon: string = 'visibility';\r\n  tokenName = 'logged-token';\r\n  form!: FormGroup;\r\n\r\n  constructor(\r\n    private authService: AuthService,\r\n    private formBuilder: FormBuilder,\r\n    private router: Router,\r\n    private snackBar: MatSnackBar,\r\n    private firestore: Firestore\r\n  ) {\r\n    \r\n  }\r\n\r\n  ngOnInit(): void {\r\n    this.form = this.formBuilder.group({\r\n      email: ['', [Validators.required, Validators.email]],\r\n      password: ['', [Validators.required]]\r\n      })\r\n  }\r\n\r\n  login() {\r\n    this.authService.signIn(\r\n      this.form.value.email,\r\n      this.form.value.password\r\n    ).subscribe({\r\n      next: () => {\r\n        localStorage.setItem(this.tokenName, 'logged-token');\r\n        this.router.navigate(['dashboard'])\r\n      },\r\n      error: error => {\r\n        this.snackBar.open(error.message, \"OK\", {\r\n          duration: 5000\r\n        })\r\n      }\r\n    })\r\n  }\r\n\r\n  register() {\r\n    this.authService.signUp(\r\n      this.form.value.email,\r\n      this.form.value.password\r\n    ).subscribe({\r\n      next: () => {\r\n        localStorage.setItem(this.tokenName, 'logged-token');\r\n        this.router.navigate(['dashboard'])\r\n      },\r\n      error: error => {\r\n        this.snackBar.open(\"Account created! You can log in now.\", \"OK\", {\r\n          duration: 5000\r\n        })\r\n      }\r\n    })\r\n  }\r\n\r\n  recoverPassword() {\r\n    this.authService.recoverPassword(\r\n      this.form.value.email\r\n    ).subscribe({\r\n      next: () => {\r\n        this.snackBar.open(\"You can recover your password in your email account.\", \"OK\", {\r\n          duration: 5000\r\n        });\r\n      },\r\n      error: error => {\r\n        this.snackBar.open(error.message, \"OK\", {\r\n          duration: 5000\r\n        })\r\n      }\r\n    })\r\n  }\r\n\r\n  togglePwVisibility(passwordInput: HTMLInputElement) {\r\n    this.isPasswordVisible = !this.isPasswordVisible;\r\n    passwordInput.type = this.isPasswordVisible ? 'text' : 'password';\r\n    this.visibiltyIcon = this.isPasswordVisible ? 'visibility_off' : 'visibility';\r\n  }\r\n\r\n}\r\n"
+        }
+    ]
+}

@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 
 /** Material Modules */
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -18,8 +19,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { LoginComponent } from './login/login.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { LoginComponent } from './components/auth/login/login.component';
+
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { DialogHelpComponent } from './components/dialog-help/dialog-help.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
@@ -29,6 +31,24 @@ import { ChannelsComponent } from './components/channels/channels.component';
 import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
 import { ChannelItemComponent } from './components/channel-item/channel-item.component';
 import { ChannelComponent } from './components/channel/channel.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+/** Firebase */
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideDatabase,getDatabase } from '@angular/fire/database';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+
+/** Components */
+
+import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
+
+/** Services */
+import { AuthService } from './shared/services/auth.service';
+import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
+
 
 
 @NgModule({
@@ -44,7 +64,9 @@ import { ChannelComponent } from './components/channel/channel.component';
     ChannelsComponent,
     DirectMessagesSectionComponent,
     ChannelItemComponent,
-    ChannelComponent
+    ChannelComponent,
+    ForgotPasswordComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule,
@@ -61,9 +83,18 @@ import { ChannelComponent } from './components/channel/channel.component';
     MatCardModule,
     MatMenuModule,
     MatButtonToggleModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatSnackBarModule,
+    FormsModule,
+    ReactiveFormsModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideDatabase(() => getDatabase()),
+    provideFirestore(() => getFirestore())
   ],
-  providers: [],
+  providers: [
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

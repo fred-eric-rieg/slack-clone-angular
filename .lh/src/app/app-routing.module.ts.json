@@ -1,0 +1,34 @@
+{
+    "sourceFile": "src/app/app-routing.module.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1685719346826,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1685719360433,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import { NgModule } from '@angular/core';\r\n import { RouterModule, Routes } from '@angular/router';\r\n-import { LoginComponent } from './login/login.component';\r\n+import { LoginComponent } from './components/login/login.component';\r\n import { DashboardComponent } from './components/dashboard/dashboard.component';\r\n import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';\r\n \r\n const routes: Routes = [\r\n"
+                },
+                {
+                    "date": 1685864206836,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import { NgModule } from '@angular/core';\r\n import { RouterModule, Routes } from '@angular/router';\r\n-import { LoginComponent } from './components/login/login.component';\r\n+import { LoginComponent } from './components/auth/login/login.component';\r\n import { DashboardComponent } from './components/dashboard/dashboard.component';\r\n import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';\r\n \r\n const routes: Routes = [\r\n"
+                },
+                {
+                    "date": 1685867498009,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,12 +2,14 @@\n import { RouterModule, Routes } from '@angular/router';\r\n import { LoginComponent } from './components/auth/login/login.component';\r\n import { DashboardComponent } from './components/dashboard/dashboard.component';\r\n import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';\r\n+import { SignUpComponent } from './components/auth/sign-up/sign-up.component';\r\n \r\n const routes: Routes = [\r\n   { path: '', component: LoginComponent },\r\n   { path: 'forgot-password', component: ForgotPasswordComponent },\r\n+  { path: 'sign-up', component: SignUpComponent },\r\n   { path: 'dashboard', component: DashboardComponent },\r\n ];\r\n \r\n @NgModule({\r\n"
+                },
+                {
+                    "date": 1685871557063,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,7 @@\n import { NgModule } from '@angular/core';\r\n import { RouterModule, Routes } from '@angular/router';\r\n+import { AuthGuard } from './shared/guards/auth.guard';\r\n import { LoginComponent } from './components/auth/login/login.component';\r\n import { DashboardComponent } from './components/dashboard/dashboard.component';\r\n import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';\r\n import { SignUpComponent } from './components/auth/sign-up/sign-up.component';\r\n"
+                }
+            ],
+            "date": 1685719346826,
+            "name": "Commit-0",
+            "content": "import { NgModule } from '@angular/core';\r\nimport { RouterModule, Routes } from '@angular/router';\r\nimport { LoginComponent } from './login/login.component';\r\nimport { DashboardComponent } from './components/dashboard/dashboard.component';\r\nimport { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';\r\n\r\nconst routes: Routes = [\r\n  { path: '', component: LoginComponent },\r\n  { path: 'forgot-password', component: ForgotPasswordComponent },\r\n  { path: 'dashboard', component: DashboardComponent },\r\n];\r\n\r\n@NgModule({\r\n  imports: [RouterModule.forRoot(routes)],\r\n  exports: [RouterModule]\r\n})\r\nexport class AppRoutingModule { }\r\n"
+        }
+    ]
+}

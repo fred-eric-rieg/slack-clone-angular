@@ -1,0 +1,91 @@
+<div class="wrapper">
+  <div class="logo">
+    <img src="../../assets/img/logo.png" />
+    <span>Slacky</span>
+  </div>
+  <div class="login-container">
+    <div class="headline">
+      <h2>Log into your account!</h2>
+      <!-- <div class="line"></div> -->
+    </div>
+    <div class="form-container">
+      <form [formGroup]="form">
+        <!-- Erste login Sektion -->
+        <mat-form-field>
+          <mat-label>E-Mail</mat-label>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
+          />
+          <mat-error *ngIf="form.get('email')!.hasError('required')"
+            >Email is required</mat-error
+          >
+          <mat-error *ngIf="form.get('email')!.hasError('pattern')"
+            >Email is invalid</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            formControlName="password"
+            [minlength]="minLengthPassword"
+            #passwordInput
+          />
+          <mat-icon
+            style="cursor: pointer"
+            matIconSuffix
+            (click)="togglePwVisibility(passwordInput)"
+            >{{ visibiltyIcon }}</mat-icon
+          >
+          <mat-error *ngIf="form.get('password')!.hasError('required')"
+            >Password is required</mat-error
+          >
+          <mat-error *ngIf="form.get('password')!.hasError('minlength')">
+            Password must contain at least {{ minLengthPassword }} characters.
+          </mat-error>
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!form.valid"
+          (click)="login()"
+        >
+          Login
+        </button>
+      </form>
+      <!-- Login divider -->
+      <div class="h-div">
+        <span>OR</span>
+        <div class="line"></div>
+      </div>
+      <!-- Letzte login sektion -->
+      <div class="google-guest">
+        <button
+          class="google-btn"
+          mat-stroked-button
+          color="secondary"
+          (click)="signInWithGoogle()"
+        >
+          <img src="../../assets/img/google_logo.svg" />
+          <span>SignIn with Google</span>
+        </button>
+        <button mat-flat-button (click)="guestLogin()">Guest login</button>
+      </div>
+
+      <!-- PW vergessen oder Registrieren -->
+      <div class="more-options">
+        <span class="frgt-pw" [routerLink]="'/forgot-password'"
+          >Forgot password?</span
+        >
+        <div class="signup">
+          <span>Don't have an account?</span>
+          <span [routerLink]="'/sign-up'">Sign up here!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

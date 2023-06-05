@@ -1,0 +1,9 @@
+{
+  "hosting": [
+    {
+      "target": "slack-clone-angular",
+      "source": ".",
+      "frameworksBackend": {}
+    }
+  ]
+}

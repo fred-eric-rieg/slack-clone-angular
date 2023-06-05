@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "slacky-89fdb": {
+      "hosting": {
+        "slack-clone-angular": [
+          "slacky-89fdb"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "slacky-89fdb"
+  }
+}

@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/app/shared/services/auth.service.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1685720135203,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1685721934962,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,8 +24,24 @@\n       throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\n     )\n   }\n \n+  signUp(email: string, password: string): Observable<any> {\n+    return from(this.auth.createUserWithEmailAndPassword(email, password))\n+      .pipe(\n+        catchError((error: FirebaseError) =>\n+      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\n+    )\n+  }\n+\n+  recoverPassword(email: string): Observable<any> {\n+    return from(this.auth.sendPasswordResetEmail(email))\n+      .pipe(\n+        catchError((error: FirebaseError) =>\n+      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\n+    )\n+  }\n+\n   private translateFirebaseErrorMessage({code, message}: FirebaseError) {\n     if (code === \"auth/user-not-found\") {\n       return \"User not found.\";\n     }\n"
+                },
+                {
+                    "date": 1685722229191,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,8 +40,13 @@\n       throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\n     )\n   }\n \n+  signInWithGoogle() {\n+    const auth = getAuth();\n+    signInWithPopup(auth, this.provider);\n+  }\n+\n   private translateFirebaseErrorMessage({code, message}: FirebaseError) {\n     if (code === \"auth/user-not-found\") {\n       return \"User not found.\";\n     }\n"
+                },
+                {
+                    "date": 1685722247931,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -45,8 +45,16 @@\n     const auth = getAuth();\n     signInWithPopup(auth, this.provider);\n   }\n \n+  isLoggedIn() {\n+    return localStorage.getItem(this.tokenName) != null;\n+  }\n+\n+  logout() {\n+    localStorage.removeItem(this.tokenName);\n+  }\n+\n   private translateFirebaseErrorMessage({code, message}: FirebaseError) {\n     if (code === \"auth/user-not-found\") {\n       return \"User not found.\";\n     }\n"
+                }
+            ],
+            "date": 1685720135203,
+            "name": "Commit-0",
+            "content": "import { Injectable } from '@angular/core';\nimport { FirebaseError } from '@angular/fire/app';\nimport { GoogleAuthProvider, getAuth, signInWithPopup } from '@angular/fire/auth';\nimport { AngularFireAuth } from '@angular/fire/compat/auth';\nimport { Router } from '@angular/router';\nimport { catchError, from, Observable, throwError } from 'rxjs';\n\n@Injectable({\n  providedIn: 'root'\n})\nexport class AuthService {\n  private provider = new GoogleAuthProvider();\n  public tokenName: string = 'logged-token';\n\n  constructor(\n    private auth: AngularFireAuth,\n    private router: Router\n  ) { }\n\n  signIn(email: string, password: string): Observable<any> {\n    return from(this.auth.signInWithEmailAndPassword(email, password))\n      .pipe(\n        catchError((error: FirebaseError) =>\n      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\n    )\n  }\n\n  private translateFirebaseErrorMessage({code, message}: FirebaseError) {\n    if (code === \"auth/user-not-found\") {\n      return \"User not found.\";\n    }\n    if (code === \"auth/wrong-password\") {\n      return \"Wrong password.\";\n    }\n    return message;\n  }\n}\n"
+        }
+    ]
+}

@@ -1,6 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-html, body { height: 100%; }
+html, body { height: 100%; color: #fafbf7; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 html, body { height: 100%; }
@@ -8,3 +13,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@font-face {
+  font-family: 'os-ebold';
+  src: url(../src/assets/fonts/OpenSans-ExtraBold.ttf);
+}
+
+@font-face {
+  font-family: 'os-light';
+  src: url(../src/assets/fonts/OpenSans-Light.ttf);
+}
+
+@font-face {
+  font-family: 'os-reg';
+  src: url(../src/assets/fonts/OpenSans-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'os-sbold';
+  src: url(../src/assets/fonts/OpenSans-SemiBold.ttf);
+}
