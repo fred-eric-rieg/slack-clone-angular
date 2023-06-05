@@ -1,0 +1,82 @@
+.title {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-inline: 24px;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+  }
+  
+  ul {
+    padding: 0px;
+    margin: 0px;
+    margin-top: 16px;
+  
+    li {
+      margin-inline: 8px;
+      padding-left: 16px;
+      padding-right: 8px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: #c7b2ca;
+  
+      img,
+      mat-icon {
+        height: 24px;
+        width: 24px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-right: 6px !important;
+  
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
+      }
+  
+      mat-icon {
+        margin-right: 16px;
+      }
+  
+      &:hover {
+        background-color: rgba($color: white, $alpha: 0.1);
+      }
+    }
+  }
+  
+  .add-channel {
+    mat-icon {
+      background-color: rgba($color: #ffffff, $alpha: 0.08);
+    }
+  }
+  
+  .direct-chats {
+    margin-top: 16px;
+  }
+  
+  @media (max-width: 600px) {
+    li {
+      font-size: 10px;
+    }
+  }
+  
+  @media (max-width: 450px) {
+    li {
+      font-size: 15px;
+      margin-inline: 8px !important;
+      padding-left: 16px !important;
+      padding-right: 8px !important;
+      height: 32px !important;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+  
+      img,
+      mat-icon {
+        width: 24px !important;
+        height: 24px !important;
+        border-radius: 6px !important;
+      }
+    }
+  }
