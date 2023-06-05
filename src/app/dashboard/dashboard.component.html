@@ -1,19 +1,24 @@
+<mat-drawer #drawer class="sidenav" [opened]="true" mode="side">
+
+  <ul class="sidenav-list">
+    <li routerLink="/dashboard"><mat-icon>fact_check</mat-icon>Dashboard</li>
+    <li routerLink="/user"><mat-icon>perm_identity</mat-icon>User</li>
+  </ul>
+</mat-drawer>
+
+<!-- Anmerkung: drawer.toggle() wird noch an der richtigen Stelle eingefügt, sobald Side-Nav-Komponente verfügbar ist.-->
+<app-toolbar (click)="drawer.toggle()"></app-toolbar>
+
 <mat-drawer-container class="mat-drawer-container" autosize>
-    <mat-drawer #drawer class="sidenav" [opened]="true" mode="side">
-      <div class="logo-container">
-        <img class="logo" src="/../assets/logo.svg" alt="logo">
-      </div>
-      <ul class="sidenav-list">
-        <li routerLink="/dashboard"><mat-icon >fact_check</mat-icon>Dashboard</li>
-        <li routerLink="/user"><mat-icon >perm_identity</mat-icon>User</li>
-      </ul>
-    </mat-drawer>
-
-    <!-- Anmerkung: drawer.toggle() wird noch an der richtigen Stelle eingefügt, sobald Side-Nav-Komponente verfügbar ist.-->
-    <app-toolbar (click)="drawer.toggle()"></app-toolbar>
-
-    <div class="router-container">
-      <router-outlet></router-outlet>
-    </div>
-
-  </mat-drawer-container>
+  <div class="example-sidenav-content">
+    <mat-toolbar color="primary">
+      <mat-toolbar-row>
+        <span>Simple CRM</span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </div>
+  <app-sidenav></app-sidenav>
+  <div class="router-container">
+    <router-outlet></router-outlet>
+  </div>
+</mat-drawer-container>

@@ -21,6 +21,11 @@ import { LoginComponent } from './login/login.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { DialogHelpComponent } from './components/dialog-help/dialog-help.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
+import { sidenavComponent } from './components/sidenav/sidenav.component';
+import { DialogAddChannelComponent } from './components/dialog-add-channel/dialog-add-channel.component';
+import { ChannelsComponent } from './components/channels/channels.component';
+import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
+import { ChannelItemComponent } from './components/channel-item/channel-item.component';
 
 
 @NgModule({
@@ -30,7 +35,12 @@ import { DialogUserComponent } from './components/dialog-user/dialog-user.compon
     LoginComponent,
     ToolbarComponent,
     DialogHelpComponent,
-    DialogUserComponent
+    DialogUserComponent,
+    sidenavComponent,
+    DialogAddChannelComponent,
+    ChannelsComponent,
+    DirectMessagesSectionComponent,
+    ChannelItemComponent
   ],
   imports: [
     BrowserModule,

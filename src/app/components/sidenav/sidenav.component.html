@@ -1,0 +1,33 @@
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" opened>
+    <div class="server-name">
+      <div class="logo">
+        <span>Slack Clone</span>
+        <button
+          class="new-msg-btn"
+          mat-mini-fab
+        >
+          <mat-icon [ngStyle]="{ color: 'black' }">edit_note</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="nav-scroll-container">
+      <div class="navigation">
+        <div
+          class="nav-hl flex-ac"
+        >
+          <mat-icon font-icon>comment</mat-icon>
+          <p>Threads</p>
+        </div>
+        <div
+          class="nav-hl flex-ac"
+        >
+          <mat-icon font-icon>supervisor_account</mat-icon>
+          <p>Users</p>
+        </div>
+      </div>
+
+      <app-channels></app-channels>
+      <app-direct-messages-section></app-direct-messages-section>
+    </div>
+  </mat-drawer>

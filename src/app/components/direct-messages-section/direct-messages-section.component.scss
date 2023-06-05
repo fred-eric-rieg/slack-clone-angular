@@ -1,0 +1,88 @@
+* {
+  user-select: none;
+  cursor: pointer;
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 !important;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.direct-msg-hl {
+  gap: 8px;
+  padding: 12px 5px 5px 20px;
+  font-size: 16px;
+  cursor: pointer;
+
+  p {
+    margin: 0 !important;
+  }
+}
+
+.channel {
+  gap: 8px;
+}
+
+.channelitem {
+  margin: 0 8px;
+  padding: 5px 12px;
+  cursor: pointer;
+
+  @media (hover: hover) {
+    &:hover:not(.activeLink) {
+      border-radius: 5px;
+      background-color: rgb(35, 33, 39);
+    }
+  }
+}
+
+.add-item {
+  padding: 2px;
+  background-color: rgb(83, 83, 83);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+}
+
+.flex-ac {
+  display: flex;
+  align-items: center;
+  margin: 0 8px;
+  padding: 5px 12px;
+  cursor: pointer;
+
+  p {
+    margin: 0 !important;
+  }
+}
+
+.user-direct-msg {
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+
+  @media (hover: hover) {
+    &:hover:not(.activeLink) {
+      border-radius: 5px;
+      background-color: rgb(35, 33, 39);
+    }
+  }
+
+  img {
+    height: 24px;
+    width: 24px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+}
