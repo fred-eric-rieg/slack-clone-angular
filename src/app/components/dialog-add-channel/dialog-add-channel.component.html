@@ -1,11 +1,11 @@
-<h1 mat-dialog-title>Add Channel</h1>
+<h1 mat-dialog-title>Create new channel</h1>
 <div mat-dialog-content>
     <mat-form-field class="mr-16 mt-4" appearance="fill">
-      <mat-label>Channnelname</mat-label>
+      <mat-label>Channnel name</mat-label>
       <input matInput placeholder="Placeholder">
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button >Cancel</button>
+  <button mat-button mat-dialog-close="">Cancel</button>
   <button mat-button (click)="saveChannel()" cdkFocusInitial>Save</button>
 </div>

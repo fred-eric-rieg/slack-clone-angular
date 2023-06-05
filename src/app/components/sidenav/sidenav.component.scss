@@ -1,82 +1,124 @@
-.title {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-inline: 24px;
-    min-height: 56px;
-    display: flex;
-    align-items: center;
-    color: white;
-    cursor: pointer;
+* {
+  color: white;
+  user-select: none;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 20px;
+
+  img {
+    height: 40px;
+    width: 40px;
   }
-  
-  ul {
-    padding: 0px;
-    margin: 0px;
-    margin-top: 16px;
-  
-    li {
-      margin-inline: 8px;
-      padding-left: 16px;
-      padding-right: 8px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      color: #c7b2ca;
-  
-      img,
-      mat-icon {
-        height: 24px;
-        width: 24px;
-        object-fit: cover;
-        border-radius: 6px;
-        margin-right: 6px !important;
-  
-        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
-      }
-  
-      mat-icon {
-        margin-right: 16px;
-      }
-  
-      &:hover {
-        background-color: rgba($color: white, $alpha: 0.1);
-      }
+
+  span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.mat-drawer-side {
+  border-right: 1px solid rgb(87, 87, 87);
+}
+
+.mat-drawer {
+  top: 64px;
+  width: 25%;
+  min-width: 200px;
+  max-width: 300px;
+  background-color: var(--bg-color-side-nav);
+}
+
+.mat-drawer-container {
+  position: unset;
+}
+
+.mat-drawer-content {
+  background-color: rgb(25, 27, 30);
+  overflow: hidden;
+}
+
+.server-name {
+  position: sticky;
+  top: 0;
+  padding: 8px 10px;
+  height: 61px;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgb(87, 87, 87);
+  background-color: var(--bg-color-side-nav);
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 !important;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.nav-scroll-container {
+  height: calc(100% - 61px);
+  overflow-y: auto;
+}
+
+.navigation {
+  div:first-of-type {
+    margin-top: 8px;
+  }
+
+  div:last-of-type {
+    margin-bottom: 8px;
+  }
+}
+
+.nav-hl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 8px;
+  padding: 5px 12px;
+  font-size: 16px;
+
+  cursor: pointer;
+
+  p {
+    margin: 0 !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  @media (hover: hover) {
+    &:hover:not(.activeLink) {
+      border-radius: 5px;
+      background-color: rgb(35, 33, 39);
     }
   }
-  
-  .add-channel {
-    mat-icon {
-      background-color: rgba($color: #ffffff, $alpha: 0.08);
-    }
+}
+
+.new-msg-btn {
+  height: 35px;
+  width: 35px;
+  margin-left: auto;
+  background-color: white;
+  &:active {
+    transform: scale(0.9);
+    filter: brightness(0.9);
   }
-  
-  .direct-chats {
-    margin-top: 16px;
+}
+
+@media screen and (max-width: 620px) {
+  mat-drawer {
+    width: 100% !important;
+    max-width: unset !important;
+    border-right: unset !important;
   }
-  
-  @media (max-width: 600px) {
-    li {
-      font-size: 10px;
-    }
-  }
-  
-  @media (max-width: 450px) {
-    li {
-      font-size: 15px;
-      margin-inline: 8px !important;
-      padding-left: 16px !important;
-      padding-right: 8px !important;
-      height: 32px !important;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-  
-      img,
-      mat-icon {
-        width: 24px !important;
-        height: 24px !important;
-        border-radius: 6px !important;
-      }
-    }
-  }
+}

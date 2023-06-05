@@ -20,6 +20,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { sidenavComponent } from './components/sidenav/sidenav.component';
 import { DialogAddChannelComponent } from './components/dialog-add-channel/dialog-add-channel.component';
+import { ChannelsComponent } from './components/channels/channels.component';
+import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
+import { ChannelItemComponent } from './components/channel-item/channel-item.component';
 
 
 @NgModule({
@@ -28,7 +31,10 @@ import { DialogAddChannelComponent } from './components/dialog-add-channel/dialo
     DashboardComponent,
     LoginComponent,
     sidenavComponent,
-    DialogAddChannelComponent
+    DialogAddChannelComponent,
+    ChannelsComponent,
+    DirectMessagesSectionComponent,
+    ChannelItemComponent
   ],
   imports: [
     BrowserModule,
