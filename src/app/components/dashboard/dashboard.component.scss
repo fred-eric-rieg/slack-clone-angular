@@ -1,9 +1,22 @@
 .mat-drawer-container {
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 
 mat-toolbar, mat-toolbar-row {
     min-height: 56px;
     height: 56px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.router-container {
+    position: relative;
+    padding: 1rem;
 }
