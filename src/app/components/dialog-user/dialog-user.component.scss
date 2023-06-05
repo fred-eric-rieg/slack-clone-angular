@@ -1,0 +1,30 @@
+mat-dialog-content {
+  min-width: 300px;
+
+  .profile-pic {
+    height: 100px;
+    width: 100px;
+  }
+}
+
+.toolbar-edit-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h2 {
+    margin-bottom: 0;
+  }
+}
+
+.toolbar-edit-content {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: center;
+}

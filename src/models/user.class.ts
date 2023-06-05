@@ -1,10 +1,11 @@
 export class User {
   fullName!: string;
   displayName!: string;
+  profile!: string;
   email!: string;
   phone!: number;
   title!: string;
-  status!: string; // e.g. "active", "inactive", "away"
+  status!: string; // e.g. "Active", "Inactive", "Away", "Busy"
   customIdName!: string;
   // namePronunciation
   // timeZone
@@ -12,6 +13,7 @@ export class User {
   constructor(obj?: any) {
     this.fullName = obj ? obj.fullName : '';
     this.displayName = obj ? obj.displayName : '';
+    this.profile = obj ? obj.profile : '';
     this.email = obj ? obj.email : '';
     this.phone = obj ? obj.email : '';
     this.title = obj ? obj.title : '';
@@ -23,6 +25,7 @@ export class User {
     return {
       fullName: this.fullName,
       displayName: this.displayName,
+      profile: this.profile,
       email: this.email,
       phone: this.phone,
       title: this.title,

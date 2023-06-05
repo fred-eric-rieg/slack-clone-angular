@@ -1,11 +1,19 @@
 <mat-dialog-content>
-  <h2>Edit your profile</h2>
-  <div>Full name</div>
-  <div>Display name</div>
-  <div>Profile photo</div>
-  <div>Title</div>
-  <div>Name pronunciation</div>
-  <div>Time zone</div>
+  <div class="toolbar-edit-container">
+    <h2>Edit your profile</h2>
+    <button mat-icon-button class="pin-right-upper-corner">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </div>
+  <div class="toolbar-edit-content">
+    <div>
+      <div>Full name {{ user.fullName }}</div>
+      <div>Display name {{ user.displayName }}</div>
+      <div>Email {{ user.email }}</div>
+      <div>Phone {{ user.phone }}</div>
+    </div>
+    <img class="profile-pic" src="assets/img/profile.png">
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancel</button>
