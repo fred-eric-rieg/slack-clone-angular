@@ -16,6 +16,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
@@ -26,6 +28,7 @@ import { DialogAddChannelComponent } from './components/dialog-add-channel/dialo
 import { ChannelsComponent } from './components/channels/channels.component';
 import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
 import { ChannelItemComponent } from './components/channel-item/channel-item.component';
+import { ChannelComponent } from './components/channel/channel.component';
 
 
 @NgModule({
@@ -40,7 +43,8 @@ import { ChannelItemComponent } from './components/channel-item/channel-item.com
     DialogAddChannelComponent,
     ChannelsComponent,
     DirectMessagesSectionComponent,
-    ChannelItemComponent
+    ChannelItemComponent,
+    ChannelComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +60,7 @@ import { ChannelItemComponent } from './components/channel-item/channel-item.com
     MatFormFieldModule,
     MatCardModule,
     MatMenuModule,
+    MatButtonToggleModule,
     BrowserAnimationsModule
   ],
   providers: [],
