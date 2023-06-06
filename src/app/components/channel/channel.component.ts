@@ -20,6 +20,7 @@ export class ChannelComponent {
    * for resizing the channel.
    */
   setMovable() {
+    console.log(this.width)
     if (this.movable) {
       this.movable = false;
     } else {
@@ -38,7 +39,7 @@ export class ChannelComponent {
           this.moveBar();
         }, 50);
     } else {
-      //nothing
+      // Nothing yet
     }
   }
 }
