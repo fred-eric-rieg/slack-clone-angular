@@ -15,15 +15,11 @@
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
 
-      <div>
+      <div class="toolbar-btn-container">
         <button mat-icon-button (click)="openDialogHelp()">
           <mat-icon>help</mat-icon>
         </button>
-
-        <button mat-icon-button [matMenuTriggerFor]="menu" #menuTrigger>
-          <mat-icon>face</mat-icon>
-        </button>
-
+        <img [matMenuTriggerFor]="menu" #menuTrigger class="profile-icon" src="assets/img/profile.png">
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="openDialogUser()">My Profile</button>
           <button mat-menu-item (click)="logoutUser()">Logout</button>

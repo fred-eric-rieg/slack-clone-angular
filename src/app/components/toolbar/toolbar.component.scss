@@ -2,7 +2,6 @@
   background: linear-gradient(90deg, rgba(100,37,136,1) 21%, rgba(23,4,91,1) 100%, rgba(23,4,91,1) 100%);
   /*background: linear-gradient(90deg, rgba(28,7,130,1) 24%, rgba(121,21,130,1) 100%);*/
 
-
   color: #fff;
 }
 
@@ -20,4 +19,20 @@
 
 .mat-mdc-form-field {
   flex-direction: unset;
+}
+
+.profile-icon {
+  width: 35px;
+  height: 35px;
+  /*border: 0.5px solid rgba(100,37,136,1);*/
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.toolbar-btn-container {
+  display: flex;
+  align-items: center;
+}
+
+.mat-mdc-form-field {
 }
