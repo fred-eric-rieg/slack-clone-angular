@@ -45,6 +45,7 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 
 /** Services */
 import { AuthService } from './shared/services/auth.service';
+import { CdkDrag } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { AuthService } from './shared/services/auth.service';
     MatSnackBarModule,
     FormsModule,
     ReactiveFormsModule,
+    CdkDrag,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
