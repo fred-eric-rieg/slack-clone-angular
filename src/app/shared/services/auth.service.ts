@@ -17,40 +17,40 @@ export class AuthService {
     private auth: AngularFireAuth,
     private userService: UserService,
     private router: Router,
-  ) {}
+  ) { }
 
   signIn(email: string, password: string): Observable<any> {
     return from(this.auth.signInWithEmailAndPassword(email, password))
       .pipe(
         catchError((error: FirebaseError) =>
-      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
-    )
+          throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
+      )
   }
 
   signUp(email: string, password: string): Observable<any> {
     return from(
       this.auth.createUserWithEmailAndPassword(email, password)
         .then((userCred) => {
-          console.log(this.userService.setNewUser());
-        console.log(userCred.user);
-      }))
+          this.userService.setNewUser(userCred.user?.uid!, email)
+        }))
       .pipe(
         catchError((error: FirebaseError) =>
-      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
-    )
+          throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
+      )
   }
 
   recoverPassword(email: string): Observable<any> {
     return from(this.auth.sendPasswordResetEmail(email))
       .pipe(
         catchError((error: FirebaseError) =>
-      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
-    )
+          throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
+      )
   }
 
   signInWithGoogle() {
     const auth = getAuth();
     signInWithPopup(auth, this.provider);
+    this.userService.setNewUser(auth.currentUser?.uid!, auth.currentUser?.email!);
   }
 
   isLoggedIn() {
@@ -61,7 +61,7 @@ export class AuthService {
     localStorage.removeItem(this.tokenName);
   }
 
-  private translateFirebaseErrorMessage({code, message}: FirebaseError) {
+  private translateFirebaseErrorMessage({ code, message }: FirebaseError) {
     if (code === "auth/user-not-found") {
       return "User not found.";
     }

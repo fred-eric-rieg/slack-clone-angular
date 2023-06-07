@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 6,
+            "activePatchIndex": 13,
             "patches": [
                 {
                     "date": 1685720135203,
@@ -32,6 +32,34 @@
                 {
                     "date": 1686157678944,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,9 @@\n import { GoogleAuthProvider, getAuth, signInWithPopup } from '@angular/fire/auth';\r\n import { AngularFireAuth } from '@angular/fire/compat/auth';\r\n import { Router } from '@angular/router';\r\n import { catchError, from, Observable, throwError } from 'rxjs';\r\n+import { UserService } from './user.service';\r\n \r\n @Injectable({\r\n   providedIn: 'root'\r\n })\r\n@@ -13,8 +14,9 @@\n   public tokenName: string = 'logged-token';\r\n \r\n   constructor(\r\n     private auth: AngularFireAuth,\r\n+    private userService: UserService,\r\n     private router: Router,\r\n   ) {}\r\n \r\n   signIn(email: string, password: string): Observable<any> {\r\n@@ -28,8 +30,9 @@\n   signUp(email: string, password: string): Observable<any> {\r\n     return from(\r\n       this.auth.createUserWithEmailAndPassword(email, password)\r\n         .then((userCred) => {\r\n+          console.log(this.userService.setNewUser());\r\n         console.log(userCred.user);\r\n       }))\r\n       .pipe(\r\n         catchError((error: FirebaseError) =>\r\n"
+                },
+                {
+                    "date": 1686158409626,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,9 +30,9 @@\n   signUp(email: string, password: string): Observable<any> {\r\n     return from(\r\n       this.auth.createUserWithEmailAndPassword(email, password)\r\n         .then((userCred) => {\r\n-          console.log(this.userService.setNewUser());\r\n+          console.log(this.userService.setNewUser(userCred.user?.uid!));\r\n         console.log(userCred.user);\r\n       }))\r\n       .pipe(\r\n         catchError((error: FirebaseError) =>\r\n"
+                },
+                {
+                    "date": 1686158595896,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n     return from(\r\n       this.auth.createUserWithEmailAndPassword(email, password)\r\n         .then((userCred) => {\r\n           console.log(this.userService.setNewUser(userCred.user?.uid!));\r\n-        console.log(userCred.user);\r\n+        console.log(\"USERCRED: \", userCred.user);\r\n       }))\r\n       .pipe(\r\n         catchError((error: FirebaseError) =>\r\n       throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\r\n"
+                },
+                {
+                    "date": 1686158686475,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n     return from(\r\n       this.auth.createUserWithEmailAndPassword(email, password)\r\n         .then((userCred) => {\r\n           console.log(this.userService.setNewUser(userCred.user?.uid!));\r\n-        console.log(\"USERCRED: \", userCred.user);\r\n+        console.log(\"USERCRED: \", userCred.user?.uid);\r\n       }))\r\n       .pipe(\r\n         catchError((error: FirebaseError) =>\r\n       throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\r\n"
+                },
+                {
+                    "date": 1686161423351,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -53,8 +53,9 @@\n     signInWithPopup(auth, this.provider);\r\n   }\r\n \r\n   isLoggedIn() {\r\n+    this.userService.setNewUser(\"test\");\r\n     return localStorage.getItem(this.tokenName) != null;\r\n   }\r\n \r\n   logout() {\r\n"
+                },
+                {
+                    "date": 1686161452689,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -53,9 +53,8 @@\n     signInWithPopup(auth, this.provider);\r\n   }\r\n \r\n   isLoggedIn() {\r\n-    this.userService.setNewUser(\"test\");\r\n     return localStorage.getItem(this.tokenName) != null;\r\n   }\r\n \r\n   logout() {\r\n"
+                },
+                {
+                    "date": 1686163535401,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,10 +30,9 @@\n   signUp(email: string, password: string): Observable<any> {\r\n     return from(\r\n       this.auth.createUserWithEmailAndPassword(email, password)\r\n         .then((userCred) => {\r\n-          console.log(this.userService.setNewUser(userCred.user?.uid!));\r\n-        console.log(\"USERCRED: \", userCred.user?.uid);\r\n+          this.userService.setNewUser(userCred.user?.uid!, email)\r\n       }))\r\n       .pipe(\r\n         catchError((error: FirebaseError) =>\r\n       throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\r\n"
+                },
+                {
+                    "date": 1686166056673,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,41 +16,42 @@\n   constructor(\r\n     private auth: AngularFireAuth,\r\n     private userService: UserService,\r\n     private router: Router,\r\n-  ) {}\r\n+  ) { }\r\n \r\n   signIn(email: string, password: string): Observable<any> {\r\n     return from(this.auth.signInWithEmailAndPassword(email, password))\r\n       .pipe(\r\n         catchError((error: FirebaseError) =>\r\n-      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\r\n-    )\r\n+          throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\r\n+      )\r\n   }\r\n \r\n   signUp(email: string, password: string): Observable<any> {\r\n     return from(\r\n       this.auth.createUserWithEmailAndPassword(email, password)\r\n         .then((userCred) => {\r\n           this.userService.setNewUser(userCred.user?.uid!, email)\r\n-      }))\r\n+        }))\r\n       .pipe(\r\n         catchError((error: FirebaseError) =>\r\n-      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\r\n-    )\r\n+          throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\r\n+      )\r\n   }\r\n \r\n   recoverPassword(email: string): Observable<any> {\r\n     return from(this.auth.sendPasswordResetEmail(email))\r\n       .pipe(\r\n         catchError((error: FirebaseError) =>\r\n-      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\r\n-    )\r\n+          throwError(() => new Error(this.translateFirebaseErrorMessage(error))))\r\n+      )\r\n   }\r\n \r\n   signInWithGoogle() {\r\n     const auth = getAuth();\r\n     signInWithPopup(auth, this.provider);\r\n+    this.userService.setNewUser(auth.currentUser?.uid!, auth.currentUser?.email!);\r\n   }\r\n \r\n   isLoggedIn() {\r\n     return localStorage.getItem(this.tokenName) != null;\r\n@@ -59,9 +60,9 @@\n   logout() {\r\n     localStorage.removeItem(this.tokenName);\r\n   }\r\n \r\n-  private translateFirebaseErrorMessage({code, message}: FirebaseError) {\r\n+  private translateFirebaseErrorMessage({ code, message }: FirebaseError) {\r\n     if (code === \"auth/user-not-found\") {\r\n       return \"User not found.\";\r\n     }\r\n     if (code === \"auth/wrong-password\") {\r\n"
                 }
             ],
             "date": 1685720135203,

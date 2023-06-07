@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 5,
             "patches": [
                 {
                     "date": 1685864558670,
@@ -12,6 +12,22 @@
                 {
                     "date": 1686157795065,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,9 +13,9 @@\n export class LoginComponent implements OnInit {\r\n   isPasswordVisible: boolean = false;\r\n   visibiltyIcon: string = 'visibility';\r\n   tokenName = 'logged-token';\r\n-  minLengthPassword: number = 5;\r\n+  minLengthPassword: number = 6;\r\n   form!: FormGroup;\r\n \r\n   constructor(\r\n     private authService: AuthService,\r\n"
+                },
+                {
+                    "date": 1686161545102,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,9 @@\n import { FormBuilder, FormGroup, Validators } from '@angular/forms';\r\n import { MatSnackBar } from '@angular/material/snack-bar';\r\n import { Router } from '@angular/router';\r\n import { AuthService } from 'src/app/shared/services/auth.service';\r\n+import { UserService } from 'src/app/shared/services/user.service';\r\n \r\n @Component({\r\n   selector: 'app-login',\r\n   templateUrl: './login.component.html',\r\n@@ -21,9 +22,9 @@\n     private authService: AuthService,\r\n     private formBuilder: FormBuilder,\r\n     private router: Router,\r\n     private snackBar: MatSnackBar,\r\n-    private firestore: Firestore\r\n+    private userService: UserService,\r\n   ) {\r\n     \r\n   }\r\n \r\n@@ -50,8 +51,12 @@\n       }\r\n     })\r\n   }\r\n \r\n+  testing() {\r\n+    this.userService.setNewUser(\"test\");\r\n+  }\r\n+\r\n   guestLogin() {\r\n     localStorage.setItem(this.tokenName, 'guest-login');\r\n     this.router.navigate(['dashboard']);\r\n   }\r\n"
+                },
+                {
+                    "date": 1686161993688,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,9 +52,9 @@\n     })\r\n   }\r\n \r\n   testing() {\r\n-    this.userService.setNewUser(\"test\");\r\n+    this.userService.setNewUser(\"test2\");\r\n   }\r\n \r\n   guestLogin() {\r\n     localStorage.setItem(this.tokenName, 'guest-login');\r\n"
+                },
+                {
+                    "date": 1686163109704,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,9 +52,9 @@\n     })\r\n   }\r\n \r\n   testing() {\r\n-    this.userService.setNewUser(\"test2\");\r\n+    this.userService.setNewUser(\"test212312\");\r\n   }\r\n \r\n   guestLogin() {\r\n     localStorage.setItem(this.tokenName, 'guest-login');\r\n"
+                },
+                {
+                    "date": 1686163696443,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,9 +52,9 @@\n     })\r\n   }\r\n \r\n   testing() {\r\n-    this.userService.setNewUser(\"test212312\");\r\n+    this.userService.setNewUser(\"test212312\", \"hallo.peter@gmx.net\");\r\n   }\r\n \r\n   guestLogin() {\r\n     localStorage.setItem(this.tokenName, 'guest-login');\r\n"
                 }
             ],
             "date": 1685864558670,

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,7 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
-    private firestore: Firestore
+    private userService: UserService,
   ) {
     
   }
@@ -49,6 +50,10 @@ export class LoginComponent implements OnInit {
         })
       }
     })
+  }
+
+  testing() {
+    this.userService.setNewUser("test212312", "hallo.peter@gmx.net");
   }
 
   guestLogin() {
