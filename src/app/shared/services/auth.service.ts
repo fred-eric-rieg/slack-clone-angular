@@ -4,6 +4,7 @@ import { GoogleAuthProvider, getAuth, signInWithPopup } from '@angular/fire/auth
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { catchError, from, Observable, throwError } from 'rxjs';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,9 @@ export class AuthService {
 
   constructor(
     private auth: AngularFireAuth,
-    private router: Router
-  ) { }
+    private userService: UserService,
+    private router: Router,
+  ) {}
 
   signIn(email: string, password: string): Observable<any> {
     return from(this.auth.signInWithEmailAndPassword(email, password))
@@ -26,7 +28,12 @@ export class AuthService {
   }
 
   signUp(email: string, password: string): Observable<any> {
-    return from(this.auth.createUserWithEmailAndPassword(email, password))
+    return from(
+      this.auth.createUserWithEmailAndPassword(email, password)
+        .then((userCred) => {
+          console.log(this.userService.setNewUser());
+        console.log(userCred.user);
+      }))
       .pipe(
         catchError((error: FirebaseError) =>
       throwError(() => new Error(this.translateFirebaseErrorMessage(error))))

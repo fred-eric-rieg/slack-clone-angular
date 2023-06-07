@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1685864558670,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1686157795065,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,9 +13,9 @@\n export class LoginComponent implements OnInit {\r\n   isPasswordVisible: boolean = false;\r\n   visibiltyIcon: string = 'visibility';\r\n   tokenName = 'logged-token';\r\n-  minLengthPassword: number = 5;\r\n+  minLengthPassword: number = 6;\r\n   form!: FormGroup;\r\n \r\n   constructor(\r\n     private authService: AuthService,\r\n"
                 }
             ],
             "date": 1685864558670,

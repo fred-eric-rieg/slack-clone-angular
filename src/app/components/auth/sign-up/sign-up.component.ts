@@ -13,7 +13,7 @@ export class SignUpComponent implements OnInit {
   form!: FormGroup;
   isPasswordVisible: boolean = false;
   visibiltyIcon: string = 'visibility';
-  minLengthPassword: number = 5;
+  minLengthPassword: number = 6;
 
   constructor(
     private authService: AuthService,

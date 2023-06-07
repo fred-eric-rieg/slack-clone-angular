@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/app/shared/services/user.service.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1686157013594,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1686157608164,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +1,21 @@\n import { Injectable } from '@angular/core';\n-import { CollectionReference, DocumentData, Firestore, collection } from '@angular/fire/firestore';\n+import { CollectionReference, DocumentData, Firestore, addDoc, collection } from '@angular/fire/firestore';\n+import { User } from 'src/models/user.class';\n \n @Injectable({\n   providedIn: 'root'\n })\n export class UserService {\n   private userColl: CollectionReference<DocumentData>;\n+  private user!: User;\n \n   constructor(\n     private firestore: Firestore,\n   ) { \n     this.userColl = collection(this.firestore, 'users');\n   }\n \n-  \n+  setNewUser() {\n+    console.log(this.userColl);\n+  }\n }\n"
+                }
+            ],
+            "date": 1686157013594,
+            "name": "Commit-0",
+            "content": "import { Injectable } from '@angular/core';\nimport { CollectionReference, DocumentData, Firestore, collection } from '@angular/fire/firestore';\n\n@Injectable({\n  providedIn: 'root'\n})\nexport class UserService {\n  private userColl: CollectionReference<DocumentData>;\n\n  constructor(\n    private firestore: Firestore,\n  ) { \n    this.userColl = collection(this.firestore, 'users');\n  }\n\n  \n}\n"
+        }
+    ]
+}
