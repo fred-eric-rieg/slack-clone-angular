@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 5,
+            "activePatchIndex": 7,
             "patches": [
                 {
                     "date": 1685864558670,
@@ -28,6 +28,14 @@
                 {
                     "date": 1686163696443,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,9 +52,9 @@\n     })\r\n   }\r\n \r\n   testing() {\r\n-    this.userService.setNewUser(\"test212312\");\r\n+    this.userService.setNewUser(\"test212312\", \"hallo.peter@gmx.net\");\r\n   }\r\n \r\n   guestLogin() {\r\n     localStorage.setItem(this.tokenName, 'guest-login');\r\n"
+                },
+                {
+                    "date": 1686237383115,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -64,8 +64,13 @@\n   signInWithGoogle() {\r\n     this.authService.signInWithGoogle();\r\n   }\r\n \r\n+  /**\r\n+   * This function toggles the visibility of password\r\n+   * in login component and change the eye icon\r\n+   * @param passwordInput get password input element of html\r\n+   */\r\n   togglePwVisibility(passwordInput: HTMLInputElement) {\r\n     this.isPasswordVisible = !this.isPasswordVisible;\r\n     passwordInput.type = this.isPasswordVisible ? 'text' : 'password';\r\n     this.visibiltyIcon = this.isPasswordVisible ? 'visibility_off' : 'visibility';\r\n"
+                },
+                {
+                    "date": 1686237424826,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -51,12 +51,8 @@\n       }\r\n     })\r\n   }\r\n \r\n-  testing() {\r\n-    this.userService.setNewUser(\"test212312\", \"hallo.peter@gmx.net\");\r\n-  }\r\n-\r\n   guestLogin() {\r\n     localStorage.setItem(this.tokenName, 'guest-login');\r\n     this.router.navigate(['dashboard']);\r\n   }\r\n"
                 }
             ],
             "date": 1685864558670,

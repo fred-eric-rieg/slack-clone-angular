@@ -21,14 +21,14 @@ export class SignUpComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router
   ) {
-    
+
   }
 
   ngOnInit(): void {
-      this.form = this.formBuilder.group({
+    this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
-      })
+    })
   }
 
   register() {
@@ -50,6 +50,11 @@ export class SignUpComponent implements OnInit {
     })
   }
 
+  /**
+   * This function toggles the visibility of password
+   * in login component and change the eye icon
+   * @param passwordInput get password input element of html
+   */
   togglePwVisibility(passwordInput: HTMLInputElement) {
     this.isPasswordVisible = !this.isPasswordVisible;
     passwordInput.type = this.isPasswordVisible ? 'text' : 'password';

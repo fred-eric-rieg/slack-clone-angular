@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 23,
+            "activePatchIndex": 24,
             "patches": [
                 {
                     "date": 1686157013594,
@@ -100,6 +100,10 @@
                 {
                     "date": 1686168925588,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,16 +14,8 @@\n   ) {\n     this.userColl = collection(this.firestore, 'users');\n   }\n \n-  setNewUsers(uID: string) {\n-    const docRef = doc(this.userColl);\n-    const userData = docData(docRef);\n-    setDoc(docRef, {\n-      uid: uID,\n-    })\n-  }\n-\n   setNewUser(uID: string, email: string) {\n     this.user.customIdName = uID;\n     this.user.displayName = this.splitMail(email);\n     this.user.email = email;\n@@ -31,9 +23,8 @@\n   }\n \n   splitMail(email: string): string {\n     const atIndex = email.indexOf('@');\n-\n     const firstPart = email.substring(0, atIndex);\n     const dotIndex = firstPart.indexOf('.');\n \n     if (dotIndex === -1) {\n"
+                },
+                {
+                    "date": 1686237215137,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,15 +14,26 @@\n   ) {\n     this.userColl = collection(this.firestore, 'users');\n   }\n \n+  /**\n+   * after signup (with mail/with google) it creates a new user\n+   * in firestore database with uID as doc id\n+   * @param uID id of user in fs authentication\n+   * @param email email to get the name \n+   */\n   setNewUser(uID: string, email: string) {\n     this.user.customIdName = uID;\n     this.user.displayName = this.splitMail(email);\n     this.user.email = email;\n     setDoc(doc(this.userColl, uID), this.user.toJson())\n   }\n \n+  /**\n+   * deletes everything after a dot and @ and return only first name of email\n+   * @param email input as string\n+   * @returns a name as a string\n+   */\n   splitMail(email: string): string {\n     const atIndex = email.indexOf('@');\n     const firstPart = email.substring(0, atIndex);\n     const dotIndex = firstPart.indexOf('.');\n"
                 }
             ],
             "date": 1686157013594,

@@ -25,14 +25,14 @@ export class LoginComponent implements OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService,
   ) {
-    
+
   }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
-      })
+    })
   }
 
   login() {
@@ -52,10 +52,6 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  testing() {
-    this.userService.setNewUser("test212312", "hallo.peter@gmx.net");
-  }
-
   guestLogin() {
     localStorage.setItem(this.tokenName, 'guest-login');
     this.router.navigate(['dashboard']);
@@ -65,6 +61,11 @@ export class LoginComponent implements OnInit {
     this.authService.signInWithGoogle();
   }
 
+  /**
+   * This function toggles the visibility of password
+   * in login component and change the eye icon
+   * @param passwordInput get password input element of html
+   */
   togglePwVisibility(passwordInput: HTMLInputElement) {
     this.isPasswordVisible = !this.isPasswordVisible;
     passwordInput.type = this.isPasswordVisible ? 'text' : 'password';
