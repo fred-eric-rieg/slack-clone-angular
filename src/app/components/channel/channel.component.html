@@ -1,6 +1,6 @@
 <div class="resizable" [style.width.px]="width">
 
-    <div class="vertical-resize-line" (click)="setMovable()"></div>
+    <!--<div class="vertical-resize-line" (click)="setMovable()"></div>-->
 
     <div class="sticky-header">
         Main Channel
@@ -98,7 +98,15 @@
                     <mat-icon>image</mat-icon>
                 </button>
             </div>
-            <input type="text" placeholder="Message to Main Channel">
+
+            <!-- Message input -->
+            <form [formGroup]="form">
+                <mat-form-field>
+                    <input matInput type="text" placeholder="Message to Main Channel" formControlName="message">
+                    <mat-error *ngIf="form.get('message')!.hasError('required')">message is required</mat-error>
+                </mat-form-field>
+            </form>
+
             <div class="row">
                 <button mat-button>
                     <mat-icon>insert_emoticon</mat-icon>
@@ -116,7 +124,7 @@
                     <mat-icon>alternate_email</mat-icon>
                 </button>
                 <div class="position-right">
-                    <button mat-button>
+                    <button mat-button (click)="sendMessage()" [disabled]="!form.valid">
                         <mat-icon>send</mat-icon>
                     </button>
                 </div>

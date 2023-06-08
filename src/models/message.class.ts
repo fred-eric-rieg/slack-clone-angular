@@ -18,4 +18,18 @@ export class Message {
         this.attachedFile = attachedFile;
         this.link = link;
     }
+
+
+    toJSON() {
+        return {
+            messageId: this.messageId,
+            userId: this.userId,
+            userName: this.userName,
+            message: this.message,
+            date: this.date,
+            attachedImage: this.attachedImage,
+            attachedFile: this.attachedFile,
+            link: this.link
+        }
+    }
 }

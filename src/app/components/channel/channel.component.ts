@@ -1,4 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Message } from 'src/models/message.class';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FirestoreService } from 'src/app/shared/services/firestore.service';
 
 
 @Component({
@@ -6,14 +9,25 @@ import { Component, Input } from '@angular/core';
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss']
 })
-export class ChannelComponent {
+export class ChannelComponent implements OnInit {
 
   @Input() positionX!: number;
   movable: boolean = false;
   width = 350;
 
-  constructor() { }
+  form!: FormGroup;
 
+  constructor(
+    private formBuilder: FormBuilder,
+    private firestoreService: FirestoreService
+    ) { }
+
+
+  ngOnInit() {
+    this.form = this.formBuilder.group({
+      message: ['', [Validators.required]]
+    });
+  }
 
   /**
    * Set the movable property to true or false whenever the user clicks on the right vertical channel bar
@@ -41,5 +55,14 @@ export class ChannelComponent {
     } else {
       // Nothing yet
     }
+  }
+
+
+  sendMessage() {
+    console.log('Send message');
+    let message = new Message('', 'guestId', 'guestName', this.form.value, new Date(), null, null, null);
+    console.log(message);
+    this.firestoreService.createMessage(message);
+    this.form.reset();
   }
 }
