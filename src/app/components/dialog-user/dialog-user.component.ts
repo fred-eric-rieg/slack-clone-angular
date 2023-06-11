@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { User } from 'src/models/user.class';
+import { Firestore, collection, doc, addDoc, updateDoc} from '@angular/fire/firestore';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dialog-user',
@@ -7,11 +10,28 @@ import { User } from 'src/models/user.class';
   styleUrls: ['./dialog-user.component.scss']
 })
 export class DialogUserComponent {
+  user = new User();
+  loading = false;
 
-  user: User = new User();
+  user$!: Observable<any>;
+  firestore: Firestore = inject(Firestore);
 
-  longText = `The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog
-  from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was
-  originally bred for hunting.`;
+  constructor(public dialogRef: MatDialogRef<DialogUserComponent>) {}
 
+  async saveUser() {
+    console.log('Current user: ', this.user);
+    this.loading = true;
+    const userCollection = collection(this.firestore, 'users'); // In Firestore wird Sammlung "users" mit JSON-Input erstellt.
+    let result = await addDoc(userCollection, this.user.toJson());
+
+    // Add ID to user.name
+    const docRef = doc(userCollection, result['id']);
+    this.user.customIdName = result['id'];
+    console.log('Custom ID: ', this.user.customIdName);
+    updateDoc(docRef, this.user.toJson());
+
+    // Stop loader and close dialog
+    this.loading = false;
+    this.dialogRef.close();
+  }
 }

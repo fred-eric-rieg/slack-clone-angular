@@ -18,6 +18,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatListModule } from '@angular/material/list';
+import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/auth/login/login.component';
@@ -25,7 +28,10 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { DialogHelpComponent } from './components/dialog-help/dialog-help.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
+import { DialogUserEditComponent } from './components/dialog-user-edit/dialog-user-edit.component';
+
 import { sidenavComponent } from './components/sidenav/sidenav.component';
+import { SidenavProfileComponent } from './components/sidenav-profile/sidenav-profile.component';
 import { DialogAddChannelComponent } from './components/dialog-add-channel/dialog-add-channel.component';
 import { ChannelsComponent } from './components/channels/channels.component';
 import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
@@ -50,7 +56,6 @@ import { AuthService } from './shared/services/auth.service';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,14 +64,17 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
     ToolbarComponent,
     DialogHelpComponent,
     DialogUserComponent,
+    DialogUserEditComponent,
+    DialogUserComponent,
     sidenavComponent,
+    SidenavProfileComponent,
     DialogAddChannelComponent,
     ChannelsComponent,
     DirectMessagesSectionComponent,
     ChannelItemComponent,
     ChannelComponent,
     ForgotPasswordComponent,
-    SignUpComponent
+    SignUpComponent,
   ],
   imports: [
     BrowserModule,
@@ -86,6 +94,9 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
     BrowserAnimationsModule,
     MatSnackBarModule,
     FormsModule,
+    MatListModule,
+    MatSelectModule,
+    MatExpansionModule,
     ReactiveFormsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),

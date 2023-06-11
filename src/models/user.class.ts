@@ -15,7 +15,7 @@ export class User {
     this.displayName = obj ? obj.displayName : '';
     this.profile = obj ? obj.profile : '';
     this.email = obj ? obj.email : '';
-    this.phone = obj ? obj.email : '';
+    this.phone = obj ? obj.phone : '';
     this.title = obj ? obj.title : '';
     this.status = obj ? obj.status : '';
     this.customIdName = obj ? obj.customIdName : '';

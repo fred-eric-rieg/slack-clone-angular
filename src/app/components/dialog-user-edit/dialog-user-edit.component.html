@@ -2,7 +2,7 @@
   <!-- Show progress bar if loading. Input fields and buttons are disabled when loading. -->
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
-  <h1 mat-dialog-title>Add User</h1>
+  <h1 mat-dialog-title>Edit User</h1>
   <div mat-dialog-content>
 
     <div>
@@ -10,14 +10,12 @@
         <mat-label>Full Name</mat-label>
         <input [disabled]="loading" [(ngModel)]="user.fullName" matInput placeholder="Full Name">
         <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-        <!--<mat-hint>Please enter a name</mat-hint>-->
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Display Name</mat-label>
         <input [disabled]="loading" [(ngModel)]="user.displayName" matInput placeholder="Display Name">
         <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-        <!--<mat-hint>Please enter a name</mat-hint>-->
       </mat-form-field>
     </div>
 
@@ -34,12 +32,11 @@
         <mat-label>Phone</mat-label>
         <input [disabled]="loading" [(ngModel)]="user.phone" matInput placeholder="Phone">
         <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-        <!--<mat-hint>Please enter a name</mat-hint>-->
       </mat-form-field>
     </div>
-  </div>
+
   <div mat-dialog-actions>
       <button [disabled]="loading" mat-button (click)="dialogRef.close()">Cancel</button>
-      <button [disabled]="loading" mat-button (click)="saveUser()" cdkFocusInitial>Save</button>
+      <button [disabled]="loading" mat-button (click)="updateUserInfo()" cdkFocusInitial>Save</button>
   </div>
 </div>

@@ -1,0 +1,46 @@
+mat-card {
+  max-width: 400px;
+  background: rgb(47, 17, 112);
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  mat-icon {
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgb(168, 161, 228);
+    }
+  }
+}
+
+mat-card-header {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.user-details {
+  display: flex;
+  gap: 10px;
+  padding-bottom: 20px;
+}
+
+.profile-pic-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    height: 250px;
+    width: 250px;
+  }
+}
