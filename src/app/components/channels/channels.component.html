@@ -1,7 +1,7 @@
 <div class="channel-container">
     <div (click)="toggleDropdown()" class="channel-hl flex-ac">
       <mat-icon
-      [ngClass]="collapsed ? 'rotate90' : ''"
+      [ngClass]="{'rotate90': !collapsed}"
       style="transition: all 125ms ease-in-out"
       fontIcon="arrow_drop_down"
       ></mat-icon>
