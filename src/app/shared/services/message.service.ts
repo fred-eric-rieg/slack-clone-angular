@@ -4,7 +4,7 @@ import { Firestore, addDoc, collection, doc, setDoc } from '@angular/fire/firest
 @Injectable({
   providedIn: 'root'
 })
-export class FirestoreService {
+export class MessageService {
 
   constructor(private firestore: Firestore) { }
 

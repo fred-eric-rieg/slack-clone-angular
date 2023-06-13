@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Message } from 'src/models/message.class';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FirestoreService } from 'src/app/shared/services/firestore.service';
+import { MessageService } from 'src/app/shared/services/message.service';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class ChannelComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private firestoreService: FirestoreService
+    private messageService: MessageService
     ) { }
 
 
@@ -62,7 +62,7 @@ export class ChannelComponent implements OnInit {
     console.log('Send message');
     let message = new Message('', 'guestId', 'guestName', this.form.value, new Date(), null, null, null);
     console.log(message);
-    this.firestoreService.createMessage(message);
+    this.messageService.createMessage(message);
     this.form.reset();
   }
 }
