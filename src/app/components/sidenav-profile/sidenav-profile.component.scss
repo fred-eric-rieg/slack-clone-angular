@@ -1,46 +1,143 @@
-mat-card {
-  max-width: 400px;
-  background: rgb(47, 17, 112);
+* {
+  color: white;
+  user-select: none;
 }
 
-.title-container {
+.d-none {
+  display: none;
+}
+
+.profile {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 15px;
+  font-size: 20px;
 
-  mat-icon {
-    cursor: pointer;
+  img {
+    height: 40px;
+    width: 40px;
+  }
 
-    &:hover {
-      background-color: rgb(168, 161, 228);
+  span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.mat-drawer-side {
+  border-right: 1px solid rgb(87, 87, 87);
+}
+
+.mat-drawer {
+  top: 64px;
+  width: 25%;
+  min-width: 200px;
+  max-width: 300px;
+  background-color: var(--bg-color-side-nav);
+}
+
+.mat-drawer-container {
+  position: unset;
+}
+
+.mat-drawer-content {
+  background-color: rgb(25, 27, 30);
+  overflow: hidden;
+}
+
+.server-name {
+  position: sticky;
+  top: 0;
+  padding: 8px 10px;
+  height: 61px;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgb(87, 87, 87);
+  background-color: var(--bg-color-side-nav);
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 !important;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.nav-scroll-container {
+  height: calc(100% - 61px);
+  overflow-y: auto;
+}
+
+.navigation {
+  div:first-of-type {
+    margin-top: 8px;
+  }
+
+  div:last-of-type {
+    margin-bottom: 8px;
+  }
+}
+
+.nav-hl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 8px;
+  padding: 5px 12px;
+  font-size: 16px;
+
+  cursor: pointer;
+
+  p {
+    margin: 0 !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  @media (hover: hover) {
+    &:hover:not(.activeLink) {
+      border-radius: 5px;
+      background-color: rgb(35, 33, 39);
     }
   }
 }
 
-mat-card-header {
-  display: flex;
-  flex-direction: column;
+.new-msg-btn {
+  height: 35px;
+  width: 35px;
+  margin-left: auto;
+  background-color: white;
+  &:active {
+    transform: scale(0.9);
+    filter: brightness(0.9);
+  }
 }
 
-mat-card-content {
-  display: flex;
-  justify-content: space-between;
+@media screen and (max-width: 620px) {
+  mat-drawer {
+    width: 100% !important;
+    max-width: unset !important;
+    border-right: unset !important;
+  }
 }
 
-.user-details {
-  display: flex;
-  gap: 10px;
-  padding-bottom: 20px;
-}
 
 .profile-pic-container {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 10px;
+  padding-bottom: 20px;
 
   img {
-    height: 250px;
-    width: 250px;
+    height: 200px;
+    width: 200px;
   }
 }

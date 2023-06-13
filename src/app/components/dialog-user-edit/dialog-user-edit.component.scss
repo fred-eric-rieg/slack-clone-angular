@@ -38,3 +38,15 @@
 .mat-mdc-form-field  {
   padding-top: 10px;
 }
+
+.profile-pic-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    height: 250px;
+    width: 250px;
+  }
+}

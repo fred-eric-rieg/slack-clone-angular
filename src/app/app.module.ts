@@ -101,7 +101,7 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
-    provideFirestore(() => getFirestore())
+    provideFirestore(() => getFirestore()),
   ],
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase },

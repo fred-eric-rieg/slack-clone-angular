@@ -1,63 +1,52 @@
-<mat-card class="example-card">
-  <mat-card-header align="start">
-    <mat-card-title>PROFILE</mat-card-title>
-    <div class="profile-pic-container">
-      <img [src]="user.profile || 'assets/img/profile.png'">
+<mat-drawer-container class="example-container d-none">
+  <mat-drawer mode="side" opened>
+    <div class="server-name">
+      <div class="profile">
+        <span>Profile</span>
+        <button
+          class="new-msg-btn"
+          mat-mini-fab
+          (click)="openDialogUserEdit()">
+          <mat-icon [ngStyle]="{ color: 'black' }">edit</mat-icon>
+        </button>
+      </div>
     </div>
-    <mat-card-subtitle class="title-container">
-      PROFILE PIC
-      <button (click)="openDialogUserEdit()" mat-icon-button>
-        <mat-icon>edit</mat-icon>
-      </button>
-    </mat-card-subtitle>
-  </mat-card-header>
-  <!-- Profile - USER NAME -->
-  <mat-card>
-    <mat-card-content>
-      <mat-card-subtitle class="title-container">
-        USER INFO
-      </mat-card-subtitle>
-      <button (click)="openDialogUserEdit()" mat-icon-button>
-        <mat-icon>edit</mat-icon>
-      </button>
-    </mat-card-content>
-    <mat-card-content>
-      <div class="user-details">
-        <mat-icon>verified_user</mat-icon>
-        <mat-card-subtitle>NAME</mat-card-subtitle>
+    <div class="nav-scroll-container">
+      <div class="navigation">
+        <div
+          class="nav-hl flex-ac">
+          <p>Profile pic</p>
+        </div>
+        <div class="profile-pic-container">
+          <img [src]="user.profile || 'assets/img/profile.png'">
+        </div>
+        <div class="nav-hl flex-ac">
+          <p>Contact info</p>
+        </div>
+        <div class="nav-hl flex-ac">
+          <mat-icon font-icon>verified_user</mat-icon>
+          <p>Name</p>
+          <ng-container *ngIf="user.fullName; else noFullName">Email: {{ user.fullName }}</ng-container>
+          <ng-template #noFullName>Add your name</ng-template>
+        </div>
+        <div class="nav-hl flex-ac">
+          <mat-icon font-icon>verified_user</mat-icon>
+          <p>Alias</p>
+          <ng-container *ngIf="user.displayName; else noDisplayName">Email: {{ user.displayName }}</ng-container>
+          <ng-template #noDisplayName>Add a display name</ng-template>
+        </div>
+        <div class="nav-hl flex-ac">
+          <mat-icon font-icon>email</mat-icon>
+          <p>Email</p>
+          <ng-container *ngIf="user.email; else noEmail">Email: {{ user.email }}</ng-container>
+          <ng-template #noEmail>Add your email</ng-template>
+        </div>
+        <div class="nav-hl flex-ac">
+          <mat-icon font-icon>phone</mat-icon>
+          <p>Phone</p>
+          <ng-container *ngIf="user.phone; else noPhone">Email: {{ user.phone }}</ng-container>
+          <ng-template #noPhone>Add a phone number</ng-template>
+        </div>
       </div>
-      <ng-container *ngIf="user.fullName; else noFullName">Email: {{ user.fullName }}</ng-container>
-      <ng-template #noFullName>Add your name</ng-template>
-    </mat-card-content>
-  <!-- Profile - DISPLAY NAME -->
-    <mat-card-content>
-      <div class="user-details">
-        <mat-icon>person</mat-icon>
-        <mat-card-subtitle>ALIAS</mat-card-subtitle>
-      </div>
-      <ng-container *ngIf="user.displayName; else noDisplayName">Email: {{ user.displayName }}</ng-container>
-      <ng-template #noDisplayName>Add a display name</ng-template>
-    </mat-card-content>
-  <!-- Profile - EMAIL -->
-    <mat-card-content>
-      <div class="user-details">
-        <mat-icon>email</mat-icon>
-        <mat-card-subtitle>EMAIL</mat-card-subtitle>
-      </div>
-      <ng-container *ngIf="user.email; else noEmail">Email: {{ user.email }}</ng-container>
-      <ng-template #noEmail>Add your email</ng-template>
-    </mat-card-content>
-  <!-- Profile - PHONE -->
-    <mat-card-content>
-      <div class="user-details">
-        <mat-icon>phone</mat-icon>
-        <mat-card-subtitle>PHONE</mat-card-subtitle>
-      </div>
-      <ng-container *ngIf="user.phone; else noPhone">Email: {{ user.phone }}</ng-container>
-      <ng-template #noPhone>Add a phone number</ng-template>
-    </mat-card-content>  </mat-card>
-  <!-- Profile - ACTION BUTTONS -->
-  <mat-card-actions align="end">
-    <button mat-button mat-dialog-close>CLOSE</button>
-  </mat-card-actions>
-</mat-card>
+    </div>
+  </mat-drawer>

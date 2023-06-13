@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { User } from 'src/models/user.class';
+import { UserService } from 'src/app/shared/services/user.service';
 import { Firestore, collection, doc, updateDoc} from '@angular/fire/firestore';
 
 @Component({
@@ -18,6 +19,9 @@ export class DialogUserEditComponent {
 
   constructor(public dialogRef: MatDialogRef<DialogUserEditComponent>) {}
 
+
+  updateUserInfo(){}
+  /*
   updateUserInfo() {
     this.loading = true;
     const userCollection = collection(this.firestore, 'users');
@@ -30,4 +34,5 @@ export class DialogUserEditComponent {
       }
     );
   }
+  */
 }

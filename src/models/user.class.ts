@@ -1,14 +1,12 @@
 export class User {
-  fullName!: string;
-  displayName!: string;
-  profile!: string;
-  email!: string;
-  phone!: number;
-  title!: string;
-  status!: string; // e.g. "Active", "Inactive", "Away", "Busy"
-  customIdName!: string;
-  // namePronunciation
-  // timeZone
+  fullName?: string;
+  displayName?: string;
+  profile?: string;
+  email?: string;
+  phone?: number;
+  title?: string;
+  status?: string;
+  customIdName?: string;
 
   constructor(obj?: any) {
     this.fullName = obj ? obj.fullName : '';
@@ -34,3 +32,16 @@ export class User {
     }
   }
 }
+
+
+/*
+export interface User {
+  fullName?: string;
+  displayName?: string;
+  profile?: string;
+  email?: string;
+  phone?: number;
+  title?: string;
+  customIdName?: string;
+}
+*/

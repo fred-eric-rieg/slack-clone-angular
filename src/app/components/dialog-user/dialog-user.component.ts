@@ -1,8 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { User } from 'src/models/user.class';
-import { Firestore, collection, doc, addDoc, updateDoc} from '@angular/fire/firestore';
-import { MatDialogRef } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { DialogUserEditComponent } from '../dialog-user-edit/dialog-user-edit.component';
+import { MatDialog } from '@angular/material/dialog';
+
+import { Firestore, collection, doc, docData } from '@angular/fire/firestore';
+import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-dialog-user',
@@ -10,28 +13,36 @@ import { Observable } from 'rxjs';
   styleUrls: ['./dialog-user.component.scss']
 })
 export class DialogUserComponent {
-  user = new User();
-  loading = false;
-
-  user$!: Observable<any>;
+  userId: string = '';
+  user: User = new User();
   firestore: Firestore = inject(Firestore);
 
-  constructor(public dialogRef: MatDialogRef<DialogUserComponent>) {}
+  constructor(private route: ActivatedRoute, private dialog: MatDialog) {
+    this.route.paramMap.subscribe( paramMap => {
+      this.userId = paramMap.get('id') ?? '';
+      console.log('Got Id', this.userId);
+      this.getUser();
+    });
+  }
 
-  async saveUser() {
-    console.log('Current user: ', this.user);
-    this.loading = true;
-    const userCollection = collection(this.firestore, 'users'); // In Firestore wird Sammlung "users" mit JSON-Input erstellt.
-    let result = await addDoc(userCollection, this.user.toJson());
 
-    // Add ID to user.name
-    const docRef = doc(userCollection, result['id']);
-    this.user.customIdName = result['id'];
-    console.log('Custom ID: ', this.user.customIdName);
-    updateDoc(docRef, this.user.toJson());
+  getUser() {
+    const userCollection = collection(this.firestore, 'users');
+    const docRef = doc(userCollection, this.userId);
 
-    // Stop loader and close dialog
-    this.loading = false;
-    this.dialogRef.close();
+    docData(docRef).subscribe((userCollection: any) => {
+      this.user = new User(userCollection);
+      console.log('Retrieved user', this.user);
+    });
+  }
+
+
+  /**
+   * Opens input fields to edit user info.
+   */
+  openDialogUserEdit() {
+    const dialog = this.dialog.open(DialogUserEditComponent);
+    dialog.componentInstance.user = new User (this.user.toJson());
+    dialog.componentInstance.userId = this.userId;
   }
 }
