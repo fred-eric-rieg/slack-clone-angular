@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogHelpComponent } from '../dialog-help/dialog-help.component';
 import { DialogUserComponent } from '../dialog-user/dialog-user.component';
+// Import des AngularFireAuth Service
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Firestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-toolbar',
@@ -12,6 +12,7 @@ import { Firestore } from '@angular/fire/firestore';
 })
 export class ToolbarComponent {
 
+  // In den Konstruktur muss der AngularFireAuth Service injected werden.
   constructor(public dialog: MatDialog, public asService: AngularFireAuth) {}
 
   openDialogHelp() {
