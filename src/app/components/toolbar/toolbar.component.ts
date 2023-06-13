@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogHelpComponent } from '../dialog-help/dialog-help.component';
 import { DialogUserComponent } from '../dialog-user/dialog-user.component';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Firestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-toolbar',
@@ -10,7 +12,7 @@ import { DialogUserComponent } from '../dialog-user/dialog-user.component';
 })
 export class ToolbarComponent {
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, public asService: AngularFireAuth) {}
 
   openDialogHelp() {
     const dialogRef = this.dialog.open(DialogHelpComponent);

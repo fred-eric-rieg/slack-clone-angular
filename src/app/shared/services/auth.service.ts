@@ -49,7 +49,9 @@ export class AuthService {
 
   signInWithGoogle() {
     const auth = getAuth();
-    signInWithPopup(auth, this.provider);
+    signInWithPopup(auth, this.provider).then( ()=> {
+      this.router.navigate(['/dashboard']);
+    });
     this.userService.setNewUser(auth.currentUser?.uid!, auth.currentUser?.email!);
   }
 

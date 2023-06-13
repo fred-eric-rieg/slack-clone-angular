@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Message } from 'src/models/message.class';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'src/app/shared/services/message.service';
+import { User } from 'src/models/user.class';
+import { UserService } from 'src/app/shared/services/user.service';
 
 
 @Component({
@@ -17,9 +19,12 @@ export class ChannelComponent implements OnInit {
 
   form!: FormGroup;
 
+  private user!: User;
+
   constructor(
     private formBuilder: FormBuilder,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private userService: UserService
     ) { }
 
 
@@ -27,6 +32,9 @@ export class ChannelComponent implements OnInit {
     this.form = this.formBuilder.group({
       message: ['', [Validators.required]]
     });
+    this.userService.user = this.user;
+    console.log(this.userService.user);
+
   }
 
   /**
