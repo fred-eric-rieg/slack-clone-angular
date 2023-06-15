@@ -4,6 +4,7 @@ import { GoogleAuthProvider, getAuth, signInWithPopup } from '@angular/fire/auth
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { catchError, from, Observable, throwError } from 'rxjs';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,36 +15,44 @@ export class AuthService {
 
   constructor(
     private auth: AngularFireAuth,
-    private router: Router
+    private userService: UserService,
+    private router: Router,
   ) { }
 
   signIn(email: string, password: string): Observable<any> {
     return from(this.auth.signInWithEmailAndPassword(email, password))
       .pipe(
         catchError((error: FirebaseError) =>
-      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
-    )
+          throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
+      )
   }
 
   signUp(email: string, password: string): Observable<any> {
-    return from(this.auth.createUserWithEmailAndPassword(email, password))
+    return from(
+      this.auth.createUserWithEmailAndPassword(email, password)
+        .then((userCred) => {
+          this.userService.setNewUser(userCred.user?.uid!, email)
+        }))
       .pipe(
         catchError((error: FirebaseError) =>
-      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
-    )
+          throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
+      )
   }
 
   recoverPassword(email: string): Observable<any> {
     return from(this.auth.sendPasswordResetEmail(email))
       .pipe(
         catchError((error: FirebaseError) =>
-      throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
-    )
+          throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
+      )
   }
 
   signInWithGoogle() {
     const auth = getAuth();
-    signInWithPopup(auth, this.provider);
+    signInWithPopup(auth, this.provider).then( ()=> {
+      this.router.navigate(['/dashboard']);
+    });
+    this.userService.setNewUser(auth.currentUser?.uid!, auth.currentUser?.email!);
   }
 
   isLoggedIn() {
@@ -54,7 +63,7 @@ export class AuthService {
     localStorage.removeItem(this.tokenName);
   }
 
-  private translateFirebaseErrorMessage({code, message}: FirebaseError) {
+  private translateFirebaseErrorMessage({ code, message }: FirebaseError) {
     if (code === "auth/user-not-found") {
       return "User not found.";
     }
