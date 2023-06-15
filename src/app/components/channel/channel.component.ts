@@ -3,7 +3,7 @@ import { Message } from 'src/models/message.class';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { User } from 'src/models/user.class';
-import { UserService } from 'src/app/shared/services/user.service';
+import { ChannelService } from 'src/app/shared/services/channel.service';
 
 
 @Component({
@@ -19,22 +19,26 @@ export class ChannelComponent implements OnInit {
 
   form!: FormGroup;
 
-  private user!: User;
+  user!: User;
+  channels!: any;
+  channelId = 'twJAVM7WFrGQvkib9jrQ';
 
   constructor(
     private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private userService: UserService
-    ) { }
+    private channelService: ChannelService
+  ) {
+    
+  }
 
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.form = this.formBuilder.group({
       message: ['', [Validators.required]]
     });
-    this.userService.user = this.user;
-    console.log(this.userService.user);
-
+    this.channelService.channels.subscribe(channels => {
+      this.channels = channels;
+    });
   }
 
   /**
@@ -56,10 +60,10 @@ export class ChannelComponent implements OnInit {
    */
   moveBar() {
     if (this.movable) {
-        this.width = this.positionX - 327;
-        setTimeout( () => {
-          this.moveBar();
-        }, 50);
+      this.width = this.positionX - 327;
+      setTimeout(() => {
+        this.moveBar();
+      }, 50);
     } else {
       // Nothing yet
     }
