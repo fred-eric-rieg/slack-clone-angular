@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogHelpComponent } from '../dialog-help/dialog-help.component';
 import { DialogUserComponent } from '../dialog-user/dialog-user.component';
+import { SidenavService } from 'src/app/shared/services/sidenav.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -9,8 +10,12 @@ import { DialogUserComponent } from '../dialog-user/dialog-user.component';
   styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent {
+  @Output() sidenavOpened = new EventEmitter<void>();
 
-  constructor(public dialog: MatDialog) {}
+  constructor(
+    public dialog: MatDialog,
+    private sidenavService: SidenavService
+  ) {}
 
   openDialogHelp() {
     const dialogRef = this.dialog.open(DialogHelpComponent);
@@ -20,20 +25,7 @@ export class ToolbarComponent {
     });
   }
 
-  openDialogUser() {
-    const dialogRef = this.dialog.open(DialogUserComponent, {restoreFocus: false});
+  openUserProfile() {
+    this.sidenavService.sidenavOpened.emit();
   }
-
-  searchChannel() {
-
-  }
-
-  openSidenavProfile() {
-
-  }
-
-  openSidenavChannel() {
-
-  }
-
 }

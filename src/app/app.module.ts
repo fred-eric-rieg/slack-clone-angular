@@ -31,7 +31,6 @@ import { DialogUserComponent } from './components/dialog-user/dialog-user.compon
 import { DialogUserEditComponent } from './components/dialog-user-edit/dialog-user-edit.component';
 
 import { sidenavComponent } from './components/sidenav/sidenav.component';
-import { SidenavProfileComponent } from './components/sidenav-profile/sidenav-profile.component';
 import { DialogAddChannelComponent } from './components/dialog-add-channel/dialog-add-channel.component';
 import { ChannelsComponent } from './components/channels/channels.component';
 import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
@@ -67,7 +66,6 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
     DialogUserEditComponent,
     DialogUserComponent,
     sidenavComponent,
-    SidenavProfileComponent,
     DialogAddChannelComponent,
     ChannelsComponent,
     DirectMessagesSectionComponent,

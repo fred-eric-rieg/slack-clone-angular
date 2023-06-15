@@ -2,27 +2,29 @@
   <!-- Show progress bar if loading. Input fields and buttons are disabled when loading. -->
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
-  <h1 mat-dialog-title>Edit User</h1>
+  <h1 mat-dialog-title>Edit Profile Info</h1>
   <div mat-dialog-content>
 
+    <div class="profile-pic-container">
+      <img [src]="user.profile || 'assets/img/profile.png'">
+      <button mat-mini-fab>
+        <mat-icon>add_a_photo</mat-icon>
+      </button>
+    </div>
+
     <div>
-      <div class="profile-pic-container">
-        <img [src]="user.profile || 'assets/img/profile.png'">
-        <button mat-mini-fab>
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
-
-      <mat-form-field class="mr-16" appearance="outline">
-        <mat-label>Full Name</mat-label>
-        <input [disabled]="loading" [(ngModel)]="user.fullName" matInput placeholder="Full Name">
-        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Name</mat-label>
+        <input [disabled]="loading" [(ngModel)]="user.fullName" matInput placeholder="Full name">
+        <mat-icon matSuffix>verified_user</mat-icon>
       </mat-form-field>
+    </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Display Name</mat-label>
+    <div>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Alias</mat-label>
         <input [disabled]="loading" [(ngModel)]="user.displayName" matInput placeholder="Display Name">
-        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-icon matSuffix>verified_user</mat-icon>
       </mat-form-field>
     </div>
 
@@ -30,7 +32,7 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>E-Mail</mat-label>
         <input [disabled]="loading" [(ngModel)]="user.email" matInput placeholder="E-Mail">
-        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-icon matSuffix>email</mat-icon>
       </mat-form-field>
     </div>
 
@@ -38,12 +40,12 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Phone</mat-label>
         <input [disabled]="loading" [(ngModel)]="user.phone" matInput placeholder="Phone">
-        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+        <mat-icon matSuffix>phone</mat-icon>
       </mat-form-field>
     </div>
 
   <div mat-dialog-actions>
       <button [disabled]="loading" mat-button (click)="dialogRef.close()">Cancel</button>
-      <button [disabled]="loading" mat-button (click)="updateUserInfo()" cdkFocusInitial>Save</button>
+      <button [disabled]="loading" mat-button (click)="updateUserInfo()" cdkFocusInitial>Save changes</button>
   </div>
 </div>

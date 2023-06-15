@@ -25,9 +25,6 @@
 
   .dialog-container {
     position: relative;
-
-    mat-progress-bar {
-    }
   }
 
   .mat-mdc-form-field  {
@@ -44,9 +41,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 
   img {
     height: 250px;
     width: 250px;
+  }
+
+  button {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
