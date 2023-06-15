@@ -1,0 +1,44 @@
+.full-width {
+  width: 100%;
+}
+
+.dialog-container {
+  position: relative;.mr-16 {
+    margin-right: 16px;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .dialog-container {
+    position: relative;
+  }
+
+  .mat-mdc-form-field  {
+    padding-top: 10px;
+  }
+}
+
+.mat-mdc-form-field  {
+  padding-top: 10px;
+}
+
+.profile-pic-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  img {
+    height: 250px;
+    width: 250px;
+  }
+
+  button {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+  }
+}

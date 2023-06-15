@@ -1,21 +1,19 @@
 export class User {
-  fullName!: string;
-  displayName!: string;
-  profile!: string;
-  email!: string;
-  phone!: number;
-  title!: string;
-  status!: string; // e.g. "Active", "Inactive", "Away", "Busy"
-  customIdName!: string;
-  // namePronunciation
-  // timeZone
+  fullName?: string;
+  displayName?: string;
+  profile?: string;
+  email?: string;
+  phone?: number;
+  title?: string;
+  status?: string;
+  customIdName?: string;
 
   constructor(obj?: any) {
     this.fullName = obj ? obj.fullName : '';
     this.displayName = obj ? obj.displayName : '';
     this.profile = obj ? obj.profile : '';
     this.email = obj ? obj.email : '';
-    this.phone = obj ? obj.email : '';
+    this.phone = obj ? obj.phone : '';
     this.title = obj ? obj.title : '';
     this.status = obj ? obj.status : '';
     this.customIdName = obj ? obj.customIdName : '';
@@ -34,3 +32,16 @@ export class User {
     }
   }
 }
+
+
+/*
+export interface User {
+  fullName?: string;
+  displayName?: string;
+  profile?: string;
+  email?: string;
+  phone?: number;
+  title?: string;
+  customIdName?: string;
+}
+*/

@@ -1,21 +1,50 @@
-<mat-dialog-content>
-  <div class="toolbar-edit-container">
-    <h2>Edit your profile</h2>
-    <button mat-icon-button class="pin-right-upper-corner">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-  </div>
-  <div class="toolbar-edit-content">
-    <div>
-      <div>Full name {{ user.fullName }}</div>
-      <div>Display name {{ user.displayName }}</div>
-      <div>Email {{ user.email }}</div>
-      <div>Phone {{ user.phone }}</div>
+<mat-drawer-container [class.d-none]="isSidenavHidden">
+  <mat-drawer mode="side" opened>
+    <div class="profile-title-container">
+      <div class="profile-title">
+        <span>Profile</span>
+        <button class="close-btn" mat-mini-fab (click)="closeSidenav()">
+          <mat-icon [ngStyle]="{ color: 'black' }">close</mat-icon>
+        </button>
+      </div>
     </div>
-    <img class="profile-pic" src="assets/img/profile.png">
-  </div>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button mat-dialog-close>Save changes</button>
-</mat-dialog-actions>
+    <div class="nav-scroll-container">
+      <div class="navigation">
+        <div class="nav-hl flex-ac space-between">
+          <p class="profile-subtitle">Profile pic</p>
+          <p class="edit-btn" (click)="openDialogUserEdit()">Edit</p>
+        </div>
+        <div class="profile-pic-container">
+          <img [src]="user.profile || 'assets/img/profile.png'">
+        </div>
+        <div class="nav-hl flex-ac space-between">
+          <p class="profile-subtitle">Contact info</p>
+          <p class="edit-btn" (click)="openDialogUserEdit()">Edit</p>
+        </div>
+        <div class="nav-hl flex-ac">
+          <mat-icon font-icon>verified_user</mat-icon>
+          <p>Name:</p>
+          <ng-container *ngIf="user.fullName; else noFullName">Email: {{ user.fullName }}</ng-container>
+          <ng-template #noFullName>Add your name</ng-template>
+        </div>
+        <div class="nav-hl flex-ac">
+          <mat-icon font-icon>verified_user</mat-icon>
+          <p>Alias:</p>
+          <ng-container *ngIf="user.displayName; else noDisplayName">Email: {{ user.displayName }}</ng-container>
+          <ng-template #noDisplayName>Add a display name</ng-template>
+        </div>
+        <div class="nav-hl flex-ac">
+          <mat-icon font-icon>email</mat-icon>
+          <p>Email:</p>
+          <ng-container *ngIf="user.email; else noEmail">Email: {{ user.email }}</ng-container>
+          <ng-template #noEmail>Add your email</ng-template>
+        </div>
+        <div class="nav-hl flex-ac">
+          <mat-icon font-icon>phone</mat-icon>
+          <p>Phone:</p>
+          <ng-container *ngIf="user.phone; else noPhone">Email: {{ user.phone }}</ng-container>
+          <ng-template #noPhone>Add a phone number</ng-template>
+        </div>
+      </div>
+    </div>
+  </mat-drawer>

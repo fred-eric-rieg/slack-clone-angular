@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogHelpComponent } from '../dialog-help/dialog-help.component';
 import { DialogUserComponent } from '../dialog-user/dialog-user.component';
+import { SidenavService } from 'src/app/shared/services/sidenav.service';
 // Import des AngularFireAuth Service
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
@@ -11,8 +12,13 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
   styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent {
+  @Output() sidenavOpened = new EventEmitter<void>();
 
-  // In den Konstruktur muss der AngularFireAuth Service injected werden.
+  constructor(
+    public dialog: MatDialog,
+    private sidenavService: SidenavService
+  ) {}
+
   constructor(public dialog: MatDialog, public asService: AngularFireAuth) {}
 
   openDialogHelp() {
@@ -23,17 +29,7 @@ export class ToolbarComponent {
     });
   }
 
-  openDialogUser() {
-    const dialogRef = this.dialog.open(DialogUserComponent, {restoreFocus: false});
-
-    // Manually restore focus to the menu trigger since the element that
-    // opens the dialog won't be in the DOM any more when the dialog closes.
-
-    // dialogRef.afterClosed().subscribe(() => this.menuTrigger.focus());
+  openUserProfile() {
+    this.sidenavService.sidenavOpened.emit();
   }
-
-  logoutUser() {
-    // tbd
-  }
-
 }

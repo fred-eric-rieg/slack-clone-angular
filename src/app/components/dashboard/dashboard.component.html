@@ -1,6 +1,3 @@
-<!-- Anmerkung: drawer.toggle() wird noch an der richtigen Stelle eingefügt, sobald Side-Nav-Komponente verfügbar ist.-->
-
-
 <mat-drawer-container class="mat-drawer-container" autosize>
   <app-toolbar></app-toolbar>
   <div class="row">
@@ -9,6 +6,6 @@
       <!-- Transferring the positionX of the mouse via Hostlistener on Dashboard -->
       <app-channel [positionX]="positionX"></app-channel>
     </div>
+    <app-dialog-user align="end"></app-dialog-user>
   </div>
-
 </mat-drawer-container>

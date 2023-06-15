@@ -1,30 +1,147 @@
-mat-dialog-content {
-  min-width: 300px;
-
-  .profile-pic {
-    height: 100px;
-    width: 100px;
-  }
+* {
+  color: white;
+  user-select: none;
 }
 
-.toolbar-edit-container {
+.d-none {
+  display: none;
+}
+
+.profile-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 15px;
+  font-size: 20px;
 
-  h2 {
-    margin-bottom: 0;
+  img {
+    height: 30px;
+    width: 30px;
+  }
+
+  span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
-.toolbar-edit-content {
-  display: flex;
-  justify-content: space-between;
-  padding-top: 20px;
-  padding-bottom: 10px;
+.profile-subtitle {
+  font-size: 18px;
 }
 
-mat-dialog-actions {
+.mat-drawer-side {
+  border-left: 1px solid rgb(87, 87, 87);
+}
+
+.mat-drawer {
+  top: 64px;
+  width: 25%;
+  min-width: 200px;
+  max-width: 300px;
+  background-color: var(--bg-color-side-nav);
+}
+
+.mat-drawer-container {
+  position: unset;
+}
+
+.mat-drawer-content {
+  background-color: rgb(25, 27, 30);
+  overflow: hidden;
+}
+
+.profile-title-container {
+  position: sticky;
+  top: 0;
+  padding: 8px 10px;
+  height: 61px;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgb(87, 87, 87);
+  background-color: var(--bg-color-side-nav);
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 !important;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.nav-scroll-container {
+  height: calc(100% - 61px);
+  overflow-y: auto;
+}
+
+.navigation {
+  div:first-of-type {
+    margin-top: 8px;
+  }
+
+  div:last-of-type {
+    margin-bottom: 8px;
+  }
+}
+
+.nav-hl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 8px;
+  padding: 5px 12px;
+  font-size: 16px;
+
+  p {
+    margin: 0 !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+.close-btn {
+  height: 35px;
+  width: 35px;
+  margin-left: auto;
+  background-color: white;
+  &:active {
+    transform: scale(0.9);
+    filter: brightness(0.9);
+  }
+}
+
+@media screen and (max-width: 620px) {
+  mat-drawer {
+    width: 100% !important;
+    max-width: unset !important;
+    border-right: unset !important;
+  }
+}
+
+.profile-pic-container {
+  width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 20px;
+
+  img {
+    height: 200px;
+    width: 200px;
+  }
+}
+
+.edit-btn {
+  color: #2196F3;
+  cursor: pointer;
+}
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
 }

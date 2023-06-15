@@ -55,6 +55,8 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     ToolbarComponent,
     DialogHelpComponent,
     DialogUserComponent,
+    DialogUserEditComponent,
+    DialogUserComponent,
     sidenavComponent,
     DialogAddChannelComponent,
     ChannelsComponent,
@@ -62,7 +64,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     ChannelItemComponent,
     ChannelComponent,
     ForgotPasswordComponent,
-    SignUpComponent
+    SignUpComponent,
   ],
   imports: [
     BrowserModule,
@@ -82,12 +84,15 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     BrowserAnimationsModule,
     MatSnackBarModule,
     FormsModule,
+    MatListModule,
+    MatSelectModule,
+    MatExpansionModule,
     ReactiveFormsModule,
     CdkDrag,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
-    provideFirestore(() => getFirestore())
+    provideFirestore(() => getFirestore()),
   ],
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
