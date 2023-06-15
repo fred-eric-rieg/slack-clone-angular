@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -17,5 +17,15 @@ export class ChannelService {
   loadChannel() {
     const collectionInstance = collection(this.firestore, 'channels');
     this.channels = collectionData(collectionInstance);
+  }
+
+
+  saveMessage(message: any, channel: any) {
+    let updatedChannel = channel;
+    updatedChannel.messages.push(message);
+    console.log("update: ", updatedChannel);
+    const collectionInstance = collection(this.firestore, 'channels');
+    const docRef = doc(collectionInstance, channel.id);
+    setDoc(docRef, updatedChannel);
   }
 }

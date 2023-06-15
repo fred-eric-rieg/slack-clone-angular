@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { User } from 'src/models/user.class';
 import { ChannelService } from 'src/app/shared/services/channel.service';
+import { Timestamp } from '@angular/fire/firestore';
 
 
 @Component({
@@ -72,9 +73,10 @@ export class ChannelComponent implements OnInit {
 
   sendMessage() {
     console.log('Send message');
-    let message = new Message('', 'guestId', 'guestName', this.form.value, new Date(), null, null, null);
+    let now = new Date().getTime() / 1000;
+    let message = { creator: 'Guest_id', firstName: 'Guest', id: `message${this.channels[0].messages.length + 1}`, lastName: '', text: this.form.value.message, timestamp: new Timestamp(now, 0)};
+    this.channelService.saveMessage(message, this.channels[0]);
     console.log(message);
-    this.messageService.createMessage(message);
     this.form.reset();
   }
 }
