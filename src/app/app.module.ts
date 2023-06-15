@@ -18,24 +18,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatListModule } from '@angular/material/list';
-import { MatSelectModule } from '@angular/material/select';
-import { MatExpansionModule } from '@angular/material/expansion';
-
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { LoginComponent } from './components/auth/login/login.component';
-
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { DialogHelpComponent } from './components/dialog-help/dialog-help.component';
-import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
-import { DialogUserEditComponent } from './components/dialog-user-edit/dialog-user-edit.component';
-
-import { sidenavComponent } from './components/sidenav/sidenav.component';
-import { DialogAddChannelComponent } from './components/dialog-add-channel/dialog-add-channel.component';
-import { ChannelsComponent } from './components/channels/channels.component';
-import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
-import { ChannelItemComponent } from './components/channel-item/channel-item.component';
-import { ChannelComponent } from './components/channel/channel.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 /** Firebase */
@@ -47,13 +29,23 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
 /** Components */
-
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { DialogHelpComponent } from './components/dialog-help/dialog-help.component';
+import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
+import { sidenavComponent } from './components/sidenav/sidenav.component';
+import { DialogAddChannelComponent } from './components/dialog-add-channel/dialog-add-channel.component';
+import { ChannelsComponent } from './components/channels/channels.component';
+import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
+import { ChannelItemComponent } from './components/channel-item/channel-item.component';
+import { ChannelComponent } from './components/channel/channel.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { LoginComponent } from './components/auth/login/login.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
+import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 
 /** Services */
 import { AuthService } from './shared/services/auth.service';
-import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
-
+import { CdkDrag } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -96,6 +88,7 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
     MatSelectModule,
     MatExpansionModule,
     ReactiveFormsModule,
+    CdkDrag,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),

@@ -5,6 +5,9 @@
         <button mat-icon-button>
           <mat-icon>swap_horiz</mat-icon>
         </button>
+        <span>Not Slack</span>
+        <!-- So können wir auf den aktuell eingeloggten User zugreifen -->
+        <span style="color:red" *ngIf="asService.authState| async as user" class="login">Logged in as {{ user.email }}</span>
       </div>
       <mat-form-field appearance="outline" class="toolbar-search-container" >
         <mat-label>Search Channel</mat-label>
@@ -20,7 +23,7 @@
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="openUserProfile()">My Profile</button>
-          <button mat-menu-item routerLink="/">Logout</button>
+          <button mat-menu-item (click)="logoutUser(); asService.signOut()" >Logout</button>
         </mat-menu>
       </div>
     </mat-toolbar-row>

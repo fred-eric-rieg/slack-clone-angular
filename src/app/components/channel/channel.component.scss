@@ -54,15 +54,13 @@
 .blue {
     color: #2196F3;
 }
-
-
 /**
 * Chat styles
 **/
 .chat-container {
     box-sizing: border-box;
     position: relative;
-    height: calc(100vh - 500px);
+    height: calc(100vh - 475px);
     
     mat-card {
         background-color: unset;
@@ -79,7 +77,6 @@
         }
     }
 }
-
 
 /**
 * Message styles
@@ -123,13 +120,30 @@
     border: 1px solid #ccc;
 
     input {
-        box-sizing: border-box;
-        width: 100%;
+        font-size: 0.75rem;
+    }
+}
+
+
+.resizable {
+    box-sizing: border-box;
+    resize: horizontal;
+    overflow: auto;
+    min-width: 350px;
+    max-width: 800px;
+    width: 500px;
+
+    .vertical-resize-line {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 5px;
         height: 100%;
-        padding: 1rem;
-        border: none;
-        outline: none;
-        background: transparent;
-        color: #fff;
+        z-index: 2;
+        
+        &:hover {
+            cursor: col-resize;
+            background: #FFF;
+        }
     }
 }

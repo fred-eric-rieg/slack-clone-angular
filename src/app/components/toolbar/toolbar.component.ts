@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogHelpComponent } from '../dialog-help/dialog-help.component';
 import { DialogUserComponent } from '../dialog-user/dialog-user.component';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
+// Import des AngularFireAuth Service
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
   selector: 'app-toolbar',
@@ -16,6 +18,8 @@ export class ToolbarComponent {
     public dialog: MatDialog,
     private sidenavService: SidenavService
   ) {}
+
+  constructor(public dialog: MatDialog, public asService: AngularFireAuth) {}
 
   openDialogHelp() {
     const dialogRef = this.dialog.open(DialogHelpComponent);

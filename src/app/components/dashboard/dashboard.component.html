@@ -3,7 +3,8 @@
   <div class="row">
     <app-sidenav></app-sidenav>
     <div class="router-container">
-      <app-channel></app-channel>
+      <!-- Transferring the positionX of the mouse via Hostlistener on Dashboard -->
+      <app-channel [positionX]="positionX"></app-channel>
     </div>
     <app-dialog-user align="end"></app-dialog-user>
   </div>
