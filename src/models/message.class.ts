@@ -1,35 +1,25 @@
+import { Timestamp } from "@angular/fire/firestore";
+
 export class Message {
     messageId: string = '';
-    userId: string = '';
-    userName: string = '';
-    message: string = '';
-    date: Date = new Date();
-    attachedImage: string | null = null;
-    attachedFile: string | null = null;
-    link: string | null = null;
+    creatorId: string = '';
+    creationDate: Timestamp = Timestamp.now();
+    text: string = '';
 
-    constructor(messageId: string, userId: string, userName: string, message: string, date: Date, attachedImage: string | null, attachedFile: string | null, link: string | null) {
+    constructor(messageId: string, creatorId: string, creationDate: Timestamp, text: string) {
         this.messageId = messageId;
-        this.userId = userId;
-        this.userName = userName;
-        this.message = message;
-        this.date = date;
-        this.attachedImage = attachedImage;
-        this.attachedFile = attachedFile;
-        this.link = link;
+        this.creatorId = creatorId;
+        this.creationDate = creationDate;
+        this.text = text;
     }
 
 
     toJSON() {
         return {
             messageId: this.messageId,
-            userId: this.userId,
-            userName: this.userName,
-            message: this.message,
-            date: this.date,
-            attachedImage: this.attachedImage,
-            attachedFile: this.attachedFile,
-            link: this.link
+            creatorId: this.creatorId,
+            creationDate: this.creationDate,
+            text: this.text
         }
     }
 }

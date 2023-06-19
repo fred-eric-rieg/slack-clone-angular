@@ -1,106 +1,109 @@
-<div *ngFor="let channel of channels">
-    <div *ngIf="channel.id === channelId">
-        <div class="resizable">
-            <!--[style.width.px]="width" das hier kommt zur div mit class=resizable rein-->
+<div *ngIf="activeChannel">
+    <div class="resizable">
+        <!--[style.width.px]="width" das hier kommt zur div mit class=resizable rein-->
 
-            <!--<div class="vertical-resize-line" (click)="setMovable()"></div>-->
+        <!--<div class="vertical-resize-line" (click)="setMovable()"></div>-->
 
-            <div class="sticky-header">
-                {{ channel.title }}
-            </div>
+        <div class="sticky-header">
+            {{ activeChannel.name }}
+        </div>
 
-            <div class="scroll-wrapper">
-                <div class="title-container">
-                    <h1>{{ channel.title }}</h1>
-                    <h2>{{ channel.creator.firstName }} has created this Channel on the {{
-                        channel.creationDate.toDate() }}. This is the start of the {{ channel.title }}
+        <div class="scroll-wrapper">
+            <div class="title-container">
+                <h1>{{ activeChannel.name }}</h1>
+                <div *ngFor="let user of users">
+                    <!-- REFERENZEN ZU USER MUESSEN NOCH ANGEPASST WERDEN-->
+                    <h2 *ngIf=" user.customIdName === creatorID">{{ user.displayName }} has created this Channel on the {{
+                        activeChannel.creationDate.toDate() }}. This is the start of the {{ activeChannel.name }}
                         Channel.</h2>
-
-                    <div class="row">
-                        <div class="center blue">
-                            <mat-icon>edit_square</mat-icon>
-                            Add description
-                        </div>
-
-                        <div class="center blue">
-                            <mat-icon>person_add</mat-icon>
-                            Add people
-                        </div>
-                    </div>
                 </div>
 
-                <div class="chat-container">
-                    <mat-card *ngFor="let message of channel.messages">
-                        <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                            <mat-card-title>{{ message.firstName }}</mat-card-title>{{ getFormattedDate(message.timestamp) }}
-                        </div>
-                        <mat-card-content>{{ message.text }}</mat-card-content>
-                    </mat-card>
+
+                <div class="row">
+                    <div class="center blue">
+                        <mat-icon>edit_square</mat-icon>
+                        Add description
+                    </div>
+
+                    <div class="center blue">
+                        <mat-icon>person_add</mat-icon>
+                        Add people
+                    </div>
                 </div>
             </div>
 
-            <div class="message-container">
-
-                <mat-card class="message-outline">
-                    <div class="row">
-                        <button mat-button>
-                            <mat-icon>format_bold</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>format_italic</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>format_strikethrough</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>link</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>format_list_numbered</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>format_list_bulleted</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>code</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>image</mat-icon>
-                        </button>
+            <div class="chat-container">
+                <mat-card *ngFor="let thread of activeChannel.threads">
+                    <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
+                        <mat-card-title>username</mat-card-title>message date
                     </div>
-
-                    <!-- Message input -->
-                    <form [formGroup]="form">
-                        <mat-form-field>
-                            <input matInput type="text" placeholder="Message to {{ channel.title }} channel" formControlName="message">
-                            <mat-error *ngIf="form.get('message')!.hasError('required')">message is required</mat-error>
-                        </mat-form-field>
-                    </form>
-
-                    <div class="row">
-                        <button mat-button>
-                            <mat-icon>insert_emoticon</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>attach_file</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>mic</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>videocam</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>alternate_email</mat-icon>
-                        </button>
-                        <div class="position-right">
-                            <button mat-button (click)="sendMessage()" [disabled]="!form.valid">
-                                <mat-icon>send</mat-icon>
-                            </button>
-                        </div>
-                    </div>
+                    <mat-card-content>message text</mat-card-content>
                 </mat-card>
             </div>
+        </div>
+
+        <div class="message-container">
+
+            <mat-card class="message-outline">
+                <div class="row">
+                    <button mat-button>
+                        <mat-icon>format_bold</mat-icon>
+                    </button>
+                    <button mat-button>
+                        <mat-icon>format_italic</mat-icon>
+                    </button>
+                    <button mat-button>
+                        <mat-icon>format_strikethrough</mat-icon>
+                    </button>
+                    <button mat-button>
+                        <mat-icon>link</mat-icon>
+                    </button>
+                    <button mat-button>
+                        <mat-icon>format_list_numbered</mat-icon>
+                    </button>
+                    <button mat-button>
+                        <mat-icon>format_list_bulleted</mat-icon>
+                    </button>
+                    <button mat-button>
+                        <mat-icon>code</mat-icon>
+                    </button>
+                    <button mat-button>
+                        <mat-icon>image</mat-icon>
+                    </button>
+                </div>
+
+                <!-- Message input -->
+                <form [formGroup]="form">
+                    <mat-form-field>
+                        <input matInput type="text" placeholder="Message to {{ activeChannel.name }} channel"
+                            formControlName="message">
+                        <mat-error *ngIf="form.get('message')!.hasError('required')">message is required</mat-error>
+                    </mat-form-field>
+                </form>
+
+                <div class="row">
+                    <button mat-button>
+                        <mat-icon>insert_emoticon</mat-icon>
+                    </button>
+                    <button mat-button>
+                        <mat-icon>attach_file</mat-icon>
+                    </button>
+                    <button mat-button>
+                        <mat-icon>mic</mat-icon>
+                    </button>
+                    <button mat-button>
+                        <mat-icon>videocam</mat-icon>
+                    </button>
+                    <button mat-button>
+                        <mat-icon>alternate_email</mat-icon>
+                    </button>
+                    <div class="position-right">
+                        <button mat-button (click)="sendMessage(activeChannelId)" [disabled]="!form.valid">
+                            <mat-icon>send</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </mat-card>
         </div>
     </div>
 </div>

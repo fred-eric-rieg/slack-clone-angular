@@ -1,10 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Message } from 'src/models/message.class';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MessageService } from 'src/app/shared/services/message.service';
-import { User } from 'src/models/user.class';
-import { ChannelService } from 'src/app/shared/services/channel.service';
 import { Timestamp } from '@angular/fire/firestore';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+// Mdels
+import { Message } from 'src/models/message.class';
+import { User } from 'src/models/user.class';
+
+// Services
+import { MessageService } from 'src/app/shared/services/message.service';
+import { ChannelService } from 'src/app/shared/services/channel.service';
+import { ThreadService } from 'src/app/shared/services/thread.service';
+import { UserService } from 'src/app/shared/services/user.service';
 
 
 @Component({
@@ -20,26 +26,30 @@ export class ChannelComponent implements OnInit {
 
   form!: FormGroup;
 
-  user!: User;
   channels!: any;
-  channelId = 'twJAVM7WFrGQvkib9jrQ';
+  users!: any;
+  threads!: any;
+  activeChannelId = 'twJAVM7WFrGQvkib9jrQ';
+  activeChannel!: any;
+  userId = 'guest';
+  creatorID = 'QIpWj6jA1xX2gqFur2vMT0MOFtN2';
 
   constructor(
     private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private channelService: ChannelService
-  ) {
-
-  }
+    private channelService: ChannelService,
+    private threadService: ThreadService,
+    private userService: UserService
+  ) {}
 
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       message: ['', [Validators.required]]
     });
-    this.channelService.channels.subscribe(channels => {
-      this.channels = channels;
-    });
+    this.loadChannels();
+    this.loadUsers();
+    this.loadThreads();
   }
 
 
@@ -87,12 +97,42 @@ export class ChannelComponent implements OnInit {
   }
 
 
-  sendMessage() {
-    console.log('Send message');
+  loadChannels() {
+    this.channelService.channels.subscribe(channels => {
+      this.channels = channels;
+      channels.forEach((channel: any) => {
+        if (channel.channelId === this.activeChannelId) {
+          this.activeChannel = channel;
+        }
+      });
+    });
+  }
+
+
+  loadUsers() {
+    this.userService.users.subscribe(users => {
+      this.users = users;
+    });
+  }
+
+
+  loadThreads() {
+    this.threadService.threads.subscribe(threads => {
+      this.threads = threads;
+      console.log(threads);
+    });
+  }
+
+
+  async sendMessage(channelId: string) {
     let now = new Date().getTime() / 1000;
-    let message = { creator: 'Guest_id', firstName: 'Guest', id: `message${this.channels[0].messages.length + 1}`, lastName: '', text: this.form.value.message, timestamp: new Timestamp(now, 0) };
-    this.channelService.saveMessage(message, this.channels[0]);
-    console.log(message);
+    let message = new Message('', this.userId, new Timestamp(now, 0), this.form.value.message);
+    let messageId = this.messageService.createMessage(message);
+
+    // Create thread and add it to the channel
+    let threadId = this.threadService.createThread(messageId);
+    this.channelService.addThreadToChannel(this.activeChannel, threadId);
+
     this.form.reset();
   }
 }
