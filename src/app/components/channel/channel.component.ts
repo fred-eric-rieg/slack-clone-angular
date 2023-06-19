@@ -29,7 +29,7 @@ export class ChannelComponent implements OnInit {
     private messageService: MessageService,
     private channelService: ChannelService
   ) {
-    
+
   }
 
 
@@ -40,6 +40,22 @@ export class ChannelComponent implements OnInit {
     this.channelService.channels.subscribe(channels => {
       this.channels = channels;
     });
+  }
+
+
+  /**
+   * Formatting a timestamp into a sting with the format: HH:MM AM/PM.
+   * @param timestamp as Timestamp.
+   * @returns a formatted date as string.
+   */
+  getFormattedDate(timestamp: Timestamp) {
+    let date = new Date(timestamp.seconds * 1000);
+    let hours = date.getHours() % 12 || 12;
+    let minutes = date.getMinutes().toLocaleString();
+    if (minutes.length == 1) {
+      minutes = 0 + minutes;
+    }
+    return `${hours}:${minutes} ${date.getHours() >= 12 ? 'PM' : 'AM'}`;
   }
 
   /**
@@ -74,7 +90,7 @@ export class ChannelComponent implements OnInit {
   sendMessage() {
     console.log('Send message');
     let now = new Date().getTime() / 1000;
-    let message = { creator: 'Guest_id', firstName: 'Guest', id: `message${this.channels[0].messages.length + 1}`, lastName: '', text: this.form.value.message, timestamp: new Timestamp(now, 0)};
+    let message = { creator: 'Guest_id', firstName: 'Guest', id: `message${this.channels[0].messages.length + 1}`, lastName: '', text: this.form.value.message, timestamp: new Timestamp(now, 0) };
     this.channelService.saveMessage(message, this.channels[0]);
     console.log(message);
     this.form.reset();

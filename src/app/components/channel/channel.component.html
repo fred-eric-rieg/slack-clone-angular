@@ -32,7 +32,7 @@
                 <div class="chat-container">
                     <mat-card *ngFor="let message of channel.messages">
                         <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                            <mat-card-title>{{ message.firstName }}</mat-card-title>({{ message.timestamp.toDate() }})
+                            <mat-card-title>{{ message.firstName }}</mat-card-title>{{ getFormattedDate(message.timestamp) }}
                         </div>
                         <mat-card-content>{{ message.text }}</mat-card-content>
                     </mat-card>
