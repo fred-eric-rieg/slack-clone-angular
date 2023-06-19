@@ -9,6 +9,7 @@ import { Firestore, collectionData, docData } from '@angular/fire/firestore';
 })
 export class UserService {
   private userCollection: CollectionReference<DocumentData>;
+  private user: User = new User();
 
   constructor(
     private firestore: Firestore) {
@@ -22,7 +23,7 @@ export class UserService {
      */
     getAll() {
       return collectionData(this.userCollection, {
-        idField: 'customIdName',
+        idField: 'userId',
       }) as Observable<User[]>;
     }
 
@@ -34,7 +35,7 @@ export class UserService {
      */
     get(customIdName: string) {
       const userDocRef = doc(this.firestore, 'users', customIdName);
-      return docData(userDocRef, { idField: 'customIdName' });
+      return docData(userDocRef, { idField: 'userId' });
     }
 
 
@@ -54,7 +55,7 @@ export class UserService {
      * @returns an update to the user collection.
      */
     update(user: User) {
-      const userDocRef = doc(this.firestore,`user/${user.customIdName}`);
+      const userDocRef = doc(this.firestore,`user/${user.userId}`);
       return updateDoc(userDocRef, { ...user });
     }
 
@@ -64,8 +65,8 @@ export class UserService {
      * @param id
      * @returns a deletion of the user that matches the id.
      */
-    delete(customIdName: string) {
-      const userDocRef = doc(this.firestore,`user/${customIdName}`);
+    delete(userId: string) {
+      const userDocRef = doc(this.firestore,`user/${userId}`);
       return deleteDoc(userDocRef);
     }
 
@@ -74,13 +75,13 @@ export class UserService {
    * after signup (with mail/with google) it creates a new user
    * in firestore database with uID as doc id
    * @param uID id of user in fs authentication
-   * @param email email to get the name 
+   * @param email email to get the name
    */
   setNewUser(uID: string, email: string) {
-    this.user.customIdName = uID;
+    this.user.userId = uID;
     this.user.displayName = this.splitMail(email);
     this.user.email = email;
-    setDoc(doc(this.userColl, uID), this.user.toJson())
+    setDoc(doc(this.userCollection, uID), this.user.toJson())
   }
 
   /**

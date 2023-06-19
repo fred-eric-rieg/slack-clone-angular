@@ -19,8 +19,6 @@ export class ToolbarComponent {
     private sidenavService: SidenavService
   ) {}
 
-  constructor(public dialog: MatDialog, public asService: AngularFireAuth) {}
-
   openDialogHelp() {
     const dialogRef = this.dialog.open(DialogHelpComponent);
 

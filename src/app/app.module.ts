@@ -19,6 +19,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatListModule } from '@angular/material/list';
+import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 
 /** Firebase */
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
@@ -32,6 +36,7 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { DialogHelpComponent } from './components/dialog-help/dialog-help.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
+import { DialogUserEditComponent } from './components/dialog-user-edit/dialog-user-edit.component';
 import { sidenavComponent } from './components/sidenav/sidenav.component';
 import { DialogAddChannelComponent } from './components/dialog-add-channel/dialog-add-channel.component';
 import { ChannelsComponent } from './components/channels/channels.component';
@@ -47,6 +52,7 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { AuthService } from './shared/services/auth.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,7 +62,6 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     DialogHelpComponent,
     DialogUserComponent,
     DialogUserEditComponent,
-    DialogUserComponent,
     sidenavComponent,
     DialogAddChannelComponent,
     ChannelsComponent,
@@ -96,6 +101,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
   ],
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
+    AuthService,
   ],
   bootstrap: [AppComponent]
 })

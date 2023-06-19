@@ -1,47 +1,38 @@
 export class User {
-  fullName?: string;
-  displayName?: string;
-  profile?: string;
-  email?: string;
-  phone?: number;
-  title?: string;
-  status?: string;
-  customIdName?: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  fullName: string;
+  profilePicture: string;
+  title: string;
+  email: string;
+  phone: string;
+
 
   constructor(obj?: any) {
-    this.fullName = obj ? obj.fullName : '';
-    this.displayName = obj ? obj.displayName : '';
-    this.profile = obj ? obj.profile : '';
-    this.email = obj ? obj.email : '';
-    this.phone = obj ? obj.phone : '';
-    this.title = obj ? obj.title : '';
-    this.status = obj ? obj.status : '';
-    this.customIdName = obj ? obj.customIdName : '';
+    this.userId = obj && obj.userId || '';
+    this.firstName = obj && obj.firstName || '';
+    this.lastName = obj && obj.lastName || '';
+    this.displayName = obj && obj.displayName || '';
+    this.fullName = obj && obj.fullName || '';
+    this.profilePicture = obj && obj.profilePicture || '';
+    this.title = obj && obj.title || '';
+    this.email = obj && obj.email || '';
+    this.phone = obj && obj.phone || '';
   }
 
   public toJson() {
     return {
-      fullName: this.fullName,
+      userId: this.userId,
+      firstName: this.firstName,
+      lastName: this.lastName,
       displayName: this.displayName,
-      profile: this.profile,
+      fullName: this.fullName,
+      profilePicture: this.profilePicture,
+      title: this.title,
       email: this.email,
       phone: this.phone,
-      title: this.title,
-      status: this.status,
-      customIdName: this.customIdName,
     }
   }
 }
-
-
-/*
-export interface User {
-  fullName?: string;
-  displayName?: string;
-  profile?: string;
-  email?: string;
-  phone?: number;
-  title?: string;
-  customIdName?: string;
-}
-*/

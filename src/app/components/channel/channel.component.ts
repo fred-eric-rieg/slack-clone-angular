@@ -19,7 +19,7 @@ export class ChannelComponent implements OnInit {
 
   form!: FormGroup;
 
-  private user!: User;
+  public user!: User;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -32,8 +32,8 @@ export class ChannelComponent implements OnInit {
     this.form = this.formBuilder.group({
       message: ['', [Validators.required]]
     });
-    this.userService.user = this.user;
-    console.log(this.userService.user);
+    //this.userService.user = this.user;
+    //console.log(this.userService.user);
 
   }
 
