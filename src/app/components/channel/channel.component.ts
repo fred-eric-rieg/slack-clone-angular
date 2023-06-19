@@ -124,7 +124,7 @@ export class ChannelComponent implements OnInit {
   }
 
 
-  async sendMessage(channelId: string) {
+  sendMessage(channelId: string) {
     let now = new Date().getTime() / 1000;
     let message = new Message('', this.userId, new Timestamp(now, 0), this.form.value.message);
     let messageId = this.messageService.createMessage(message);
