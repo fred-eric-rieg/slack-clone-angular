@@ -1,36 +1,35 @@
 export class User {
-  fullName!: string;
-  displayName!: string;
-  profile!: string;
-  email!: string;
-  phone!: number;
-  title!: string;
-  status!: string; // e.g. "Active", "Inactive", "Away", "Busy"
-  customIdName!: string;
-  // namePronunciation
-  // timeZone
+  userId: string = '';
+  firstName: string = '';
+  lastName: string = '';
+  displayName: string = '';
+  fullName: string = '';
+  title: string = '';
+  email: string = '';
+  phone: string = '';
+
 
   constructor(obj?: any) {
-    this.fullName = obj ? obj.fullName : '';
-    this.displayName = obj ? obj.displayName : '';
-    this.profile = obj ? obj.profile : '';
-    this.email = obj ? obj.email : '';
-    this.phone = obj ? obj.email : '';
-    this.title = obj ? obj.title : '';
-    this.status = obj ? obj.status : '';
-    this.customIdName = obj ? obj.customIdName : '';
+    this.userId = obj && obj.userId || '';
+    this.firstName = obj && obj.firstName || '';
+    this.lastName = obj && obj.lastName || '';
+    this.displayName = obj && obj.displayName || '';
+    this.fullName = obj && obj.fullName || '';
+    this.title = obj && obj.title || '';
+    this.email = obj && obj.email || '';
+    this.phone = obj && obj.phone || '';
   }
 
   public toJson() {
     return {
-      fullName: this.fullName,
+      userId: this.userId,
+      firstName: this.firstName,
+      lastName: this.lastName,
       displayName: this.displayName,
-      profile: this.profile,
-      email: this.email,
-      phone: this.phone,
+      fullName: this.fullName,
       title: this.title,
-      status: this.status,
-      customIdName: this.customIdName,
+      email: this.email,
+      phone: this.phone
     }
   }
 }
