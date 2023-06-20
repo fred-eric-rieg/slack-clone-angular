@@ -14,12 +14,8 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 export class ToolbarComponent {
   @Output() sidenavOpened = new EventEmitter<void>();
 
-  constructor(
-    public dialog: MatDialog,
-    private sidenavService: SidenavService
-  ) {}
 
-  constructor(public dialog: MatDialog, public asService: AngularFireAuth) {}
+  constructor(public dialog: MatDialog, public asService: AngularFireAuth, private sidenavService: SidenavService) {}
 
   openDialogHelp() {
     const dialogRef = this.dialog.open(DialogHelpComponent);
@@ -31,5 +27,10 @@ export class ToolbarComponent {
 
   openUserProfile() {
     this.sidenavService.sidenavOpened.emit();
+  }
+
+
+  logoutUser() {
+
   }
 }

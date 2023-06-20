@@ -7,6 +7,7 @@ export class User {
   title: string = '';
   email: string = '';
   phone: string = '';
+  profile: string = '';
 
 
   constructor(obj?: any) {
@@ -18,6 +19,7 @@ export class User {
     this.title = obj && obj.title || '';
     this.email = obj && obj.email || '';
     this.phone = obj && obj.phone || '';
+    this.profile = obj && obj.profile || '';
   }
 
   public toJson() {
@@ -29,7 +31,8 @@ export class User {
       fullName: this.fullName,
       title: this.title,
       email: this.email,
-      phone: this.phone
+      phone: this.phone,
+      profile: this.profile
     }
   }
 }
