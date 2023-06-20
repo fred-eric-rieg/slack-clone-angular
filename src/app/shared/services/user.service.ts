@@ -1,18 +1,21 @@
 import { User } from './../../../models/user.class';
 import { Injectable } from '@angular/core';
+import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { CollectionReference, DocumentData, addDoc, setDoc, collection, deleteDoc, doc, updateDoc } from '@firebase/firestore';
-import { Firestore, collectionData, docData } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+
+  user: User = new User();
+  users!: Observable<any>;
   private userCollection: CollectionReference<DocumentData>;
 
   constructor(
     private firestore: Firestore) {
       this.userCollection = collection(this.firestore, 'users');
+      this.getAllUsers();
     }
 
 
@@ -77,10 +80,10 @@ export class UserService {
    * @param email email to get the name 
    */
   setNewUser(uID: string, email: string) {
-    this.user.customIdName = uID;
+    //this.user.userId = uID;
     this.user.displayName = this.splitMail(email);
     this.user.email = email;
-    setDoc(doc(this.userColl, uID), this.user.toJson())
+    //setDoc(doc(this.userColl, uID), this.user.toJson())
   }
 
   /**
@@ -98,5 +101,11 @@ export class UserService {
     } else {
       return firstPart.substring(0, dotIndex);
     }
+  }
+
+
+  getAllUsers() {
+    const userCollection = collection(this.firestore, 'users');
+    this.users = collectionData(userCollection);
   }
 }

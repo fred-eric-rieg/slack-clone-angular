@@ -30,7 +30,7 @@
 .title-container {
     box-sizing: border-box;
     position: relative;
-    height: 200px;
+    height: 240px;
     border-bottom: 1px solid #ccc;
     overflow: hidden;
     padding: 0.5rem;
@@ -60,7 +60,7 @@
 .chat-container {
     box-sizing: border-box;
     position: relative;
-    height: calc(100vh - 475px);
+    height: calc(100vh - 550px);
     
     mat-card {
         background-color: unset;
@@ -124,14 +124,11 @@
     }
 }
 
-
 .resizable {
     box-sizing: border-box;
     resize: horizontal;
     overflow: auto;
-    min-width: 350px;
-    max-width: 800px;
-    width: 500px;
+    width: 800px;
 
     .vertical-resize-line {
         position: absolute;
