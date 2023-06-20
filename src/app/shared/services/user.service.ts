@@ -35,8 +35,8 @@ export class UserService {
      * @param id
      * @returns the user that matches the id.
      */
-    get(customIdName: string) {
-      const userDocRef = doc(this.firestore, 'users', customIdName);
+    get(userId: string) {
+      const userDocRef = doc(this.firestore, 'users', userId);
       return docData(userDocRef, { idField: 'customIdName' });
     }
 
@@ -57,7 +57,7 @@ export class UserService {
      * @returns an update to the user collection.
      */
     update(user: User) {
-      const userDocRef = doc(this.firestore,`user/${user.customIdName}`);
+      const userDocRef = doc(this.firestore,`user/${user.userId}`);
       return updateDoc(userDocRef, { ...user });
     }
 
@@ -67,8 +67,8 @@ export class UserService {
      * @param id
      * @returns a deletion of the user that matches the id.
      */
-    delete(customIdName: string) {
-      const userDocRef = doc(this.firestore,`user/${customIdName}`);
+    delete(userId: string) {
+      const userDocRef = doc(this.firestore,`user/${userId}`);
       return deleteDoc(userDocRef);
     }
 
