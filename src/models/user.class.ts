@@ -20,6 +20,7 @@ export class User {
     this.phone = obj && obj.phone || '';
   }
 
+
   public toJson() {
     return {
       userId: this.userId,

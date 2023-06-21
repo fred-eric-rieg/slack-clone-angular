@@ -48,7 +48,7 @@ export class DialogUserComponent implements OnInit {
     * If no user ID is provided in the route parameters, a default user ID is used.
     */
     this.route.paramMap.subscribe(paramMap => {
-      this.userId = paramMap.get('id') ?? '1EPTd99Hh1YYFjrxLPW0'; // ID vom Login übernehmen??
+      this.userId = paramMap.get('id') ?? '1EPTd99Hh1YYFjrxLPW0'; // Diese Zeile muss geändert werden!! (ID vom Login übernehmen?? Guest mit fixer ID??)
       this.getUser();
     });
 
@@ -87,6 +87,10 @@ export class DialogUserComponent implements OnInit {
     dialog.componentInstance.userId = this.userId;
   }
 
+
+  /**
+   * Closes Sidenav with profile information
+   */
   closeSidenav() {
     this.isSidenavHidden = true;
   }
