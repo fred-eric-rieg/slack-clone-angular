@@ -1,33 +1,52 @@
 <div class="dialog-container">
   <!-- Show progress bar if loading. Input fields and buttons are disabled when loading. -->
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
-
-  <h1 mat-dialog-title>Edit Profile Info</h1>
+  <!-- Input fields to edit profile info -->
+  <h1 mat-dialog-title>Edit Profile</h1>
   <div mat-dialog-content>
-
+    <!-- Edit rofile picture -->
     <div class="profile-pic-container">
-      <img [src]="user.profile || 'assets/img/profile.png'">
+      <img [src]="user.profilePicture || 'assets/img/profile.png'">
       <button mat-mini-fab>
         <mat-icon>add_a_photo</mat-icon>
       </button>
     </div>
-
+    <!-- Edit chat + contact information -->
     <div>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Alias</mat-label>
+        <input [disabled]="loading" [(ngModel)]="user.displayName" matInput placeholder="Alias">
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Title</mat-label>
+        <input [disabled]="loading" [(ngModel)]="user.title" matInput placeholder="Title">
+        <mat-icon matSuffix>work</mat-icon>
+      </mat-form-field>
+    </div>
+    <div>
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Timezone</mat-label>
+          <mat-select [disabled]="loading" [(ngModel)]="user.timezone" matInput placeholder="Timezone">
+            <mat-option value="LA time, -9h">LA, -9h</mat-option>
+            <mat-option value="NewYork, -6h">NewYork, -6h</mat-option>
+            <mat-option value="London, -1h">London, -1h</mat-option>
+            <mat-option value="Berlin, +0h">Berlin, +0h</mat-option>
+            <mat-option value="Hongkong, +6h">Hongkong, +6h</mat-option>
+            <mat-option value="Syney, +8h">Sydney, +8h</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Name</mat-label>
         <input [disabled]="loading" [(ngModel)]="user.fullName" matInput placeholder="Full name">
         <mat-icon matSuffix>verified_user</mat-icon>
       </mat-form-field>
     </div>
-
-    <div>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Alias</mat-label>
-        <input [disabled]="loading" [(ngModel)]="user.displayName" matInput placeholder="Display Name">
-        <mat-icon matSuffix>verified_user</mat-icon>
-      </mat-form-field>
-    </div>
-
     <div>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>E-Mail</mat-label>
@@ -35,7 +54,6 @@
         <mat-icon matSuffix>email</mat-icon>
       </mat-form-field>
     </div>
-
     <div>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Phone</mat-label>
@@ -43,7 +61,7 @@
         <mat-icon matSuffix>phone</mat-icon>
       </mat-form-field>
     </div>
-
+  <!-- Action buttons -->
   <div mat-dialog-actions>
       <button [disabled]="loading" mat-button (click)="dialogRef.close()">Cancel</button>
       <button [disabled]="loading" mat-button (click)="updateUserInfo()" cdkFocusInitial>Save changes</button>

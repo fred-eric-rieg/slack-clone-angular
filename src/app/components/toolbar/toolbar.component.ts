@@ -1,7 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogHelpComponent } from '../dialog-help/dialog-help.component';
-import { DialogUserComponent } from '../dialog-user/dialog-user.component';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
 // Import des AngularFireAuth Service
 import { AngularFireAuth } from '@angular/fire/compat/auth';

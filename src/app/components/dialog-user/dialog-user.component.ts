@@ -1,59 +1,66 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { SidenavService } from './../../shared/services/sidenav.service';
 import { Firestore, collection, collectionData, doc, docData } from '@angular/fire/firestore';
 import { User } from 'src/models/user.class';
 import { DialogUserEditComponent } from '../dialog-user-edit/dialog-user-edit.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-
+import { SidenavService } from './../../shared/services/sidenav.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+// import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
   selector: 'app-dialog-user',
   templateUrl: './dialog-user.component.html',
   styleUrls: ['./dialog-user.component.scss']
 })
-
 export class DialogUserComponent implements OnInit {
-
   users: any;
   userId: string = '';
   user: User = new User();
   isSidenavHidden = false;
 
-  // Import des Firestore Services
+
   constructor(
-    private firestore: Firestore,
-    private sidenavService: SidenavService,
-    private authService: AuthService,
+    public firestore: Firestore,
     private route: ActivatedRoute,
-    private dialog: MatDialog
-    ) { }
+    private dialog: MatDialog,
+    public sidenavService: SidenavService,
+    public authService: AuthService,
+    // public userService: UserService,
+  ) {}
 
 
+  /**
+   * ngOnInit is called, and the 'users' collection is fetched from Firestore.
+   * The collection is converted into an Observable and stored in this.users.
+   * Within the subscription, you can access the data and make a copy if needed.
+   */
   ngOnInit() {
-    // OnInit wird aufgerufen und aus Firestore wird die Collection 'users' abgerufen.
-    // Danach wird die Collection in ein Observable umgewandelt und in this.users gespeichert.
-    // Innerhalb der Subscription kann man auf die Daten zugreifen und diese kopieren.
     const collectionInstance = collection(this.firestore, 'users');
     this.users = collectionData(collectionInstance);
     this.users.subscribe((data: any) => {
-      console.log('Got data', data); // TEST
+      console.log('Got data', data);
     });
     /**
-     * Subscribes to route parameter changes and fetches user data.
-     * User ID is extracted from the route parameters.
-     * Fetches user data based on the retrieved user ID.
-     */
+    * Subscribes to route parameter changes and fetches user data.
+    * User ID is extracted from the route parameters.
+    * Fetches user data based on the retrieved user ID.
+    * If no user ID is provided in the route parameters, a default user ID is used.
+    */
     this.route.paramMap.subscribe(paramMap => {
-      this.userId = paramMap.get('id') ?? '';
+      this.userId = paramMap.get('id') ?? '1EPTd99Hh1YYFjrxLPW0'; // Diese Zeile muss geändert werden!! (ID vom Login übernehmen?? Guest mit fixer ID??)
       this.getUser();
     });
 
+
+    /**
+     * Checks if sidenav with profile info is oppened.
+     */
     this.sidenavService.sidenavOpened.subscribe(() => {
       this.isSidenavHidden = false;
     });
   }
+
 
   /**
    * Retrieves user data from Firestore based on the provided user ID.
@@ -81,6 +88,9 @@ export class DialogUserComponent implements OnInit {
   }
 
 
+  /**
+   * Closes Sidenav with profile information
+   */
   closeSidenav() {
     this.isSidenavHidden = true;
   }

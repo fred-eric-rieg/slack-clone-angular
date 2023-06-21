@@ -100,6 +100,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
   ],
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
+    AuthService,
   ],
   bootstrap: [AppComponent]
 })

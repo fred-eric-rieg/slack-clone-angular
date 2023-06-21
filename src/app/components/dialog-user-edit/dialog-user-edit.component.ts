@@ -4,6 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { User } from 'src/models/user.class';
 import { Firestore, collection, doc, updateDoc} from '@angular/fire/firestore';
 import { AuthService } from 'src/app/shared/services/auth.service';
+// import { UserService } from 'src/app/shared/services/user.service';
 
 
 @Component({
@@ -24,8 +25,9 @@ export class DialogUserEditComponent {
 
   constructor(
     private firestore: Firestore,
-    private authService: AuthService,
-    public dialogRef: MatDialogRef<DialogUserEditComponent>
+    public dialogRef: MatDialogRef<DialogUserEditComponent>,
+    public authService: AuthService,
+    // public userService: UserService,
   ) {}
 
 
