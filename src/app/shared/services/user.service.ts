@@ -1,74 +1,51 @@
 import { User } from './../../../models/user.class';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { CollectionReference, DocumentData, addDoc, setDoc, collection, deleteDoc, doc, updateDoc } from '@firebase/firestore';
-import { Firestore, collectionData, docData } from '@angular/fire/firestore';
+import { setDoc, collection, doc, updateDoc } from '@firebase/firestore';
+import { Firestore, docData, getDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private userCollection: CollectionReference<DocumentData>;
-  private user: User = new User();
+  user: User = new User();
+  userId: string = '';
+  userCollection = collection(this.firestore, 'users');
+  loading: boolean = false;
 
   constructor(
-    private firestore: Firestore) {
-      this.userCollection = collection(this.firestore, 'users');
-    }
+    private firestore: Firestore) {}
 
 
     /**
-     * Gets all user info.
-     * @returns all of the user in the collection.
-     */
-    getAll() {
-      return collectionData(this.userCollection, {
-        idField: 'userId',
-      }) as Observable<User[]>;
-    }
+   * Retrieves user data from Firestore based on the provided user ID.
+   * Subscribes to the document data and maps it to a User object.
+   * 'userCollection' is a firestore collection representing the 'users' collection.
+   * 'docRef' is a document reference representing a specific user document.
+   */
+  getUser() {
+    const userCollection = collection(this.firestore, 'users');
+    const docRef = doc(userCollection, this.userId);
+
+    docData(docRef).subscribe((userCollection: any) => {
+      this.user = new User(userCollection);
+    });
+  }
 
 
-    /**
-     * Gets user info based on id.
-     * @param id
-     * @returns the user that matches the id.
-     */
-    get(customIdName: string) {
-      const userDocRef = doc(this.firestore, 'users', customIdName);
-      return docData(userDocRef, { idField: 'userId' });
-    }
-
-
-    /**
-     * Creates new user.
-     * @param user
-     * @returns a new user to the collection.
-     */
-    create(user: User) {
-      return addDoc(this.userCollection, user);
-    }
-
-
-    /**
-     * Updates user info.
-     * @param user
-     * @returns an update to the user collection.
-     */
-    update(user: User) {
-      const userDocRef = doc(this.firestore,`user/${user.userId}`);
-      return updateDoc(userDocRef, { ...user });
-    }
-
-
-    /**
-     * Deletes selected user.
-     * @param id
-     * @returns a deletion of the user that matches the id.
-     */
-    delete(userId: string) {
-      const userDocRef = doc(this.firestore,`user/${userId}`);
-      return deleteDoc(userDocRef);
-    }
+  /**
+   * Updates user information in Firestore.
+   * Loading indicates whether the update operation is in progress.
+   */
+  updateUserInfo() {
+    this.loading = true;
+    const userCollection = collection(this.firestore, 'users');
+    const docRef = doc(userCollection, this.userId);
+    updateDoc(docRef, this.user.toJson())
+      .then(() => {
+        this.loading = false;
+      }
+    );
+  }
 
 
   /**

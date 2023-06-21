@@ -1,23 +1,21 @@
 export class User {
   userId: string;
-  firstName: string;
-  lastName: string;
-  displayName: string;
   fullName: string;
+  displayName: string;
   profilePicture: string;
   title: string;
+  timezone: string;
   email: string;
   phone: string;
 
 
   constructor(obj?: any) {
     this.userId = obj && obj.userId || '';
-    this.firstName = obj && obj.firstName || '';
-    this.lastName = obj && obj.lastName || '';
-    this.displayName = obj && obj.displayName || '';
     this.fullName = obj && obj.fullName || '';
+    this.displayName = obj && obj.displayName || '';
     this.profilePicture = obj && obj.profilePicture || '';
     this.title = obj && obj.title || '';
+    this.timezone = obj && obj.timezone || '';
     this.email = obj && obj.email || '';
     this.phone = obj && obj.phone || '';
   }
@@ -25,12 +23,11 @@ export class User {
   public toJson() {
     return {
       userId: this.userId,
-      firstName: this.firstName,
-      lastName: this.lastName,
-      displayName: this.displayName,
       fullName: this.fullName,
+      displayName: this.displayName,
       profilePicture: this.profilePicture,
       title: this.title,
+      timezone: this.timezone,
       email: this.email,
       phone: this.phone,
     }

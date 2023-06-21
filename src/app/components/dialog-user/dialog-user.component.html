@@ -1,6 +1,6 @@
 <mat-drawer-container [class.d-none]="isSidenavHidden">
   <mat-drawer mode="side" opened>
-    <div class="profile-title-container">
+    <div class="profile-title-container b-bottom">
       <div class="profile-title">
         <span>Profile</span>
         <button class="close-btn" mat-mini-fab (click)="closeSidenav()">
@@ -11,12 +11,34 @@
     <div class="nav-scroll-container">
       <div class="navigation">
         <div class="nav-hl flex-ac space-between">
-          <p class="profile-subtitle">Profile pic</p>
+          <p class="profile-subtitle">Profile info</p>
           <p class="edit-btn" (click)="openDialogUserEdit()">Edit</p>
         </div>
         <div class="profile-pic-container">
           <img [src]="user.profilePicture || 'assets/img/profile.png'">
         </div>
+        <!-- Chat Info -->
+        <div class="m-bottom b-bottom">
+          <div class="nav-hl flex-ac">
+            <mat-icon font-icon>person</mat-icon>
+            <p>Alias:</p>
+            <ng-container *ngIf="user.displayName; else noDisplayName">{{ user.displayName }}</ng-container>
+            <ng-template #noDisplayName>Add a display name</ng-template>
+          </div>
+          <div class="nav-hl flex-ac">
+            <mat-icon font-icon>work</mat-icon>
+            <p>Title:</p>
+            <ng-container *ngIf="user.title; else noTitle">{{ user.title }}</ng-container>
+            <ng-template #noTitle>Add a title</ng-template>
+          </div>
+          <div class="nav-hl flex-ac">
+            <mat-icon font-icon>language</mat-icon>
+            <p>Timezone:</p>
+            <ng-container *ngIf="user.timezone; else noTimezone">{{ user.timezone }}</ng-container>
+            <ng-template #noTimezone>Add a timezone</ng-template>
+          </div>
+        </div>
+        <!-- Contact Info -->
         <div class="nav-hl flex-ac space-between">
           <p class="profile-subtitle">Contact info</p>
           <p class="edit-btn" (click)="openDialogUserEdit()">Edit</p>
@@ -24,25 +46,19 @@
         <div class="nav-hl flex-ac">
           <mat-icon font-icon>verified_user</mat-icon>
           <p>Name:</p>
-          <ng-container *ngIf="user.fullName; else noFullName">Email: {{ user.fullName }}</ng-container>
+          <ng-container *ngIf="user.fullName; else noFullName">{{ user.fullName }}</ng-container>
           <ng-template #noFullName>Add your name</ng-template>
-        </div>
-        <div class="nav-hl flex-ac">
-          <mat-icon font-icon>verified_user</mat-icon>
-          <p>Alias:</p>
-          <ng-container *ngIf="user.displayName; else noDisplayName">Email: {{ user.displayName }}</ng-container>
-          <ng-template #noDisplayName>Add a display name</ng-template>
         </div>
         <div class="nav-hl flex-ac">
           <mat-icon font-icon>email</mat-icon>
           <p>Email:</p>
-          <ng-container *ngIf="user.email; else noEmail">Email: {{ user.email }}</ng-container>
+          <ng-container *ngIf="user.email; else noEmail">{{ user.email }}</ng-container>
           <ng-template #noEmail>Add your email</ng-template>
         </div>
         <div class="nav-hl flex-ac">
           <mat-icon font-icon>phone</mat-icon>
           <p>Phone:</p>
-          <ng-container *ngIf="user.phone; else noPhone">Email: {{ user.phone }}</ng-container>
+          <ng-container *ngIf="user.phone; else noPhone">{{ user.phone }}</ng-container>
           <ng-template #noPhone>Add a phone number</ng-template>
         </div>
       </div>

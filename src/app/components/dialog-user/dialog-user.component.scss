@@ -56,8 +56,15 @@
   padding: 8px 10px;
   height: 61px;
   box-sizing: border-box;
-  border-bottom: 1px solid rgb(87, 87, 87);
   background-color: var(--bg-color-side-nav);
+}
+
+.b-bottom {
+  border-bottom: 1px solid rgb(87, 87, 87);
+}
+
+.m-bottom {
+  margin-bottom: 10px;
 }
 
 p,
