@@ -4,6 +4,7 @@ import { DialogHelpComponent } from '../dialog-help/dialog-help.component';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
 // Import des AngularFireAuth Service
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-toolbar',
@@ -14,7 +15,7 @@ export class ToolbarComponent {
   @Output() sidenavOpened = new EventEmitter<void>();
 
 
-  constructor(public dialog: MatDialog, public asService: AngularFireAuth, private sidenavService: SidenavService) {}
+  constructor(public dialog: MatDialog, public asService: AngularFireAuth, private sidenavService: SidenavService, private router: Router) {}
 
   openDialogHelp() {
     const dialogRef = this.dialog.open(DialogHelpComponent);
@@ -30,6 +31,7 @@ export class ToolbarComponent {
 
 
   logoutUser() {
-
+    this.asService.signOut();
+    this.router.navigate(['']);
   }
 }
