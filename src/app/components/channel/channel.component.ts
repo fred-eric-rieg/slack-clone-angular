@@ -33,6 +33,7 @@ export class ChannelComponent implements OnInit {
   activeChannel!: any;
   userId = 'guest';
   creatorID = 'QIpWj6jA1xX2gqFur2vMT0MOFtN2';
+  public user!: User;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,6 +52,8 @@ export class ChannelComponent implements OnInit {
     this.loadUsers();
     this.loadThreads();
   }
+    //this.userService.user = this.user;
+    //console.log(this.userService.user);
 
 
   /**

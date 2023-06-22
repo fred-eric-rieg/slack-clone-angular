@@ -20,14 +20,19 @@ export class UserService {
 
 
     /**
-     * Gets all user info.
-     * @returns all of the user in the collection.
-     */
-    getAll() {
-      return collectionData(this.userCollection, {
-        idField: 'customIdName',
-      }) as Observable<User[]>;
-    }
+   * Retrieves user data from Firestore based on the provided user ID.
+   * Subscribes to the document data and maps it to a User object.
+   * 'userCollection' is a firestore collection representing the 'users' collection.
+   * 'docRef' is a document reference representing a specific user document.
+   */
+  getUser() {
+    const userCollection = collection(this.firestore, 'users');
+    const docRef = doc(userCollection, this.user.userId);
+
+    docData(docRef).subscribe((userCollection: any) => {
+      this.user = new User(userCollection);
+    });
+  }
 
 
     /**
@@ -77,7 +82,7 @@ export class UserService {
    * after signup (with mail/with google) it creates a new user
    * in firestore database with uID as doc id
    * @param uID id of user in fs authentication
-   * @param email email to get the name 
+   * @param email email to get the name
    */
   setNewUser(uID: string, email: string) {
     //this.user.userId = uID;

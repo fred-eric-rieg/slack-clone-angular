@@ -23,6 +23,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 
+
 /** Firebase */
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
@@ -51,6 +52,7 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { AuthService } from './shared/services/auth.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,7 +62,6 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     DialogHelpComponent,
     DialogUserComponent,
     DialogUserEditComponent,
-    DialogUserComponent,
     sidenavComponent,
     DialogAddChannelComponent,
     ChannelsComponent,
