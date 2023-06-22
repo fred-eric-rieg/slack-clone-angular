@@ -59,14 +59,14 @@ export class DialogUserComponent implements OnInit {
     this.auth.user.subscribe(user => {
       if (user) {
         this.userId = user.uid;
-        console.log(this.userId)
+        console.log(this.userId);
         this.getUser();
       } else {
         this.userId = '1EPTd99Hh1YYFjrxLPW0';
+        console.log(this.userId);
+        this.getUser();
       }
     });
-
-    //this.getUser();
 
 
     /**
