@@ -122,7 +122,6 @@ export class ChannelComponent implements OnInit {
   loadThreads() {
     this.threadService.threads.subscribe(threads => {
       this.threads = threads;
-      console.log(threads);
     });
   }
 
