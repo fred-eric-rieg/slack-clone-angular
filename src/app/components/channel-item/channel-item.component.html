@@ -1,4 +1,4 @@
-<div class="flex-ac channel">
-    <mat-icon>numbers</mat-icon>
-    <p (click)="openChannel()">Main</p>
+<div *ngFor="let channel of allChannels" class="flex-ac channel">
+  <mat-icon>numbers</mat-icon>
+  <p (click)="openChannel(channel['id'])">{{ channel["name"] }}</p>
 </div>
