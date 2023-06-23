@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { DialogAddChannelComponent } from '../dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Firestore, Timestamp, doc } from '@angular/fire/firestore';
 import { Channel } from 'src/models/channel.class';
-import { addDoc, collection } from '@firebase/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { ChannelService } from 'src/app/shared/services/channel.service';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-channels',
@@ -14,59 +14,47 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 })
 export class ChannelsComponent implements OnInit {
   collapsed = false;
-  channel!: Channel;
+  channel: Channel = new Channel();
+
 
   constructor(
     public dialog: MatDialog,
-    private firestore: Firestore,
-    public router: Router,
+    private router: Router,
     public auth: AngularFireAuth,
+    private channelService: ChannelService
+  ) {}
 
-  ) {
-
-  }
 
   ngOnInit(): void {
-    this.auth.user.subscribe((user) => {
-      this.channel.creatorId = user?.uid as string;
-    })
+    this.auth.user.subscribe(user => {
+      if(user) {
+        this.channel.creatorId = user.uid;
+        this.channel.members = [user.uid];
+      } else {
+        // This is the default user ID for the guest user.
+        this.channel.creatorId = '1EPTd99Hh1YYFjrxLPW0';
+        this.channel.members = ['1EPTd99Hh1YYFjrxLPW0'];
+      }
+    });
   }
+
 
   openDialog() {
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
 
     dialogRef.afterClosed().subscribe(async (dialogData) => {
       if (dialogData && dialogData.name) {
-        this.createChannel(dialogData);
+        this.createChannel(dialogData.name);
       }
     });
   }
 
-  getAllChannels() {
-    const channelColl = collection(this.firestore, 'channels');
-    const channelDoc = doc(channelColl);
 
-
-  }
-
-  createChannel(dialogData?: any) {
-    const channelColl = collection(this.firestore, 'channels');
-    const channelDoc = doc(channelColl);
-
-    this.channel.channelId = channelDoc.id;
-    this.channel.name = dialogData && dialogData.name ? dialogData.name : 'Your Channel Title';
-
-    const channelData = this.channel;
-
-    addDoc(collection(this.firestore, 'channels'), channelData)
-      .then((docRef) => {
-        console.log('Channel created with ID: ', docRef.id);
-      })
-      .catch((error) => {
-        console.error('Error creating channel: ', error);
-      });
-
-
+  createChannel(dialogData: string) {
+    this.channel.name = dialogData;
+    let now = new Date().getTime() / 1000;
+    this.channel.creationDate = new Timestamp(now, 0);
+    this.channelService.createNewChannel(this.channel);
   }
 
 

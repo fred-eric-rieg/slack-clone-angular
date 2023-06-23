@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import { Firestore, Timestamp, collection, collectionData, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Channel } from 'src/models/channel.class';
 
@@ -36,6 +36,21 @@ export class ChannelService {
 
     setDoc(channelDocument, channel).then(() => {
       console.log('Channel updated successfully!');
+    }).catch((error: any) => {
+      console.log(error);
+    }
+    );
+  }
+
+
+  createNewChannel(channel: Channel) {
+    const channelCollection = collection(this.firestore, 'channels');
+    const channelDocument = doc(channelCollection);
+
+    channel.channelId = channelDocument.id;
+
+    setDoc(channelDocument, channel.toJSON()).then(() => {
+      console.log('Channel created successfully!');
     }).catch((error: any) => {
       console.log(error);
     }
