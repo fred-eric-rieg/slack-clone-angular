@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ChannelService } from 'src/app/shared/services/channel.service';
+import { Channel } from 'src/models/channel.class';
 
 @Component({
   selector: 'app-channel-item',
@@ -8,10 +10,19 @@ import { Router } from '@angular/router';
 })
 export class ChannelItemComponent {
 
-  constructor(private route: Router) {}
+  allChannels!: Array<Channel>;
+
+  constructor(private route: Router, private channelService: ChannelService) {}
 
 
-  openChannel() {
+  ngOnInit(): void {
+    this.channelService.channels.subscribe((channels) => {
+      this.allChannels = channels;
+    })
+  }
+
+
+  openChannel(id?: string) {
     
   }
 }
