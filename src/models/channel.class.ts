@@ -10,7 +10,7 @@ export class Channel {
     members: string[] = [];
     threads: string[] = [];
 
-    constructor(obj: any) {
+    constructor(obj?: any) {
         this.channelId = obj && obj.channelId || '';
         this.creationDate = obj && obj.creationDate;
         this.creatorId = obj && obj.creatorId || '';
