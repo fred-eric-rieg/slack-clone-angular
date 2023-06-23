@@ -10,18 +10,18 @@ export class Channel {
     members: string[] = [];
     threads: string[] = [];
 
-    constructor(channelId: string, creationDate: Timestamp, creatorId: string, type: string, description: string, name: string, members: string[], threads: string[]) {
-        this.channelId = channelId;
-        this.creationDate = creationDate;
-        this.creatorId = creatorId;
-        this.type = type;
-        this.description = description;
-        this.name = name;
-        this.members = members;
-        this.threads = threads;        
+    constructor(obj: any) {
+        this.channelId = obj && obj.channelId || '';
+        this.creationDate = obj && obj.creationDate;
+        this.creatorId = obj && obj.creatorId || '';
+        this.type = obj && obj.type || 'public';
+        this.description = obj && obj.description || '';
+        this.name = obj && obj.name || '';
+        this.members = obj && obj.members || [];
+        this.threads = obj && obj.threads || [];
     }
 
-    
+
     toJSON() {
         return {
             channelid: this.channelId,

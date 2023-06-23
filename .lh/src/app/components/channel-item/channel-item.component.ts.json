@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/app/components/channel-item/channel-item.component.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1687529705167,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1687529705167,
+            "name": "Commit-0",
+            "content": "import { Component, OnInit } from '@angular/core';\r\nimport { collection } from '@angular/fire/firestore';\r\nimport { Router } from '@angular/router';\r\nimport { ChannelService } from 'src/app/shared/services/channel.service';\r\nimport { Channel } from 'src/models/channel.class';\r\n\r\n@Component({\r\n  selector: 'app-channel-item',\r\n  templateUrl: './channel-item.component.html',\r\n  styleUrls: ['./channel-item.component.scss']\r\n})\r\nexport class ChannelItemComponent implements OnInit {\r\n  allChannels = [];\r\n\r\n  constructor(\r\n    private route: Router,\r\n    private channelService: ChannelService,\r\n\r\n  ) { }\r\n\r\n  ngOnInit(): void {\r\n    this.channelService.channels.subscribe((channels) => {\r\n      this.allChannels = channels;\r\n    })\r\n  }\r\n\r\n\r\n  openChannel(cId: string) {\r\n    //\r\n  }\r\n}\r\n"
+        }
+    ]
+}

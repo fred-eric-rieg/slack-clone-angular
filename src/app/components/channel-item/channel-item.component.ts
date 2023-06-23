@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { collection } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { Channel } from 'src/models/channel.class';
@@ -8,12 +9,14 @@ import { Channel } from 'src/models/channel.class';
   templateUrl: './channel-item.component.html',
   styleUrls: ['./channel-item.component.scss']
 })
-export class ChannelItemComponent {
+export class ChannelItemComponent implements OnInit {
+  allChannels = [];
 
-  allChannels!: Array<Channel>;
+  constructor(
+    private route: Router,
+    private channelService: ChannelService,
 
-  constructor(private route: Router, private channelService: ChannelService) {}
-
+  ) { }
 
   ngOnInit(): void {
     this.channelService.channels.subscribe((channels) => {
@@ -22,7 +25,7 @@ export class ChannelItemComponent {
   }
 
 
-  openChannel(id?: string) {
-    
+  openChannel(cId: string) {
+    //
   }
 }
