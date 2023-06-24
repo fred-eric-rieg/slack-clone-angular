@@ -4,8 +4,8 @@
     flex-direction: column;
 }
 
-
-mat-toolbar, mat-toolbar-row {
+mat-toolbar,
+mat-toolbar-row {
     min-height: 56px;
     height: 56px;
 }
@@ -15,9 +15,9 @@ mat-toolbar, mat-toolbar-row {
     flex-direction: row;
 }
 
-
 .router-container {
+    width: 100%;
     box-sizing: border-box;
-    padding: 1rem;
+    // padding: 1rem;
     position: relative;
 }

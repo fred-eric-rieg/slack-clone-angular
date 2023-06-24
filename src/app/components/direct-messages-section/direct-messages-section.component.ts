@@ -9,7 +9,7 @@ export class DirectMessagesSectionComponent {
   collapsed: boolean = false;
 
   openDirectMsg() {
-    console.log("test");
+    // TODO
   }
 
   toggleDropdown() {

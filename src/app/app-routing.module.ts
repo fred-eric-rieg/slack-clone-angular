@@ -8,6 +8,7 @@ import { ChannelComponent } from './components/channel/channel.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
+import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
     children: [
       { path: 'channel', component: ChannelComponent },
       { path: 'user/:id', component: DialogUserComponent },
+      { path: 'chat', component: DirectMessageChannelComponent },
     ]
   },
   { path: 'sidenav', component: sidenavComponent },
