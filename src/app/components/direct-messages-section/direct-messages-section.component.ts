@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { CollectionReference, DocumentData } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+import { UserService } from 'src/app/shared/services/user.service';
+
 
 @Component({
   selector: 'app-direct-messages-section',
@@ -7,9 +11,26 @@ import { Component } from '@angular/core';
 })
 export class DirectMessagesSectionComponent {
   collapsed: boolean = false;
+  chatsColl!: CollectionReference;
+  chats$!: Observable<DocumentData[]>;
+  chats: Array<any> = [];
+  currentUserId: any;
 
-  openDirectMsg() {
-    // TODO
+  constructor(
+    private userServive: UserService,
+  ) {
+    this.currentUserId = this.userServive.currentUser;
+    this.getCurrentUserId();
+  }
+
+  /**
+   * Get current logged in user from UserServie
+   */
+  getCurrentUserId() {
+    this.userServive.getCurrentUser()
+      .then((currentUserId) => {
+        this.currentUserId = currentUserId;
+      })
   }
 
   toggleDropdown() {

@@ -22,4 +22,8 @@ export class DirectMessageChannelComponent implements OnInit {
       this.chatId = params['id'];
     })
   }
+
+  sendMessage() {
+
+  }
 }

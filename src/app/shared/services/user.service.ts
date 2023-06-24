@@ -2,29 +2,31 @@ import { User } from './../../../models/user.class';
 import { Injectable } from '@angular/core';
 import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
+  currentUser: any;
   user: User = new User();
   users!: Observable<any>;
   private userCollection: CollectionReference<DocumentData>;
 
   constructor(
     private firestore: Firestore) {
-      this.userCollection = collection(this.firestore, 'users');
-      this.getAllUsers();
-    }
+    this.userCollection = collection(this.firestore, 'users');
+    this.getAllUsers();
+  }
 
 
-    /**
-   * Retrieves user data from Firestore based on the provided user ID.
-   * Subscribes to the document data and maps it to a User object.
-   * 'userCollection' is a firestore collection representing the 'users' collection.
-   * 'docRef' is a document reference representing a specific user document.
-   */
+  /**
+ * Retrieves user data from Firestore based on the provided user ID.
+ * Subscribes to the document data and maps it to a User object.
+ * 'userCollection' is a firestore collection representing the 'users' collection.
+ * 'docRef' is a document reference representing a specific user document.
+ */
   getUser() {
     const userCollection = collection(this.firestore, 'users');
     const docRef = doc(userCollection, this.user.userId);
@@ -35,47 +37,64 @@ export class UserService {
   }
 
 
-    /**
-     * Gets user info based on id.
-     * @param id
-     * @returns the user that matches the id.
-     */
-    get(userId: string) {
-      const userDocRef = doc(this.firestore, 'users', userId);
-      return docData(userDocRef, { idField: 'customIdName' });
-    }
+  /**
+   * Gets user info based on id.
+   * @param id
+   * @returns the user that matches the id.
+   */
+  get(userId: string) {
+    const userDocRef = doc(this.firestore, 'users', userId);
+    return docData(userDocRef, { idField: 'customIdName' });
+  }
 
 
-    /**
-     * Creates new user.
-     * @param user
-     * @returns a new user to the collection.
-     */
-    create(user: User) {
-      return addDoc(this.userCollection, user);
-    }
+  /**
+   * Creates new user.
+   * @param user
+   * @returns a new user to the collection.
+   */
+  create(user: User) {
+    return addDoc(this.userCollection, user);
+  }
 
 
-    /**
-     * Updates user info.
-     * @param user
-     * @returns an update to the user collection.
-     */
-    update(user: User) {
-      const userDocRef = doc(this.firestore,`user/${user.userId}`);
-      return updateDoc(userDocRef, { ...user });
-    }
+  /**
+   * Updates user info.
+   * @param user
+   * @returns an update to the user collection.
+   */
+  update(user: User) {
+    const userDocRef = doc(this.firestore, `user/${user.userId}`);
+    return updateDoc(userDocRef, { ...user });
+  }
 
 
-    /**
-     * Deletes selected user.
-     * @param id
-     * @returns a deletion of the user that matches the id.
-     */
-    delete(userId: string) {
-      const userDocRef = doc(this.firestore,`user/${userId}`);
-      return deleteDoc(userDocRef);
-    }
+  /**
+   * Deletes selected user.
+   * @param id
+   * @returns a deletion of the user that matches the id.
+   */
+  delete(userId: string) {
+    const userDocRef = doc(this.firestore, `user/${userId}`);
+    return deleteDoc(userDocRef);
+  }
+
+  /**
+   * Get current logged in User
+   */
+  getCurrentUser() {
+    const auth = getAuth();
+    return new Promise((resolve, reject) => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.currentUser = user.uid;
+          resolve(this.currentUser);
+        } else {
+          reject(new Error("User is not logged in."))
+        }
+      })
+    })
+  }
 
 
   /**
