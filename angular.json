@@ -8,7 +8,17 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
+        },
+      "architect": {
+        "build": {
+          "options": {
+            "allowedCommonJsDependencies": [
+              "quill"
+            ]
+          }
         }
+      }
+
       },
       "root": "",
       "sourceRoot": "src",

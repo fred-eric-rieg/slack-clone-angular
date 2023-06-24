@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 /** Material Modules */
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -23,12 +23,14 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 
+/** Librarys */
+import { QuillModule } from 'ngx-quill';
 
 /** Firebase */
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
-import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideDatabase,getDatabase } from '@angular/fire/database';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
@@ -47,11 +49,11 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
+import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
 
 /** Services */
 import { AuthService } from './shared/services/auth.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
-import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
 
 
 @NgModule({
@@ -96,6 +98,7 @@ import { DirectMessageChannelComponent } from './components/direct-message-chann
     MatExpansionModule,
     ReactiveFormsModule,
     CdkDrag,
+    QuillModule.forRoot(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
