@@ -51,6 +51,7 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 /** Services */
 import { AuthService } from './shared/services/auth.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
+import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
 
 
 @NgModule({
@@ -69,7 +70,8 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     ChannelItemComponent,
     ChannelComponent,
     ForgotPasswordComponent,
-    SignUpComponent
+    SignUpComponent,
+    DirectMessageChannelComponent
   ],
   imports: [
     BrowserModule,

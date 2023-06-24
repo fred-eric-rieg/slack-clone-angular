@@ -11,12 +11,18 @@ import { DialogUserComponent } from './components/dialog-user/dialog-user.compon
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    children: [
+      { path: 'channel', component: ChannelComponent },
+      { path: 'user/:id', component: DialogUserComponent },
+    ]
+  },
   { path: 'sidenav', component: sidenavComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'sign-up', component: SignUpComponent },
-  { path: 'dashboard/channel', component: ChannelComponent },
-  { path: 'user/:id', component: DialogUserComponent},
+  // { path: 'dashboard/channel', component: ChannelComponent },
 ];
 
 @NgModule({

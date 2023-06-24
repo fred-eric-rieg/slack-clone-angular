@@ -7,7 +7,11 @@ import { Component } from '@angular/core';
 })
 export class DirectMessagesSectionComponent {
   collapsed: boolean = false;
-  
+
+  openDirectMsg() {
+    console.log("test");
+  }
+
   toggleDropdown() {
     this.collapsed = !this.collapsed;
   }

@@ -10,7 +10,6 @@ import { Channel } from 'src/models/channel.class';
 })
 export class ChannelItemComponent {
   allChannels!: Array<Channel>;
-  test: string = '';
   constructor(private route: Router, private channelService: ChannelService) { }
 
 
