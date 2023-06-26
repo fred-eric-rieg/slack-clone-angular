@@ -10,7 +10,12 @@
   </div>
 
   <div *ngIf="!collapsed">
-    <div class="user-direct-msg flex-ac">
+    <div
+      *ngFor="let chat of chats"
+      class="user-direct-msg flex-ac"
+      [routerLink]="['chat']"
+      (click)="getCurrentUserId()"
+    >
       <!-- <img src="" alt="Profilbild"> -->
       <mat-icon>person</mat-icon>
       <p>Max Muster</p>

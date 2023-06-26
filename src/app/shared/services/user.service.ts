@@ -82,7 +82,7 @@ export class UserService {
   /**
    * Get current logged in User
    */
-  getCurrentUser() {
+  async getCurrentUser() {
     const auth = getAuth();
     return new Promise((resolve, reject) => {
       onAuthStateChanged(auth, (user) => {

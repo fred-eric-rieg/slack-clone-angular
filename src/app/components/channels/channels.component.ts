@@ -28,7 +28,7 @@ export class ChannelsComponent implements OnInit {
 
   ngOnInit(): void {
     this.auth.user.subscribe((user) => {
-      this.channel.creatorId = user?.uid as string;
+      // this.channel.creatorId = user?.uid as string;
     })
   }
 
