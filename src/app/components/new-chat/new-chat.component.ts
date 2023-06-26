@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./new-chat.component.scss']
 })
 export class NewChatComponent {
-
+  test = [1, 2, 3, 4];
 }
