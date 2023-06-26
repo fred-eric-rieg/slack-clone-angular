@@ -29,7 +29,7 @@
         </div>
 
         <div *ngIf="!channelsCollapsed" class="channel-dropdown-menu">
-          
+
           <div *ngFor="let channel of allChannels" class="flex-ac channel">
             <mat-icon>numbers</mat-icon>
             <p (click)="openChannel(channel.channelId)">{{ channel.name }}</p>
@@ -63,7 +63,6 @@
             </div>
           </div>
         </div>
-
       </div>
 
     </div>
