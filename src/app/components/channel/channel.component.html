@@ -13,7 +13,7 @@
                 <h1>{{ activeChannel.name }}</h1>
                 <div *ngFor="let user of users">
                     <!-- REFERENZEN ZU USER MUESSEN NOCH ANGEPASST WERDEN-->
-                    <h2 *ngIf=" user.customIdName === creatorID">{{ user.displayName }} has created this Channel on the {{
+                    <h2 *ngIf=" user.userId === activeChannel.creatorId">{{ user.displayName }} has created this Channel on the {{
                         activeChannel.creationDate.toDate() }}. This is the start of the {{ activeChannel.name }}
                         Channel.</h2>
                 </div>

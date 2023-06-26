@@ -11,6 +11,8 @@ import { MessageService } from 'src/app/shared/services/message.service';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { ThreadService } from 'src/app/shared/services/thread.service';
 import { UserService } from 'src/app/shared/services/user.service';
+import { Channel } from 'src/models/channel.class';
+import { Thread } from 'src/models/thread.class';
 
 
 @Component({
@@ -26,34 +28,32 @@ export class ChannelComponent implements OnInit {
 
   form!: FormGroup;
 
-  channels!: any;
-  users!: any;
-  threads!: any;
+  channels!: Channel[];
+  users!: User[];
+  threads!: Thread[];
   activeChannelId = 'twJAVM7WFrGQvkib9jrQ';
-  activeChannel!: any;
+  activeChannel!: Channel;
   userId = 'guest';
-  creatorID = 'QIpWj6jA1xX2gqFur2vMT0MOFtN2';
+  creatorID = 'Rqrrqz1YfpZGRjI8Xm6TER1aS2r1';
   public user!: User;
 
   constructor(
     private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private channelService: ChannelService,
     private threadService: ThreadService,
+    private channelService: ChannelService,
     private userService: UserService
-  ) {}
+  ) { }
 
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       message: ['', [Validators.required]]
     });
-    this.loadChannels();
-    this.loadUsers();
     this.loadThreads();
+    this.loadUsers();
+    this.loadActiveChannel();
   }
-    //this.userService.user = this.user;
-    //console.log(this.userService.user);
 
 
   /**
@@ -100,10 +100,10 @@ export class ChannelComponent implements OnInit {
   }
 
 
-  loadChannels() {
-    this.channelService.channels.subscribe(channels => {
+  loadActiveChannel() {
+    this.channelService.channels.subscribe((channels: Channel[]) => {
       this.channels = channels;
-      channels.forEach((channel: any) => {
+      this.channels.forEach((channel: Channel) => {
         if (channel.channelId === this.activeChannelId) {
           this.activeChannel = channel;
         }
@@ -113,7 +113,7 @@ export class ChannelComponent implements OnInit {
 
 
   loadUsers() {
-    this.userService.users.subscribe(users => {
+    this.userService.users.subscribe((users: User[]) => {
       this.users = users;
     });
   }
