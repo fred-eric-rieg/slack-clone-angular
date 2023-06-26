@@ -3,8 +3,8 @@
     <div class="added-partners">
       <span>Send to: </span>
       <div class="added-box">
-        <div class="partner" *ngFor="let user of test">
-          <span>Max Muster</span>
+        <div class="partner" *ngFor="let user of addedUsers">
+          <span>{{user.displayName}}</span>
           <mat-icon width="5px">close</mat-icon>
         </div>
       </div>
@@ -14,7 +14,7 @@
       <button mat-raised-button color="primary">Create chat</button>
     </div>
   </div>
-  <div class="user" *ngFor="let user of test">
+  <div class="user" *ngFor="let user of allUsers" (click)="addUser(user.userId)">
     <div class="user-box">
       <div class="info-box">
         <div class="profileImg">
@@ -22,11 +22,12 @@
         </div>
         <div class="user-infos">
           <div class="head">
-            <span>Max Muster</span>
+            <span>{{user.displayName}}</span>
+            <span>{{user.fullName}}</span>
           </div>
           <div class="email">
             <div class="email-txt">
-              max.muster@gmail.com
+              {{user.email}}
             </div>
           </div>
         </div>

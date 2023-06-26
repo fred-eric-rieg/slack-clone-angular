@@ -80,7 +80,7 @@ export class UserService {
   }
 
   /**
-   * Get current logged in User
+   * Get current logged in User and return its ID
    */
   async getCurrentUser() {
     const auth = getAuth();
@@ -131,5 +131,9 @@ export class UserService {
   getAllUsers() {
     const userCollection = collection(this.firestore, 'users');
     this.users = collectionData(userCollection);
+  }
+
+  returnAllUsers(){
+    return collectionData(this.userCollection);
   }
 }
