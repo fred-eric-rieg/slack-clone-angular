@@ -61,7 +61,7 @@ export class DialogUserComponent implements OnInit {
         this.userId = user.uid;
         this.getUser();
       } else {
-        this.userId = '1EPTd99Hh1YYFjrxLPW0';
+        this.userId = 'Zta41sUcC7rLGHbpMmn4';
         this.getUser();
       }
     });

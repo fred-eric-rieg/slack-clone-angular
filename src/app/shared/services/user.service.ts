@@ -85,10 +85,11 @@ export class UserService {
    * @param email email to get the name
    */
   setNewUser(uID: string, email: string) {
-    //this.user.userId = uID;
+    console.log("New email: ", email + " New uID: ", uID)
+    this.user.userId = uID;
     this.user.displayName = this.splitMail(email);
     this.user.email = email;
-    //setDoc(doc(this.userColl, uID), this.user.toJson())
+    setDoc(doc(this.userCollection, uID), this.user.toJson())
   }
 
   /**
