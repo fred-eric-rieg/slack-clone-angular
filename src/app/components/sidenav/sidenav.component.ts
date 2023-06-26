@@ -27,18 +27,18 @@ export class sidenavComponent implements OnInit {
     private router: Router,
     public auth: AngularFireAuth,
     private channelService: ChannelService
-  ) {}
+  ) { }
 
 
   ngOnInit(): void {
     this.auth.user.subscribe(user => {
-      if(user) {
+      if (user) {
         this.channel.creatorId = user.uid;
         this.channel.members = [user.uid];
       } else {
         // This is the default user ID for the guest user.
-        this.channel.creatorId = '1EPTd99Hh1YYFjrxLPW0';
-        this.channel.members = ['1EPTd99Hh1YYFjrxLPW0'];
+        this.channel.creatorId = 'Zta41sUcC7rLGHbpMmn4';
+        this.channel.members = ['Zta41sUcC7rLGHbpMmn4'];
       }
     });
     this.channelService.channels.subscribe((channels) => {
@@ -48,13 +48,12 @@ export class sidenavComponent implements OnInit {
 
 
   openDialog() {
-    setTimeout(() => {
-      this.dialog.open(DialogAddChannelComponent);
-    }, 100)
+    this.dialog.open(DialogAddChannelComponent);
 
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
 
     dialogRef.afterClosed().subscribe(async (dialogData) => {
+      console.log(dialogData);
       if (dialogData && dialogData.name) {
         this.createChannel(dialogData.name);
       }
