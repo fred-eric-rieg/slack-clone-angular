@@ -39,9 +39,6 @@ import { DialogUserComponent } from './components/dialog-user/dialog-user.compon
 import { DialogUserEditComponent } from './components/dialog-user-edit/dialog-user-edit.component';
 import { sidenavComponent } from './components/sidenav/sidenav.component';
 import { DialogAddChannelComponent } from './components/dialog-add-channel/dialog-add-channel.component';
-import { ChannelsComponent } from './components/channels/channels.component';
-import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
-import { ChannelItemComponent } from './components/channel-item/channel-item.component';
 import { ChannelComponent } from './components/channel/channel.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/auth/login/login.component';
@@ -64,9 +61,6 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     DialogUserEditComponent,
     sidenavComponent,
     DialogAddChannelComponent,
-    ChannelsComponent,
-    DirectMessagesSectionComponent,
-    ChannelItemComponent,
     ChannelComponent,
     ForgotPasswordComponent,
     SignUpComponent
