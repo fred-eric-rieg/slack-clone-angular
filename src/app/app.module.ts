@@ -54,6 +54,7 @@ import { DirectMessageChannelComponent } from './components/direct-message-chann
 /** Services */
 import { AuthService } from './shared/services/auth.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
+import { NewChatComponent } from './components/new-chat/new-chat.component';
 
 
 @NgModule({
@@ -73,7 +74,8 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     ChannelComponent,
     ForgotPasswordComponent,
     SignUpComponent,
-    DirectMessageChannelComponent
+    DirectMessageChannelComponent,
+    NewChatComponent
   ],
   imports: [
     BrowserModule,

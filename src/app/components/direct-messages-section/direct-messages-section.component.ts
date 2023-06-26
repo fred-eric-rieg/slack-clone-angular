@@ -47,6 +47,10 @@ export class DirectMessagesSectionComponent implements OnInit {
     });
   }
 
+  createNewChat(){
+    
+  }
+
   toggleDropdown() {
     this.collapsed = !this.collapsed;
   }

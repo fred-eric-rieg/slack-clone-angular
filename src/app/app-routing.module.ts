@@ -9,6 +9,7 @@ import { ForgotPasswordComponent } from './components/auth/forgot-password/forgo
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
 import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
+import { NewChatComponent } from './components/new-chat/new-chat.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'channel', component: ChannelComponent },
       { path: 'user/:id', component: DialogUserComponent },
       { path: 'chat', component: DirectMessageChannelComponent },
+      { path: 'create-chat', component: NewChatComponent },
     ]
   },
   { path: 'sidenav', component: sidenavComponent },
