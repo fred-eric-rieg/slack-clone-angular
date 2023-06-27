@@ -44,12 +44,15 @@ a {
       }
       .partner {
         display: flex;
+        gap: 4px;
         align-items: center;
         background-color: #fff3;
         padding: 2px 8px;
         border-radius: 8px;
         mat-icon {
-          font-size: 22px;
+          width: fit-content;
+          height: fit-content;
+          font-size: 12px;
           cursor: pointer;
         }
       }

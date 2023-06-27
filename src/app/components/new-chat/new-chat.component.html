@@ -5,7 +5,7 @@
       <div class="added-box">
         <div class="partner" *ngFor="let user of addedUsers">
           <span>{{user.displayName}}</span>
-          <mat-icon width="5px" (click)="removeUser(user)">close</mat-icon>
+          <mat-icon (click)="removeUser(user)">close</mat-icon>
         </div>
       </div>
     </div>
