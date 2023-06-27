@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { take } from 'rxjs';
+import { ChatService } from 'src/app/shared/services/chat.service';
 import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class NewChatComponent {
 
   constructor(
     private userService: UserService,
+    private chatService: ChatService,
   ){
     this.getAllUsers();
   }
@@ -51,6 +53,22 @@ export class NewChatComponent {
       )))
   }
 
+  createNewChat(users: any){
+    console.log(users);
+    const chatId = this.generateRandomId();
+    this.chatService.updateUserChatData(chatId);
+    this.chatService.setChatData(chatId, users);
+  }
 
-  // ENDE
+
+  
+  generateRandomId() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let randomId = '';
+    for (let i = 0; i < 20; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomId += characters.charAt(randomIndex);
+    }
+    return randomId;
+  }
 }

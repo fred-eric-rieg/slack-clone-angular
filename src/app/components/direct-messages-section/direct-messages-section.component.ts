@@ -24,10 +24,10 @@ export class DirectMessagesSectionComponent implements OnInit {
     this.currentUserId = this.userServive.currentUser;
     // this.getCurrentUserChats();
   }
-  
+
   async ngOnInit(): Promise<void> {
     await this.getCurrentUserId();
-    await this.getCurrentUserChats(); 
+    await this.getCurrentUserChats();
   }
 
   /**
@@ -40,19 +40,23 @@ export class DirectMessagesSectionComponent implements OnInit {
       })
   }
 
-  async getCurrentUserChats(){
-    await this.chatService.getUserChatData(this.currentUserId)
-    .then((chatIds: any) => {
-      this.chats = chatIds;
+  getUserChatData() {
+    this.chatService.returnUserChatData(this.currentUserId)
+    .subscribe(data => {
+      console.log(data);
+
     });
   }
 
-  createNewChat(){
-    
+  async getCurrentUserChats() {
+    await this.chatService.getUserChatData(this.currentUserId)
+      .then((chatIds: any) => {
+        this.chats = chatIds;
+      });
   }
 
   toggleDropdown() {
     this.collapsed = !this.collapsed;
   }
-  
+
 }

@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { CollectionReference, DocumentData, DocumentReference, Firestore, doc, docData, docSnapshots, setDoc, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, DocumentReference, Firestore, Timestamp, arrayUnion, collectionData, doc, docData, docSnapshots, setDoc, updateDoc } from '@angular/fire/firestore';
 import { collection } from '@firebase/firestore';
 import { UserService } from './user.service';
 import { Chat } from 'src/models/chat.class';
@@ -38,14 +38,44 @@ export class ChatService implements OnInit {
     })
   }
 
-  /** Set a database for current User with all chats that this user have */
-  setUserChatData(chatIds: Array<string>) {
+  returnUserChatData(customUserId: string){
+    const docRef = doc(this.userChatCollection, customUserId);
+    return docData(docRef);
+  }
+
+  /** After a new chat was created this function updates
+   * and push chatIds into the document of current user
+   */
+  updateUserChatData(chatId: string) {
     this.userService.getCurrentUser().then((userId) => {
       this.currentUserId = userId;
-      setDoc(doc(this.userChatCollection, this.currentUserId),
+      updateDoc(doc(this.userChatCollection, this.currentUserId),
         {
-          chatIds: chatIds
+          chatIds: arrayUnion(chatId)
         })
     });
+  }
+
+  /** Set new Doc in 'chats' Collection with all
+   * added members and current server time
+   * @param chatId generated chatId as string
+   * @param users selected users as Object
+   */
+  setChatData(chatId: string, users: any){
+    const docRef = doc(this.chatCollection, chatId);
+    setDoc(docRef, {
+      chatId: chatId,
+      creationDate: Timestamp.now(),
+      members: arrayUnion(...this.extractMembers(users)),
+      threads: []
+    })
+  }
+
+  extractMembers(users: any){
+    let members: any = [];
+    users.forEach((user: any) => {
+      members.push(user.userId)
+    });
+    return members;
   }
 }

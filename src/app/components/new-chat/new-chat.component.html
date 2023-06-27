@@ -11,7 +11,7 @@
     </div>
     <div class="toolbox">
       <input type="text" placeholder="search your chat partners">
-      <button mat-raised-button color="primary">Create chat</button>
+      <button mat-raised-button color="primary" (click)="createNewChat(addedUsers)">Create chat</button>
     </div>
   </div>
   <div class="user" *ngFor="let user of allUsers" (click)="addUser(user.userId)">
