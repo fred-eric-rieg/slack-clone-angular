@@ -96,6 +96,10 @@ export class UserService {
     })
   }
 
+  getUserData(userId: string) {
+    const docRef = doc(this.userCollection, userId);
+    return docData(docRef);
+  }
 
   /**
    * after signup (with mail/with google) it creates a new user

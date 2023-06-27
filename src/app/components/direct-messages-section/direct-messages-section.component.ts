@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CollectionReference, DocumentData } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { UserService } from 'src/app/shared/services/user.service';
+import { Chat } from 'src/models/chat.class';
 
 
 @Component({
@@ -12,47 +13,80 @@ import { UserService } from 'src/app/shared/services/user.service';
 })
 export class DirectMessagesSectionComponent implements OnInit {
   collapsed: boolean = false;
-  chatsColl!: CollectionReference;
-  chats$!: Observable<DocumentData[]>;
-  chats: Array<string> = [];
+  chatIds: Array<string> = [];
   currentUserId: any;
+  allChats: any[] = [];
+
+  creationDate: any = [];
+  memberIds: any = [];
+  memberNames: any = [];
+  threads: any = [];
+
 
   constructor(
-    private userServive: UserService,
+    private userService: UserService,
     public chatService: ChatService,
   ) {
-    this.currentUserId = this.userServive.currentUser;
+    this.currentUserId = this.userService.currentUser;
     // this.getCurrentUserChats();
   }
 
   async ngOnInit(): Promise<void> {
     await this.getCurrentUserId();
-    await this.getCurrentUserChats();
+    this.getCurrentUserChats();
+    this.setNameFirstUser();
   }
 
   /**
    * Get current logged in user id from UserServie
    */
   async getCurrentUserId() {
-    await this.userServive.getCurrentUser()
+    await this.userService.getCurrentUser()
       .then((currentUserId) => {
         this.currentUserId = currentUserId;
       })
   }
 
-  getUserChatData() {
-    this.chatService.returnUserChatData(this.currentUserId)
-    .subscribe(data => {
-      console.log(data);
+  getCurrentUserChats() {
+    this.chatService.returnCurrentUserChats(this.currentUserId)
+      .subscribe(snap => {
+        this.chatIds = snap.get('chatIds');
+        this.getChatDataById(this.chatIds);
 
-    });
+      })
   }
 
-  async getCurrentUserChats() {
-    await this.chatService.getUserChatData(this.currentUserId)
-      .then((chatIds: any) => {
-        this.chats = chatIds;
-      });
+  getChatDataById(chatIds: Array<string>) {
+    chatIds.forEach(chatId => {
+      const data = this.chatService.returnChatData(chatId);
+      data
+      .pipe(take(1))
+      .subscribe(chat => {
+        this.creationDate.push(chat['creationDate']);
+        this.memberIds.push(chat['members']);
+        this.threads.push(chat['threads']);
+      })
+    })
+  }
+
+  setNameFirstUser(){
+    setTimeout(() => {
+      this.memberIds.forEach((user: any) => {
+        this.userService.getUserData(user[0])
+          .pipe(take(1))
+          .subscribe((user) => {
+            this.memberNames.push(user['displayName']);
+          })
+      })
+    }, 600)
+      
+  }
+
+  test(){
+    this.userService.getUserData(this.currentUserId)
+        .subscribe(name => {
+          // console.log(name);
+        })
   }
 
   toggleDropdown() {

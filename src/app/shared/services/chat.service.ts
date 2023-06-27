@@ -28,18 +28,15 @@ export class ChatService implements OnInit {
     
   }
 
-  async getUserChatData(userId: string){
-    return new Promise((resolve) => {
-      docSnapshots(doc(this.userChatCollection, userId))
-        .subscribe(snap => {
-          const chatIds = snap.get('chatIds');
-          resolve(chatIds);
-        })
-    })
+  returnCurrentUserChats(userId: string){
+    	const docRef = doc(this.userChatCollection, userId);
+      return docSnapshots(docRef);
   }
 
-  returnUserChatData(customUserId: string){
-    const docRef = doc(this.userChatCollection, customUserId);
+
+  // NICHT IN BENUTZUNG
+  returnChatData(chatId: string){
+    const docRef = doc(this.chatCollection, chatId);
     return docData(docRef);
   }
 

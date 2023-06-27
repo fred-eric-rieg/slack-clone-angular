@@ -11,15 +11,14 @@
 
   <div *ngIf="!collapsed">
     <div
-      *ngFor="let chat of chats"
+      *ngFor="let chat of chatIds; let i = index"
       class="user-direct-msg flex-ac"
       [routerLink]="['chat']"
-      (click)="getCurrentUserId()"
     >
       <!-- <img src="" alt="Profilbild"> -->
       <mat-icon>person</mat-icon>
-      <p>Max Muster</p>
-      <div class="extra-members">+3</div>
+      <p>{{memberNames[i]}}</p>
+      <div class="extra-members">+{{memberIds[i].length-1}}</div>
     </div>
     <div>
       <div class="channelitem channel flex-ac" [routerLink]="'create-chat'">
