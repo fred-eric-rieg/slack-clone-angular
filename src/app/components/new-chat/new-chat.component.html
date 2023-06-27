@@ -5,12 +5,12 @@
       <div class="added-box">
         <div class="partner" *ngFor="let user of addedUsers">
           <span>{{user.displayName}}</span>
-          <mat-icon width="5px">close</mat-icon>
+          <mat-icon width="5px" (click)="removeUser(user)">close</mat-icon>
         </div>
       </div>
     </div>
     <div class="toolbox">
-      <input type="text" placeholder="search your chat partners">
+      <input type="text" placeholder="search for a chat partner">
       <button mat-raised-button color="primary" (click)="createNewChat(addedUsers)">Create chat</button>
     </div>
   </div>

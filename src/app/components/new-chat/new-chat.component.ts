@@ -11,8 +11,6 @@ import { UserService } from 'src/app/shared/services/user.service';
 export class NewChatComponent {
   allUsers: Array<any> = [];
   addedUsers: Array<any> = [];
-  addedUsersId: Array<any> = [];
-  userNames: Array<string> = [];
 
   constructor(
     private userService: UserService,
@@ -53,15 +51,24 @@ export class NewChatComponent {
       )))
   }
 
+  /**
+   * create a new chat with all added users
+   * @param users added Users as Object
+   */
   createNewChat(users: any){
-    console.log(users);
     const chatId = this.generateRandomId();
     this.chatService.updateUserChatData(chatId);
     this.chatService.setChatData(chatId, users);
   }
 
+  removeUser(user: any){
+    console.log(user);
+  }
 
   
+  /** Generate a random ID with 20 chars
+   * @returns string
+   */
   generateRandomId() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let randomId = '';

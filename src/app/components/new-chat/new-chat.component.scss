@@ -10,10 +10,10 @@ a {
 .header {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   height: 146px;
   gap: 8px;
-  padding: 8px 16px;
+  padding: 16px 16px;
   font-size: 20px;
   border-bottom: 1px solid rgb(87, 87, 87);
   .toolbox {
