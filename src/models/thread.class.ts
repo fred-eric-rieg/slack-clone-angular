@@ -11,7 +11,7 @@ export class Thread {
 
     public toJSON() {
         return {
-            threadid: this.threadId,
+            threadId: this.threadId,
             messages: this.messages
         };
     }
