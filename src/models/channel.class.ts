@@ -24,7 +24,7 @@ export class Channel {
 
     toJSON() {
         return {
-            channelid: this.channelId,
+            channelId: this.channelId,
             creationdate: this.creationDate,
             creatorid: this.creatorId,
             type: this.type,
