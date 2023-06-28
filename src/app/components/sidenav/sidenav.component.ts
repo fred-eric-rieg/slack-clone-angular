@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DialogAddChannelComponent } from '../dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Channel } from 'src/models/channel.class';
@@ -20,7 +20,7 @@ export class sidenavComponent implements OnInit {
   channel: Channel = new Channel();
   allChannels!: Array<Channel>;
 
-  test: string = '';
+  @Output() channelSelected: EventEmitter<Channel> = new EventEmitter<Channel>();
 
   constructor(
     public dialog: MatDialog,
@@ -79,7 +79,7 @@ export class sidenavComponent implements OnInit {
   }
 
 
-  openChannel(id?: string) {
-
+  openChannel(channel?: Channel) {
+    this.channelSelected.emit(channel || undefined);
   }
 }
