@@ -39,7 +39,9 @@
                             <div *ngFor="let message of messages">
                                 <mat-card *ngIf="thread.messages[0] === message.messageId">
                                     <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                                        <mat-card-title>{{ message.creatorId }}</mat-card-title>{{
+                                        <mat-card-title>
+                                            {{ getUserName(message.creatorId) }}
+                                        </mat-card-title>{{
                                         message.creationDate.toDate().toTimeString().trim().slice(0, 5) }} Uhr
                                     </div>
                                     <mat-card-content>{{ message.text }}</mat-card-content>

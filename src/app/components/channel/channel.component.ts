@@ -13,6 +13,7 @@ import { ThreadService } from 'src/app/shared/services/thread.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { Channel } from 'src/models/channel.class';
 import { Thread } from 'src/models/thread.class';
+import { getAuth } from '@angular/fire/auth';
 
 
 @Component({
@@ -30,15 +31,13 @@ export class ChannelComponent implements OnInit {
   messages!: Message[];
 
   @Input() activeChannel!: Channel;
-  userId = 'guest';
-  creatorID = 'Rqrrqz1YfpZGRjI8Xm6TER1aS2r1';
 
   constructor(
     private formBuilder: FormBuilder,
     private messageService: MessageService,
     private threadService: ThreadService,
     private channelService: ChannelService,
-    private userService: UserService
+    private userService: UserService,
   ) { }
 
 
@@ -102,9 +101,38 @@ export class ChannelComponent implements OnInit {
   }
 
 
+  /**
+   * Finds the user displayName by the user id.
+   * @param userId as string.
+   * @returns a string with the user displayName.
+   */
+  getUserName(userId: string) {
+    for (let i = 0; i < this.users.length; i++) {
+      if (this.users[i].userId === userId) {
+        return this.users[i].displayName;
+      }
+    }
+    return 'Unknown';
+  }
+
+
+  /**
+   * Returns either the logged user or a default user id.
+   * @returns the logged user id.
+   */
+  loggedUser() {
+    const auth = getAuth();
+    if (auth.currentUser) {
+      return auth.currentUser.uid;
+    } else {
+      return 'Zta41sUcC7rLGHbpMmn4';
+    }
+  }
+
+
   sendMessage() {
     let now = new Date().getTime() / 1000;
-    let message = new Message('', this.userId, new Timestamp(now, 0), this.form.value.message);
+    let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.form.value.message);
     let messageId = this.messageService.createMessage(message);
 
     // Create thread and add it to the channel
