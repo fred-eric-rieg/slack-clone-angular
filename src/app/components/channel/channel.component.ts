@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -22,20 +22,18 @@ import { Thread } from 'src/models/thread.class';
 })
 export class ChannelComponent implements OnInit {
 
-  @Input() positionX!: number;
-  movable: boolean = false;
-  width = 350;
 
   form!: FormGroup;
 
   channels!: Channel[];
   users!: User[];
   threads!: Thread[];
+  messages!: Message[];
+
   activeChannelId = 'twJAVM7WFrGQvkib9jrQ';
   activeChannel!: Channel;
   userId = 'guest';
   creatorID = 'Rqrrqz1YfpZGRjI8Xm6TER1aS2r1';
-  public user!: User;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -52,6 +50,7 @@ export class ChannelComponent implements OnInit {
     });
     this.loadThreads();
     this.loadUsers();
+    this.loadMessages();
     this.loadActiveChannel();
   }
 
@@ -69,34 +68,6 @@ export class ChannelComponent implements OnInit {
       minutes = 0 + minutes;
     }
     return `${hours}:${minutes} ${date.getHours() >= 12 ? 'PM' : 'AM'}`;
-  }
-
-  /**
-   * Set the movable property to true or false whenever the user clicks on the right vertical channel bar
-   * for resizing the channel.
-   */
-  setMovable() {
-    console.log(this.width)
-    if (this.movable) {
-      this.movable = false;
-    } else {
-      this.movable = true;
-    }
-    this.moveBar();
-  }
-
-  /**
-   * Move the channel bar to the right or left depending on the mouse position on the dashboard.
-   */
-  moveBar() {
-    if (this.movable) {
-      this.width = this.positionX - 327;
-      setTimeout(() => {
-        this.moveBar();
-      }, 50);
-    } else {
-      // Nothing yet
-    }
   }
 
 
@@ -126,7 +97,14 @@ export class ChannelComponent implements OnInit {
   }
 
 
-  sendMessage(channelId: string) {
+  loadMessages() {
+    this.messageService.messages.subscribe((messages: Message[]) => {
+      this.messages = messages;
+    });
+  }
+
+
+  sendMessage() {
     let now = new Date().getTime() / 1000;
     let message = new Message('', this.userId, new Timestamp(now, 0), this.form.value.message);
     let messageId = this.messageService.createMessage(message);
