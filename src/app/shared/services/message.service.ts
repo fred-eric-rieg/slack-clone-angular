@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, doc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, setDoc, updateDoc, collectionData } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { Message } from 'src/models/message.class';
 
 @Injectable({
@@ -7,8 +8,17 @@ import { Message } from 'src/models/message.class';
 })
 export class MessageService {
 
-  constructor(private firestore: Firestore) { }
+  messages!: Observable<any>;
 
+  constructor(private firestore: Firestore) {
+    this.loadMessages();
+  }
+
+
+  loadMessages() {
+    const messageCollection = collection(this.firestore, 'messages');
+    this.messages = collectionData(messageCollection);
+  }
 
   /**
    * Takes in a message object and creates a new message in the database and sets the messageId to the document id.
