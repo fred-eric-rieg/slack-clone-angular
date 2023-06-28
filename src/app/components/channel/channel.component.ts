@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -22,7 +22,6 @@ import { Thread } from 'src/models/thread.class';
 })
 export class ChannelComponent implements OnInit {
 
-
   form!: FormGroup;
 
   channels!: Channel[];
@@ -30,8 +29,7 @@ export class ChannelComponent implements OnInit {
   threads!: Thread[];
   messages!: Message[];
 
-  activeChannelId = 'twJAVM7WFrGQvkib9jrQ';
-  activeChannel!: Channel;
+  @Input() activeChannel!: Channel;
   userId = 'guest';
   creatorID = 'Rqrrqz1YfpZGRjI8Xm6TER1aS2r1';
 
@@ -75,7 +73,7 @@ export class ChannelComponent implements OnInit {
     this.channelService.channels.subscribe((channels: Channel[]) => {
       this.channels = channels;
       this.channels.forEach((channel: Channel) => {
-        if (channel.channelId === this.activeChannelId) {
+        if (channel.channelId === this.activeChannel.channelId) {
           this.activeChannel = channel;
         }
       });
