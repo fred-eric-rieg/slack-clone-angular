@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { SidenavService } from './../../shared/services/sidenav.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
+//import { AngularFireStorage } from '@angular/fire/storage';
 // import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
@@ -18,6 +19,7 @@ export class DialogUserComponent implements OnInit {
   userId: string = '';
   user: User = new User();
   isSidenavHidden = false;
+  imgUrl: string = ''; // TEST
 
 
   constructor(
@@ -26,6 +28,7 @@ export class DialogUserComponent implements OnInit {
     private dialog: MatDialog,
     public sidenavService: SidenavService,
     public authService: AuthService,
+    //private storage: AngularFireStorage
     // public userService: UserService,
   ) {}
 
@@ -76,6 +79,38 @@ export class DialogUserComponent implements OnInit {
       this.user = new User(userCollection);
     });
   }
+
+
+  uploadImage(): void {
+    /*
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+
+    input.onchange = async (event) => {
+      const file = (event.target as HTMLInputElement).files[0];
+      const filePath = `user-profile-images/${this.userId}.jpg`;
+      const fileRef = this.storage.ref(filePath);
+      const uploadTask = this.storage.upload(filePath, file);
+
+      uploadTask.percentageChanges().subscribe(percent => {
+        console.log('upload progress:', percent);
+      });
+
+      try {
+        const snapshot = await uploadTask.toPromise();
+        const url = await snapshot.ref.getDownloadURL();
+        this.imgUrl = url;
+        await this.userCollection.update({ profileImageUrl: url });
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+    };
+
+    input.click();
+    */
+  }
+
 
 
   /**

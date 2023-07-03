@@ -14,6 +14,16 @@
           <p class="profile-subtitle">Profile info</p>
           <p class="edit-btn" (click)="openDialogUserEdit()">Edit</p>
         </div>
+        <!-- TEST Upload Files -->
+        <div class="container" style="width:600px">
+          <div class="my-3">
+            <app-upload-form></app-upload-form>
+          </div>
+          <div class="my-2">
+            <app-upload-list></app-upload-list>
+          </div>
+        </div>
+        <!-- TEST Upload Files ENDE -->
         <div class="profile-pic-container">
           <img [src]="user.profilePicture || 'assets/img/profile.png'">
         </div>

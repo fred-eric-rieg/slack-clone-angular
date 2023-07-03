@@ -31,6 +31,10 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideDatabase,getDatabase } from '@angular/fire/database';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+/** Firebase storage */
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+
 
 /** Components */
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
@@ -52,6 +56,11 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { AuthService } from './shared/services/auth.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 
+/** Components for File Storage */
+import { UploadFormComponent } from './components/upload-form/upload-form.component';
+import { UploadListComponent } from './components/upload-list/upload-list.component';
+import { UploadDetailsComponent } from './components/upload-details/upload-details.component';
+
 
 @NgModule({
   declarations: [
@@ -70,6 +79,9 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     ChannelComponent,
     ForgotPasswordComponent,
     SignUpComponent,
+    UploadFormComponent,
+    UploadListComponent,
+    UploadDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -98,6 +110,8 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
     provideFirestore(() => getFirestore()),
+    AngularFireDatabaseModule,
+    AngularFireStorageModule,
   ],
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
