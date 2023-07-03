@@ -43,6 +43,8 @@ export class sidenavComponent implements OnInit {
     });
     this.channelService.channels.subscribe((channels) => {
       this.allChannels = channels;
+      // Stets den ersten Channel als aktiven Channel übertragen.
+      this.channelSelected.emit(this.allChannels[0]);
     })
   }
 
