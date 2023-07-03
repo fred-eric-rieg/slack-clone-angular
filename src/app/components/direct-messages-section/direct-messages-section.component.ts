@@ -79,7 +79,6 @@ export class DirectMessagesSectionComponent implements OnInit {
           })
       })
     }, 600)
-      
   }
 
   test(){

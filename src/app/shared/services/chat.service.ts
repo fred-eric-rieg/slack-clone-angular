@@ -34,7 +34,7 @@ export class ChatService implements OnInit {
   }
 
 
-  // NICHT IN BENUTZUNG
+  /** returns fs document data for a specific chat id */
   returnChatData(chatId: string){
     const docRef = doc(this.chatCollection, chatId);
     return docData(docRef);

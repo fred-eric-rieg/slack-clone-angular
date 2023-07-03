@@ -13,7 +13,7 @@
     <div
       *ngFor="let chat of chatIds; let i = index"
       class="user-direct-msg flex-ac"
-      [routerLink]="['chat']"
+      [routerLink]="['chat/' + chat]"
     >
       <!-- <img src="" alt="Profilbild"> -->
       <mat-icon>person</mat-icon>
