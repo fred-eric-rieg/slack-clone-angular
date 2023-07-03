@@ -48,12 +48,9 @@ export class sidenavComponent implements OnInit {
 
 
   openDialog() {
-    this.dialog.open(DialogAddChannelComponent);
-
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
 
     dialogRef.afterClosed().subscribe(async (dialogData) => {
-      console.log(dialogData);
       if (dialogData && dialogData.name) {
         this.createChannel(dialogData.name);
       }
