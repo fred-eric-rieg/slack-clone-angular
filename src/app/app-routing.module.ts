@@ -8,9 +8,21 @@ import { ChannelComponent } from './components/channel/channel.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
+import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
+import { NewChatComponent } from './components/new-chat/new-chat.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    children: [
+      { path: 'channel', component: ChannelComponent },
+      { path: 'user/:id', component: DialogUserComponent },
+      { path: 'chat/:id', component: DirectMessageChannelComponent },
+      { path: 'create-chat', component: NewChatComponent },
+    ]
+  },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'sidenav', component: sidenavComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },

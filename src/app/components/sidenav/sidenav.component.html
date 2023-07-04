@@ -42,28 +42,7 @@
         </div>
       </div>
 
-      <!-- Direct Messages -->
-      <div class="user-direct-msg-container">
-        <div (click)="toggleMessagesDropdown()" class="direct-msg-hl flex-ac">
-          <mat-icon [ngClass]="messagesCollapsed ? 'rotate90' : ''" style="transition: all 125ms ease-in-out"
-            fontIcon="arrow_drop_down">
-          </mat-icon>
-          <span>Direct Messages</span>
-        </div>
-
-        <div *ngIf="!messagesCollapsed">
-          <div class="user-direct-msg flex-ac">
-            <img src="/../../assets/img/profile.png" alt="profile picture">
-            <p>Max Muster</p>
-          </div>
-          <div>
-            <div class="channelitem channel flex-ac">
-              <mat-icon class="add-item" fontIcon="add"></mat-icon>
-              <p>Create new chat</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <app-direct-messages-section></app-direct-messages-section>
 
     </div>
   </mat-drawer>

@@ -24,7 +24,7 @@ export class NewChatComponent {
    * push whole Object to 'allUsers'
    */
   getAllUsers(){
-    this.userService.returnAllUsers().subscribe(data => {
+    this.userService.users.subscribe(data => {
       this.allUsers = data;
     });
   }
