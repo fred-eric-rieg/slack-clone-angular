@@ -1,8 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-// Mdels
+import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill/public-api';
+import 'quill-emoji/dist/quill-emoji.js';
+
+// Models
 import { Message } from 'src/models/message.class';
 import { User } from 'src/models/user.class';
 
@@ -24,7 +26,32 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class ChannelComponent implements OnInit, OnDestroy {
 
-  form!: FormGroup;
+  collectedContent!: any;
+
+  config = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['code-block'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['emoji'],
+      ['link'],
+      ['image'],
+    ],
+    'emoji-toolbar': true,
+    'emoji-textarea': false,
+    'emoji-shortname': true,
+    keyboard: {
+      bindings: {
+        short_enter: {
+          key: 13,
+          shortKey: true,
+          handler: () => {
+            this.sendMessage();
+          },
+        },
+      },
+    },
+  };
 
   channels!: Channel[];
   users!: User[];
@@ -32,11 +59,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
   messages!: Message[];
 
   @Input() activeChannel!: Channel;
+  @Input() placeholder = 'Type your message here...';
 
   private destroy$ = new Subject();
 
   constructor(
-    private formBuilder: FormBuilder,
     private messageService: MessageService,
     private threadService: ThreadService,
     private channelService: ChannelService,
@@ -45,9 +72,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.form = this.formBuilder.group({
-      message: ['', [Validators.required]]
-    });
     this.loadThreads();
     this.loadUsers();
     this.loadMessages();
@@ -118,7 +142,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     });
   }
 
-
   /**
    * Finds the user displayName by the user id.
    * @param userId as string.
@@ -133,7 +156,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     return 'Unknown';
   }
 
-
   /**
    * Returns either the logged user or a default user id.
    * @returns the logged user id.
@@ -147,16 +169,26 @@ export class ChannelComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Filles collectedContent with the current content in the editor.
+   * @param event 
+   */
+  async collectContent(event: EditorChangeContent | EditorChangeSelection) {
+    console.log(event);
+    if (event.event === 'text-change') {
+      this.collectedContent = event.html;
+    }
+    console.log(event.event)
+  }
+
 
   sendMessage() {
-    let now = new Date().getTime() / 1000;
-    let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.form.value.message);
-    let messageId = this.messageService.createMessage(message);
-
-    // Create thread and add it to the channel
-    let threadId = this.threadService.createThread(messageId);
-    this.channelService.addThreadToChannel(this.activeChannel, threadId);
-
-    this.form.reset();
+    if (this.collectedContent != null && this.collectedContent != '') {
+      let now = new Date().getTime() / 1000;
+      let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
+      let messageId = this.messageService.createMessage(message); // Create message
+      let threadId = this.threadService.createThread(messageId); // Create thread and add message
+      this.channelService.addThreadToChannel(this.activeChannel, threadId); // Add thread to channel
+    }
   }
 }

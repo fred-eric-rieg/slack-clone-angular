@@ -8,11 +8,8 @@
 html, body { height: 100%; color: #fafbf7; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import '~quill/dist/quill.snow.css';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 @font-face {
   font-family: 'os-ebold';
   src: url(../src/assets/fonts/OpenSans-ExtraBold.ttf);

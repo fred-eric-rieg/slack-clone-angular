@@ -9,6 +9,7 @@ import { Channel } from 'src/models/channel.class';
 export class DashboardComponent {
 
   activeChannel!: Channel;
+  placeholder!: string;
 
 
   constructor() { }
@@ -16,6 +17,7 @@ export class DashboardComponent {
 
   setActiveChannel(event: Channel) {
     this.activeChannel = event;
+    this.placeholder = `Type your message here in ${this.activeChannel.name}...`;
   }
     
 }

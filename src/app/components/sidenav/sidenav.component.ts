@@ -77,7 +77,10 @@ export class sidenavComponent implements OnInit {
     this.messagesCollapsed = !this.messagesCollapsed;
   }
 
-
+  /**
+   * Emits the selected channel to the parent component (Dashboard).
+   * @param channel as Channel.
+   */
   openChannel(channel?: Channel) {
     this.channelSelected.emit(channel || undefined);
   }
