@@ -54,12 +54,14 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { UploadFormComponent } from './components/upload-form/upload-form.component';
 import { UploadListComponent } from './components/upload-list/upload-list.component';
 import { UploadDetailsComponent } from './components/upload-details/upload-details.component';
-import { DirectMessageChannelComponent } from './components/direct-message-channel.component';
+import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
+import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
+import { NewChatComponent } from './components/new-chat/new-chat.component';
 
 /** Services */
 import { AuthService } from './shared/services/auth.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
-import { NewChatComponent } from './components/new-chat/new-chat.component';
+
 
 
 @NgModule({
@@ -81,6 +83,7 @@ import { NewChatComponent } from './components/new-chat/new-chat.component';
     UploadDetailsComponent,
     SignUpComponent,
     DirectMessageChannelComponent,
+    DirectMessagesSectionComponent,
     NewChatComponent
   ],
   imports: [

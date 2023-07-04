@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="header">
+      <div class="added-partners">
+        <span>Send to: </span>
+        <div class="added-box">
+          <div class="partner" *ngFor="let user of addedUsers">
+            <span>{{user.displayName}}</span>
+            <mat-icon (click)="removeUser(user)">close</mat-icon>
+          </div>
+        </div>
+      </div>
+      <div class="toolbox">
+        <input type="text" placeholder="search for a chat partner">
+        <button mat-raised-button color="primary" (click)="createNewChat(addedUsers)">Create chat</button>
+      </div>
+    </div>
+    <div class="user" *ngFor="let user of allUsers" (click)="addUser(user.userId)">
+      <div class="user-box">
+        <div class="info-box">
+          <div class="profileImg">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="user-infos">
+            <div class="head">
+              <span>{{user.displayName}}</span>
+              <span>{{user.fullName}}</span>
+            </div>
+            <div class="email">
+              <div class="email-txt">
+                {{user.email}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

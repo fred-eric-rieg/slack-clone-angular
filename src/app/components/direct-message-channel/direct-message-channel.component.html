@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="chat-partners">
+        <div class="person" *ngFor="let member of members">{{member}}</div>
+    </div>
+    <div *ngFor="let msg of test" class="chat-window">
+      <div class="chat-box">
+        <div class="msg-box">
+          <div class="profileImg">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="msg-infos">
+            <div class="head">
+              <span>Max Muster</span>
+              <span>Sat, 24. June 23 - 16:35</span>
+            </div>
+            <div class="msg">
+              <div class="msg-txt">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.<br /><br />
+                <a href="https://google.de/">https://google.de/</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="answers">
+          <span (click)="sendMessage()">3 answers</span>
+        </div>
+      </div>
+    </div>
+  
+    <!-- CHAT INPUT -->
+    <quill-editor class="txt-editor"></quill-editor>
+  </div>
