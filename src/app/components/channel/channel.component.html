@@ -11,9 +11,9 @@
                 <div *ngFor="let user of users">
                     <!-- REFERENZEN ZU USER MUESSEN NOCH ANGEPASST WERDEN-->
                     <h2 *ngIf=" user.userId === activeChannel.creatorId">{{ user.displayName }} has created this Channel
-                        on the {{
-                        activeChannel.creationDate.toDate() }}. This is the start of the {{ activeChannel.name }}
-                        Channel.</h2>
+                        on the {{ activeChannel.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} |
+                        {{ activeChannel.creationDate.toDate() | date : "HH:mm"}}. This is the start of the
+                        {{ activeChannel.name }} Channel.</h2>
                 </div>
 
 
@@ -41,8 +41,7 @@
                                     <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
                                         <mat-card-title>
                                             {{ getUserName(message.creatorId) }}
-                                        </mat-card-title>{{
-                                        message.creationDate.toDate().toTimeString().trim().slice(0, 5) }} Uhr
+                                        </mat-card-title>{{ message.creationDate.toDate() | date : "h:mm a" }}
                                     </div>
                                     <mat-card-content>{{ message.text }}</mat-card-content>
                                 </mat-card>
