@@ -5,7 +5,7 @@ import { FileUpload } from './../../../models/file-upload.class';
 @Component({
   selector: 'app-upload-form',
   templateUrl: './upload-form.component.html',
-  styleUrls: ['./upload-form.component.css']
+  styleUrls: ['./upload-form.component.scss']
 })
 export class UploadFormComponent implements OnInit {
   selectedFiles?: FileList;

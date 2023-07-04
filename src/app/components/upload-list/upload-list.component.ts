@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-upload-list',
   templateUrl: './upload-list.component.html',
-  styleUrls: ['./upload-list.component.css']
+  styleUrls: ['./upload-list.component.scss']
 })
 export class UploadListComponent implements OnInit {
   fileUploads?: any[];
