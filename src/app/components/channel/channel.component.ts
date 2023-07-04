@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -14,6 +14,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 import { Channel } from 'src/models/channel.class';
 import { Thread } from 'src/models/thread.class';
 import { getAuth } from '@angular/fire/auth';
+import { Subject, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -21,7 +22,7 @@ import { getAuth } from '@angular/fire/auth';
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss']
 })
-export class ChannelComponent implements OnInit {
+export class ChannelComponent implements OnInit, OnDestroy {
 
   form!: FormGroup;
 
@@ -31,6 +32,8 @@ export class ChannelComponent implements OnInit {
   messages!: Message[];
 
   @Input() activeChannel!: Channel;
+
+  private destroy$ = new Subject();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,6 +54,13 @@ export class ChannelComponent implements OnInit {
     this.loadActiveChannel();
   }
 
+  /**
+   * To avoid memory leaks, unsubscribe from all subscriptions on destruction of the component.
+   */
+  ngOnDestroy(): void {
+    console.log('ChannelComponent destroyed');
+    this.destroy$.next(true);
+  }
 
   /**
    * Formatting a timestamp into a sting with the format: HH:MM AM/PM.
@@ -69,7 +79,9 @@ export class ChannelComponent implements OnInit {
 
 
   loadActiveChannel() {
-    this.channelService.channels.subscribe((channels: Channel[]) => {
+    this.channelService.channels.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((channels: Channel[]) => {
       this.channels = channels;
       this.channels.forEach((channel: Channel) => {
         if (channel.channelId === this.activeChannel.channelId) {
@@ -81,21 +93,27 @@ export class ChannelComponent implements OnInit {
 
 
   loadUsers() {
-    this.userService.users.subscribe((users: User[]) => {
+    this.userService.users.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((users: User[]) => {
       this.users = users;
     });
   }
 
 
   loadThreads() {
-    this.threadService.threads.subscribe(threads => {
+    this.threadService.threads.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(threads => {
       this.threads = threads;
     });
   }
 
 
   loadMessages() {
-    this.messageService.messages.subscribe((messages: Message[]) => {
+    this.messageService.messages.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((messages: Message[]) => {
       this.messages = messages;
     });
   }
