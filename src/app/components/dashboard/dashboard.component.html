@@ -3,7 +3,7 @@
   <div class="row">
     <app-sidenav (channelSelected)="setActiveChannel($event)"></app-sidenav>
     <div class="router-container">
-      <app-channel [activeChannel]="activeChannel"></app-channel>
+      <app-channel [activeChannel]="activeChannel" [placeholder]="placeholder"></app-channel>
     </div>
     <app-dialog-user align="end"></app-dialog-user>
   </div>

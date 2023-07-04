@@ -54,7 +54,7 @@
     </div>
 
     <div class="message-container">
-        <quill-editor (onEditorChanged)="collectContent($event)" [modules]="config" [placeholder]="placeholder">
+        <quill-editor format="object" [preserveWhitespace]="true" (onEditorChanged)="collectContent($event)" [modules]="config" [placeholder]="placeholder">
 
         </quill-editor>
         <div class="message-bottom">

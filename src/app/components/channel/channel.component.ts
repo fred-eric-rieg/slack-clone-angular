@@ -28,8 +28,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   collectedContent!: any;
 
-  placeholder = 'Type your message here...';
-
   config = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
@@ -55,13 +53,13 @@ export class ChannelComponent implements OnInit, OnDestroy {
     },
   };
 
-
   channels!: Channel[];
   users!: User[];
   threads!: Thread[];
   messages!: Message[];
 
   @Input() activeChannel!: Channel;
+  @Input() placeholder = 'Type your message here...';
 
   private destroy$ = new Subject();
 
@@ -112,8 +110,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.channels.forEach((channel: Channel) => {
         if (channel.channelId === this.activeChannel.channelId) {
           this.activeChannel = channel;
-          // This still needs to be fixed because it does not update the placeholder when switching channels.
-          this.placeholder = `Type your message in ${channel.name}...`;
         }
       });
     });
@@ -146,7 +142,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     });
   }
 
-
   /**
    * Finds the user displayName by the user id.
    * @param userId as string.
@@ -161,7 +156,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     return 'Unknown';
   }
 
-
   /**
    * Returns either the logged user or a default user id.
    * @returns the logged user id.
@@ -175,23 +169,26 @@ export class ChannelComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  /**
+   * Filles collectedContent with the current content in the editor.
+   * @param event 
+   */
   async collectContent(event: EditorChangeContent | EditorChangeSelection) {
+    console.log(event);
     if (event.event === 'text-change') {
-      console.log(event);
       this.collectedContent = event.html;
     }
+    console.log(event.event)
   }
 
 
   sendMessage() {
-    let now = new Date().getTime() / 1000;
-    let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
-
-    let messageId = this.messageService.createMessage(message);
-
-    // Create thread and add it to the channel
-    let threadId = this.threadService.createThread(messageId);
-    this.channelService.addThreadToChannel(this.activeChannel, threadId);
+    if (this.collectedContent != null && this.collectedContent != '') {
+      let now = new Date().getTime() / 1000;
+      let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
+      let messageId = this.messageService.createMessage(message); // Create message
+      let threadId = this.threadService.createThread(messageId); // Create thread and add message
+      this.channelService.addThreadToChannel(this.activeChannel, threadId); // Add thread to channel
+    }
   }
 }
