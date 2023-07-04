@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
 
 /** Material Modules */
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -22,6 +23,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 /** Firebase */
@@ -80,6 +82,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     MatCardModule,
     MatMenuModule,
     MatButtonToggleModule,
+    MatProgressSpinnerModule,
     BrowserAnimationsModule,
     MatSnackBarModule,
     FormsModule,
@@ -88,6 +91,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     MatExpansionModule,
     ReactiveFormsModule,
     CdkDrag,
+    QuillModule.forRoot(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),

@@ -1,121 +1,67 @@
 <div *ngIf="activeChannel">
-    <div class="resizable">
 
-        <div class="sticky-header">
-            {{ activeChannel.name }}
-        </div>
+    <div class="sticky-header">
+        {{ activeChannel.name }}
+    </div>
 
-        <div class="scroll-wrapper">
-            <div class="title-container">
-                <h1>{{ activeChannel.name }}</h1>
-                <div *ngFor="let user of users">
-                    <!-- REFERENZEN ZU USER MUESSEN NOCH ANGEPASST WERDEN-->
-                    <h2 *ngIf=" user.userId === activeChannel.creatorId">{{ user.displayName }} has created this Channel
-                        on the {{ activeChannel.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} |
-                        {{ activeChannel.creationDate.toDate() | date : "h:mm a"}}. This is the start of the
-                        {{ activeChannel.name }} Channel.</h2>
-                </div>
-
-
-                <div class="row">
-                    <div class="center blue">
-                        <mat-icon>edit_square</mat-icon>
-                        Add description
-                    </div>
-
-                    <div class="center blue">
-                        <mat-icon>person_add</mat-icon>
-                        Add people
-                    </div>
-                </div>
+    <div class="scroll-wrapper">
+        <div class="title-container">
+            <h1>{{ activeChannel.name }}</h1>
+            <div *ngFor="let user of users">
+                <!-- REFERENZEN ZU USER MUESSEN NOCH ANGEPASST WERDEN-->
+                <h2 *ngIf=" user.userId === activeChannel.creatorId">{{ user.displayName }} has created this Channel
+                    on the {{ activeChannel.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} |
+                    {{ activeChannel.creationDate.toDate() | date : "h:mm a"}}. This is the start of the
+                    {{ activeChannel.name }} Channel.</h2>
             </div>
 
-            <!-- Das hier ist abenteuerlich, aber funktioniert...
+
+            <div class="row">
+                <div class="center blue">
+                    <mat-icon>edit_square</mat-icon>
+                    Add description
+                </div>
+
+                <div class="center blue">
+                    <mat-icon>person_add</mat-icon>
+                    Add people
+                </div>
+            </div>
+        </div>
+
+        <!-- Das hier ist abenteuerlich, aber funktioniert...
                  ich kann mir aber nicht vorstellen, dass das eine performante Lösung ist. -->
-            <div class="chat-container">
-                <div *ngFor="let activeThread of activeChannel.threads">
-                    <div *ngFor="let thread of threads">
-                        <div *ngIf="activeThread === thread.threadId">
-                            <div *ngFor="let message of messages">
-                                <mat-card *ngIf="thread.messages[0] === message.messageId">
-                                    <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                                        <mat-card-title>
-                                            {{ getUserName(message.creatorId) }}
-                                        </mat-card-title>
-                                        {{ message.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
-                                        {{ message.creationDate.toDate() | date : "h:mm a" }}
-                                    </div>
-                                    <mat-card-content>{{ message.text }}</mat-card-content>
-                                </mat-card>
-                            </div>
+        <div class="chat-container">
+            <div *ngFor="let activeThread of activeChannel.threads">
+                <div *ngFor="let thread of threads">
+                    <div *ngIf="activeThread === thread.threadId">
+                        <div *ngFor="let message of messages">
+                            <mat-card *ngIf="thread.messages[0] === message.messageId">
+                                <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
+                                    <mat-card-title>
+                                        {{ getUserName(message.creatorId) }}
+                                    </mat-card-title>
+                                    {{ message.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
+                                    {{ message.creationDate.toDate() | date : "h:mm a" }}
+                                </div>
+                                <mat-card-content [innerHTML]="message.text"></mat-card-content>
+                            </mat-card>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="message-container">
+    <div class="message-container">
+        <quill-editor (onEditorChanged)="collectContent($event)" [modules]="config" [placeholder]="placeholder">
 
-            <mat-card class="message-outline">
-                <div class="row">
-                    <button mat-button>
-                        <mat-icon>format_bold</mat-icon>
-                    </button>
-                    <button mat-button>
-                        <mat-icon>format_italic</mat-icon>
-                    </button>
-                    <button mat-button>
-                        <mat-icon>format_strikethrough</mat-icon>
-                    </button>
-                    <button mat-button>
-                        <mat-icon>link</mat-icon>
-                    </button>
-                    <button mat-button>
-                        <mat-icon>format_list_numbered</mat-icon>
-                    </button>
-                    <button mat-button>
-                        <mat-icon>format_list_bulleted</mat-icon>
-                    </button>
-                    <button mat-button>
-                        <mat-icon>code</mat-icon>
-                    </button>
-                    <button mat-button>
-                        <mat-icon>image</mat-icon>
-                    </button>
-                </div>
-
-                <!-- Message input -->
-                <form [formGroup]="form">
-                    <mat-form-field>
-                        <input matInput type="text" placeholder="Message to {{ activeChannel.name }} channel"
-                            formControlName="message">
-                        <mat-error *ngIf="form.get('message')!.hasError('required')">message is required</mat-error>
-                    </mat-form-field>
-                </form>
-
-                <div class="row">
-                    <button mat-button>
-                        <mat-icon>insert_emoticon</mat-icon>
-                    </button>
-                    <button mat-button>
-                        <mat-icon>attach_file</mat-icon>
-                    </button>
-                    <button mat-button>
-                        <mat-icon>mic</mat-icon>
-                    </button>
-                    <button mat-button>
-                        <mat-icon>videocam</mat-icon>
-                    </button>
-                    <button mat-button>
-                        <mat-icon>alternate_email</mat-icon>
-                    </button>
-                    <div class="position-right">
-                        <button mat-button (click)="sendMessage()" [disabled]="!form.valid">
-                            <mat-icon>send</mat-icon>
-                        </button>
-                    </div>
-                </div>
-            </mat-card>
+        </quill-editor>
+        <div class="message-bottom">
+            <p class="hint">Send with command/ctrl & enter.</p>
+            <button class="button-send" (click)="sendMessage()">
+                <mat-icon matTooltip="send">send</mat-icon>
+            </button>
         </div>
     </div>
 </div>
