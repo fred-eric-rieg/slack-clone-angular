@@ -16,7 +16,6 @@ export class DashboardComponent {
 
   setActiveChannel(event: Channel) {
     this.activeChannel = event;
-    console.log(this.activeChannel)
   }
     
 }
