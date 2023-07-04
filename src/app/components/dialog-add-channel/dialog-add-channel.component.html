@@ -6,8 +6,8 @@
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button mat-dialog-close="">Cancel</button>
-  <button mat-button cdkFocusInitial [mat-dialog-close]="dialogData" [disabled]="dialogData.name.length == 0">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="dialogData" [disabled]="dialogData.name.length == 0">
     OK
   </button>
 </div>

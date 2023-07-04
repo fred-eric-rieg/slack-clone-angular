@@ -1,4 +1,5 @@
-import { Component, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
+import { Channel } from 'src/models/channel.class';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,11 +8,14 @@ import { Component, HostListener } from '@angular/core';
 })
 export class DashboardComponent {
 
-  positionX: number = 0;
-  
-  // Get the mouse position on the dashboard and emit it to the channel component.
-  @HostListener('document:mousemove', ['$event'])
-  getMousePosition($event: MouseEvent) {
-    this.positionX = $event.clientX;
+  activeChannel!: Channel;
+
+
+  constructor() { }
+
+
+  setActiveChannel(event: Channel) {
+    this.activeChannel = event;
   }
+    
 }

@@ -1,10 +1,9 @@
 <mat-drawer-container class="mat-drawer-container" autosize>
   <app-toolbar></app-toolbar>
   <div class="row">
-    <app-sidenav></app-sidenav>
+    <app-sidenav (channelSelected)="setActiveChannel($event)"></app-sidenav>
     <div class="router-container">
-      <!-- Transferring the positionX of the mouse via Hostlistener on Dashboard -->
-      <app-channel [positionX]="positionX"></app-channel>
+      <app-channel [activeChannel]="activeChannel"></app-channel>
     </div>
     <app-dialog-user align="end"></app-dialog-user>
   </div>

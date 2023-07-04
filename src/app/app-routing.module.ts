@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { sidenavComponent } from './components/sidenav/sidenav.component';
+import { AuthGuard } from './shared/guards/auth.guard';
 import { ChannelComponent } from './components/channel/channel.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';

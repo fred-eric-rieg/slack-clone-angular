@@ -1,19 +1,22 @@
 import { User } from './../../../models/user.class';
 import { Injectable } from '@angular/core';
-import { setDoc, collection, doc, updateDoc } from '@firebase/firestore';
-import { Firestore, docData } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, setDoc, updateDoc } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+
   user: User = new User();
-  userId: string = '';
-  userCollection = collection(this.firestore, 'users');
-  loading: boolean = false;
+  users!: Observable<any>;
+  private userCollection: CollectionReference<DocumentData>;
 
   constructor(
-    private firestore: Firestore) {}
+    private firestore: Firestore) {
+      this.userCollection = collection(this.firestore, 'users');
+      this.getAllUsers();
+    }
 
 
     /**
@@ -24,7 +27,7 @@ export class UserService {
    */
   getUser() {
     const userCollection = collection(this.firestore, 'users');
-    const docRef = doc(userCollection, this.userId);
+    const docRef = doc(userCollection, this.user.userId);
 
     docData(docRef).subscribe((userCollection: any) => {
       this.user = new User(userCollection);
@@ -32,20 +35,47 @@ export class UserService {
   }
 
 
-  /**
-   * Updates user information in Firestore.
-   * Loading indicates whether the update operation is in progress.
-   */
-  updateUserInfo() {
-    this.loading = true;
-    const userCollection = collection(this.firestore, 'users');
-    const docRef = doc(userCollection, this.userId);
-    updateDoc(docRef, this.user.toJson())
-      .then(() => {
-        this.loading = false;
-      }
-    );
-  }
+    /**
+     * Gets user info based on id.
+     * @param id
+     * @returns the user that matches the id.
+     */
+    get(userId: string) {
+      const userDocRef = doc(this.firestore, 'users', userId);
+      return docData(userDocRef, { idField: 'customIdName' });
+    }
+
+
+    /**
+     * Creates new user.
+     * @param user
+     * @returns a new user to the collection.
+     */
+    create(user: User) {
+      return addDoc(this.userCollection, user);
+    }
+
+
+    /**
+     * Updates user info.
+     * @param user
+     * @returns an update to the user collection.
+     */
+    update(user: User) {
+      const userDocRef = doc(this.firestore,`user/${user.userId}`);
+      return updateDoc(userDocRef, { ...user });
+    }
+
+
+    /**
+     * Deletes selected user.
+     * @param id
+     * @returns a deletion of the user that matches the id.
+     */
+    delete(userId: string) {
+      const userDocRef = doc(this.firestore,`user/${userId}`);
+      return deleteDoc(userDocRef);
+    }
 
 
   /**
@@ -55,6 +85,7 @@ export class UserService {
    * @param email email to get the name
    */
   setNewUser(uID: string, email: string) {
+    console.log("New email: ", email + " New uID: ", uID)
     this.user.userId = uID;
     this.user.displayName = this.splitMail(email);
     this.user.email = email;
@@ -76,5 +107,11 @@ export class UserService {
     } else {
       return firstPart.substring(0, dotIndex);
     }
+  }
+
+
+  getAllUsers() {
+    const userCollection = collection(this.firestore, 'users');
+    this.users = collectionData(userCollection);
   }
 }

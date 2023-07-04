@@ -1,73 +1,37 @@
+import { Timestamp } from "@angular/fire/firestore";
+
 export class Channel {
     channelId: string = '';
-    title: string = '';
-    // description: string = '';
-    // isDirectMessage: boolean = false;
-    // isArchived: boolean = false;
-    // isPublic: boolean = false;
-    // creationDate: Date = new Date();
-    // creatorId: string = 'ös039jFjkdT5ika9xC';
-    // creatorName: string = 'Herbert';
-    // members: { userId: string; userName: string }[] = [];
-    // messages: {
-    //     messageId: string;
-    //     userId: string;
-    //     userName: string;
-    //     message: string;
-    //     date: Date;
-    //     attachedImage: string | null;
-    //     attachedFile: string | null;
-    //     link: string | null;
-    // }[] = [];
+    creationDate: Timestamp = Timestamp.now();
+    creatorId: string = '';
+    type: string = 'public';
+    description: string = '';
+    name: string = '';
+    members: string[] = [];
+    threads: string[] = [];
 
-    constructor(
-        channelId: string,
-        title: string,
-        // description: string,
-        // isDirectMessage: boolean,
-        // isArchived: boolean,
-        // isPublic: boolean,
-        // creationDate: Date,
-        // creatorId: string,
-        // creatorName: string,
-        // members: { userId: string; userName: string }[],
-        // messages: {
-        //     messageId: string;
-        //     userId: string;
-        //     userName: string;
-        //     message: string;
-        //     date: Date;
-        //     attachedImage: string | null;
-        //     attachedFile: string | null;
-        //     link: string | null;
-        // }[]
-    ) {
-        this.channelId = channelId;
-        this.title = title;
-        // this.description = description;
-        // this.isDirectMessage = isDirectMessage;
-        // this.isArchived = isArchived;
-        // this.isPublic = isPublic;
-        // this.creationDate = creationDate;
-        // this.creatorId = creatorId;
-        // this.creatorName = creatorName;
-        // this.members = members;
-        // this.messages = messages;
+    constructor(obj?: any) {
+        this.channelId = obj && obj.channelId || '';
+        this.creationDate = obj && obj.creationDate;
+        this.creatorId = obj && obj.creatorId || '';
+        this.type = obj && obj.type || 'public';
+        this.description = obj && obj.description || '';
+        this.name = obj && obj.name || '';
+        this.members = obj && obj.members || [];
+        this.threads = obj && obj.threads || [];
     }
+
 
     toJSON() {
         return {
             channelId: this.channelId,
-            title: this.title,
-            // description: this.description,
-            // isDirectMessage: this.isDirectMessage,
-            // isArchived: this.isArchived,
-            // isPublic: this.isPublic,
-            // creationDate: this.creationDate,
-            // creatorId: this.creatorId,
-            // creatorName: this.creatorName,
-            // members: this.members,
-            // messages: this.messages
+            creationDate: this.creationDate,
+            creatorId: this.creatorId,
+            type: this.type,
+            description: this.description,
+            name: this.name,
+            members: this.members,
+            threads: this.threads
         };
     }
 }

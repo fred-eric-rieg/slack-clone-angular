@@ -3,31 +3,68 @@
     <div class="server-name">
       <div class="logo">
         <span>Slack Clone</span>
-        <button
-          class="new-msg-btn"
-          mat-mini-fab
-        >
+        <button class="new-msg-btn" mat-mini-fab>
           <mat-icon [ngStyle]="{ color: 'black' }">edit_note</mat-icon>
         </button>
       </div>
     </div>
     <div class="nav-scroll-container">
       <div class="navigation">
-        <div
-          class="nav-hl flex-ac"
-        >
+        <div class="nav-hl flex-ac">
           <mat-icon font-icon>comment</mat-icon>
           <p>Threads</p>
         </div>
-        <div
-          class="nav-hl flex-ac"
-        >
+        <div class="nav-hl flex-ac">
           <mat-icon font-icon>supervisor_account</mat-icon>
           <p>Users</p>
         </div>
       </div>
 
-      <app-channels></app-channels>
-      <app-direct-messages-section></app-direct-messages-section>
+      <!-- Channels -->
+      <div class="channel-container">
+        <div (click)="toggleChannelsDropdown()" class="channel-hl flex-ac">
+          <mat-icon [ngClass]="{ rotate90: !channelsCollapsed }" style="transition: all 125ms ease-in-out"
+            fontIcon="arrow_drop_down"></mat-icon>
+          <p>Channels</p>
+        </div>
+
+        <div *ngIf="!channelsCollapsed" class="channel-dropdown-menu">
+
+          <div *ngFor="let channel of allChannels" class="flex-ac channel">
+            <mat-icon>numbers</mat-icon>
+            <p (click)="openChannel(channel)">{{ channel.name }}</p>
+          </div>
+
+          <div (click)="openDialog()" class="channelitem channel flex-ac">
+            <mat-icon class="add-item" fontIcon="add"></mat-icon>
+            <p>Create new channel</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Direct Messages -->
+      <div class="user-direct-msg-container">
+        <div (click)="toggleMessagesDropdown()" class="direct-msg-hl flex-ac">
+          <mat-icon [ngClass]="messagesCollapsed ? 'rotate90' : ''" style="transition: all 125ms ease-in-out"
+            fontIcon="arrow_drop_down">
+          </mat-icon>
+          <span>Direct Messages</span>
+        </div>
+
+        <div *ngIf="!messagesCollapsed">
+          <div class="user-direct-msg flex-ac">
+            <img src="/../../assets/img/profile.png" alt="profile picture">
+            <p>Max Muster</p>
+          </div>
+          <div>
+            <div class="channelitem channel flex-ac">
+              <mat-icon class="add-item" fontIcon="add"></mat-icon>
+              <p>Create new chat</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </mat-drawer>
+</mat-drawer-container>

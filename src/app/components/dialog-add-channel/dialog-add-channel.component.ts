@@ -9,7 +9,6 @@ export class DialogAddChannelComponent {
 
   dialogData = {
     name: '',
-    isPrivat: false,
   };
 
 }

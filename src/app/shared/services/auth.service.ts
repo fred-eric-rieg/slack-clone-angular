@@ -50,9 +50,9 @@ export class AuthService {
   signInWithGoogle() {
     const auth = getAuth();
     signInWithPopup(auth, this.provider).then( ()=> {
+      this.userService.setNewUser(auth.currentUser?.uid!, auth.currentUser?.email!);
       this.router.navigate(['/dashboard']);
     });
-    this.userService.setNewUser(auth.currentUser?.uid!, auth.currentUser?.email!);
   }
 
   isLoggedIn() {
