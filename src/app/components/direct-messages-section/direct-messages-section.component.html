@@ -1,0 +1,30 @@
+<div class="user-direct-msg-container">
+  <div (click)="toggleDropdown()" class="direct-msg-hl flex-ac">
+    <mat-icon
+      [ngClass]="collapsed ? 'rotate90' : ''"
+      style="transition: all 125ms ease-in-out"
+      fontIcon="arrow_drop_down"
+    >
+    </mat-icon>
+    <span>Direct Messages</span>
+  </div>
+
+  <div *ngIf="!collapsed">
+    <div
+      *ngFor="let chat of chatIds; let i = index"
+      class="user-direct-msg flex-ac"
+      [routerLink]="['chat/' + chat]"
+    >
+      <!-- <img src="" alt="Profilbild"> -->
+      <mat-icon>person</mat-icon>
+      <p>{{memberNames[i]}}</p>
+      <div class="extra-members">+{{memberIds[i].length-1}}</div>
+    </div>
+    <div>
+      <div class="channelitem channel flex-ac" [routerLink]="'create-chat'">
+        <mat-icon class="add-item" fontIcon="add"></mat-icon>
+        <p>Create new chat</p>
+      </div>
+    </div>
+  </div>
+</div>

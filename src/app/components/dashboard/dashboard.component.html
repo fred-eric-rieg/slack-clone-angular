@@ -4,6 +4,9 @@
     <app-sidenav (channelSelected)="setActiveChannel($event)"></app-sidenav>
     <div class="router-container">
       <app-channel [activeChannel]="activeChannel" [placeholder]="placeholder"></app-channel>
+      <!-- Transferring the positionX of the mouse via Hostlistener on Dashboard -->
+      <router-outlet></router-outlet>
+      <!-- <app-channel [positionX]="positionX"></app-channel> -->
     </div>
     <app-dialog-user align="end"></app-dialog-user>
   </div>
