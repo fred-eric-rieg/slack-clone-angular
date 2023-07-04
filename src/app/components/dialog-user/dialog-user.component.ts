@@ -19,6 +19,7 @@ export class DialogUserComponent implements OnInit {
   userId: string = '';
   user: User = new User();
   isSidenavHidden = false;
+  imgUrl: string = ''; // TEST
 
 
   constructor(
@@ -27,7 +28,7 @@ export class DialogUserComponent implements OnInit {
     private dialog: MatDialog,
     public sidenavService: SidenavService,
     public authService: AuthService,
-    private auth: AngularFireAuth
+    private auth: AngularFireAuth,
     // public userService: UserService,
   ) {}
 
@@ -49,7 +50,7 @@ export class DialogUserComponent implements OnInit {
     * Fetches user data based on the retrieved user ID.
     * If no user ID is provided in the route parameters, a default user ID is used.
     */
-   /*
+    /*
     this.route.paramMap.subscribe(paramMap => {
       this.userId = paramMap.get('id') ?? '1EPTd99Hh1YYFjrxLPW0'; // Diese Zeile muss geändert werden!! (ID vom Login übernehmen?? Guest mit fixer ID??)
       this.getUser();
