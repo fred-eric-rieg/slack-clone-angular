@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill/public-api';
@@ -17,6 +17,7 @@ import { Channel } from 'src/models/channel.class';
 import { Thread } from 'src/models/thread.class';
 import { getAuth } from '@angular/fire/auth';
 import { Subject, takeUntil } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -58,8 +59,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
   threads!: Thread[];
   messages!: Message[];
 
-  @Input() activeChannel!: Channel;
-  @Input() placeholder = 'Type your message here...';
+  activeChannelId!: string;
+  activeChannel!: Channel;
+  placeholder = 'Type your message here...';
 
   private destroy$ = new Subject();
 
@@ -68,6 +70,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     private threadService: ThreadService,
     private channelService: ChannelService,
     private userService: UserService,
+    private route: ActivatedRoute
   ) { }
 
 
@@ -101,16 +104,17 @@ export class ChannelComponent implements OnInit, OnDestroy {
     return `${hours}:${minutes} ${date.getHours() >= 12 ? 'PM' : 'AM'}`;
   }
 
-
+  /**
+   * Calls the channelService to load the active channel via the route params.
+   * Is destroyed on component destruction.
+   */
   loadActiveChannel() {
-    this.channelService.channels.pipe(
+    this.route.params.pipe(
       takeUntil(this.destroy$)
-    ).subscribe((channels: Channel[]) => {
-      this.channels = channels;
-      this.channels.forEach((channel: Channel) => {
-        if (channel.channelId === this.activeChannel.channelId) {
-          this.activeChannel = channel;
-        }
+    ).subscribe(params => {
+      this.activeChannelId = params['id'];
+      this.channelService.getChannel(this.activeChannelId).then((response) => {
+        this.activeChannel = response.data() as Channel;
       });
     });
   }

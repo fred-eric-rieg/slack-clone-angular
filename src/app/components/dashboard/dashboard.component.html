@@ -1,13 +1,15 @@
 <mat-drawer-container class="mat-drawer-container" autosize>
   <app-toolbar></app-toolbar>
   <div class="row">
-    <app-sidenav (channelSelected)="setActiveChannel($event)"></app-sidenav>
+
+    <!-- Sidenav -->
+    <app-sidenav></app-sidenav>
+
+    <!-- Children Router Outlet for Channels & Chats -->
     <div class="router-container">
-      <app-channel [activeChannel]="activeChannel" [placeholder]="placeholder"></app-channel>
-      <!-- Transferring the positionX of the mouse via Hostlistener on Dashboard -->
       <router-outlet></router-outlet>
-      <!-- <app-channel [positionX]="positionX"></app-channel> -->
     </div>
+
     <app-dialog-user align="end"></app-dialog-user>
   </div>
 </mat-drawer-container>

@@ -1,10 +1,9 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DialogAddChannelComponent } from '../dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Channel } from 'src/models/channel.class';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Router } from '@angular/router';
 import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
@@ -20,11 +19,9 @@ export class sidenavComponent implements OnInit {
   channel: Channel = new Channel();
   allChannels!: Array<Channel>;
 
-  @Output() channelSelected: EventEmitter<Channel> = new EventEmitter<Channel>();
-
+  
   constructor(
     public dialog: MatDialog,
-    private router: Router,
     public auth: AngularFireAuth,
     private channelService: ChannelService
   ) { }
@@ -43,8 +40,6 @@ export class sidenavComponent implements OnInit {
     });
     this.channelService.channels.subscribe((channels) => {
       this.allChannels = channels;
-      // Stets den ersten Channel als aktiven Channel übertragen.
-      this.channelSelected.emit(this.allChannels[0]);
     })
   }
 
@@ -75,13 +70,5 @@ export class sidenavComponent implements OnInit {
 
   toggleMessagesDropdown() {
     this.messagesCollapsed = !this.messagesCollapsed;
-  }
-
-  /**
-   * Emits the selected channel to the parent component (Dashboard).
-   * @param channel as Channel.
-   */
-  openChannel(channel?: Channel) {
-    this.channelSelected.emit(channel || undefined);
   }
 }

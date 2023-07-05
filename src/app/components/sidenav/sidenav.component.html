@@ -32,7 +32,7 @@
 
           <div *ngFor="let channel of allChannels" class="flex-ac channel">
             <mat-icon>numbers</mat-icon>
-            <p (click)="openChannel(channel)">{{ channel.name }}</p>
+            <p [routerLink]="'channel/' + channel.channelId">{{ channel.name }}</p>
           </div>
 
           <div (click)="openDialog()" class="channelitem channel flex-ac">

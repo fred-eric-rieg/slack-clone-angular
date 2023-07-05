@@ -13,17 +13,14 @@ import { NewChatComponent } from './components/new-chat/new-chat.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
+  { path: 'dashboard', component: DashboardComponent,
     children: [
-      { path: 'channel', component: ChannelComponent },
+      { path: 'channel/:id', component: ChannelComponent },
       { path: 'user/:id', component: DialogUserComponent },
       { path: 'chat/:id', component: DirectMessageChannelComponent },
       { path: 'create-chat', component: NewChatComponent },
     ]
   },
-  { path: 'dashboard', component: DashboardComponent },
   { path: 'sidenav', component: sidenavComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'sign-up', component: SignUpComponent },
