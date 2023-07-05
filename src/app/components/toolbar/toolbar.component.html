@@ -10,7 +10,11 @@
       </div>
       <mat-form-field appearance="outline" class="toolbar-search-container" >
         <mat-label>Search Channel</mat-label>
-        <input matInput>
+        <input matInput
+          type="text"
+          placeholder="Search..."
+          [(ngModel)]="channelService.searchValue"
+        />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
       <div>

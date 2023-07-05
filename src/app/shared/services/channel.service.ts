@@ -8,6 +8,7 @@ import { Channel } from 'src/models/channel.class';
 })
 export class ChannelService {
 
+  searchValue: string = '';
   channels!: Observable<any>;
 
   constructor(private firestore: Firestore) {
