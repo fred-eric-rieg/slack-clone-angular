@@ -41,6 +41,7 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 /** Components */
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { DialogHelpComponent } from './components/dialog-help/dialog-help.component';
+import { DialogLegalComponent } from './components/dialog-legal/dialog-legal.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
 import { DialogUserEditComponent } from './components/dialog-user-edit/dialog-user-edit.component';
 import { sidenavComponent } from './components/sidenav/sidenav.component';
@@ -71,6 +72,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     LoginComponent,
     ToolbarComponent,
     DialogHelpComponent,
+    DialogLegalComponent,
     DialogUserComponent,
     DialogUserEditComponent,
     sidenavComponent,

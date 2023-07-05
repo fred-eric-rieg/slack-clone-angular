@@ -1,11 +1,13 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogHelpComponent } from '../dialog-help/dialog-help.component';
+import { DialogLegalComponent } from '../dialog-legal/dialog-legal.component';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
 // Import des AngularFireAuth Service
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { ChannelService } from 'src/app/shared/services/channel.service';
+
 
 @Component({
   selector: 'app-toolbar',
@@ -30,6 +32,16 @@ export class ToolbarComponent {
       console.log(`Dialog result: ${result}`);
     });
   }
+
+
+  openDialogLegal() {
+    const dialogRef = this.dialog.open(DialogLegalComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
 
   openUserProfile() {
     this.sidenavService.sidenavOpened.emit();
