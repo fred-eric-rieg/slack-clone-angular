@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 export class UserService {
 
   currentUser: any;
+  activeUser!: any;
   user: User = new User();
   users!: Observable<any>;
   private userCollection: CollectionReference<DocumentData>;
@@ -64,7 +65,7 @@ export class UserService {
    * @returns an update to the user collection.
    */
   update(user: User) {
-    const userDocRef = doc(this.firestore, `user/${user.userId}`);
+    const userDocRef = doc(this.firestore, `users/${user.userId}`);
     return updateDoc(userDocRef, { ...user });
   }
 
@@ -75,7 +76,7 @@ export class UserService {
    * @returns a deletion of the user that matches the id.
    */
   delete(userId: string) {
-    const userDocRef = doc(this.firestore, `user/${userId}`);
+    const userDocRef = doc(this.firestore, `users/${userId}`);
     return deleteDoc(userDocRef);
   }
 
@@ -104,6 +105,20 @@ export class UserService {
         if (user) {
           this.currentUser = user.uid;
           resolve(this.currentUser);
+        } else {
+          reject(new Error("User is not logged in."))
+        }
+      })
+    })
+  }
+
+  async getCompleteCurrentUser() {
+    const auth = getAuth();
+    return new Promise((resolve, reject) => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.activeUser = user;
+          resolve(this.activeUser);
         } else {
           reject(new Error("User is not logged in."))
         }

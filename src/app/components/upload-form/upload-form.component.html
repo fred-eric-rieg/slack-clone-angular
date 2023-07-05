@@ -12,8 +12,8 @@
   <div class="col-4">
     <button
       class="btn btn-success btn-sm"
-      [disabled]="!selectedFiles"
-      (click)="upload()"
+      [disabled]="!file"
+      (click)="uploadFile.uploadFile(file)"
     >
       Upload
     </button>
