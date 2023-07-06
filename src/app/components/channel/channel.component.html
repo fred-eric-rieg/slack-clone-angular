@@ -1,7 +1,7 @@
-<div *ngIf="activeChannel">
+<div *ngIf="activeChannel" class="content-box">
 
     <div class="sticky-header">
-        {{ activeChannel.name }}
+        # {{ activeChannel.name }}
     </div>
 
     <div class="scroll-wrapper">
@@ -54,7 +54,7 @@
     </div>
 
     <div class="message-container">
-        <quill-editor format="object" [preserveWhitespace]="true" (onEditorChanged)="collectContent($event)" [modules]="config" [placeholder]="placeholder">
+        <quill-editor format="object" [preserveWhitespace]="true" (onEditorChanged)="collectContent($event)" [style]="quillStyles" [modules]="config" [placeholder]="placeholder">
 
         </quill-editor>
         <div class="message-bottom">

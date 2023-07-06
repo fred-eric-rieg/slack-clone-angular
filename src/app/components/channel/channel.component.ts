@@ -29,6 +29,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   collectedContent!: any;
 
+  quillStyles = {
+    height: '100%',
+    width: '100%',
+  };
+
   config = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
@@ -52,6 +57,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
         },
       },
     },
+    theme: 'snow'
   };
 
   channels!: Channel[];

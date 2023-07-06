@@ -1,12 +1,21 @@
+.content-box {
+    box-sizing: border-box;
+    position: relative;
+    height: calc(100vh - 64px);
+}
+
 .sticky-header {
     box-sizing: border-box;
     position: sticky;
     top: 0;
     z-index: 1;
-    padding: 0.5rem;
-    height: 3.5rem;
+    padding: 8px 10px;
+    height: 61px;
     background: #303030;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid rgb(87, 87, 87);
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
 }
 
 .scroll-wrapper {
@@ -32,10 +41,10 @@
 .title-container {
     box-sizing: border-box;
     position: relative;
-    height: 240px;
-    border-bottom: 1px solid #ccc;
+    height: fit-content;
+    border-bottom: 1px solid rgb(87, 87, 87);
     overflow: hidden;
-    padding: 0.5rem;
+    padding: 8px 10px;
 
     h2 {
         font-size: 1rem;
@@ -63,7 +72,7 @@
 .chat-container {
     box-sizing: border-box;
     position: relative;
-    height: calc(100vh - 550px);
+    padding: 8px 10px;
 
     mat-card {
         background-color: unset;
@@ -74,7 +83,6 @@
         }
 
         mat-card-title {
-            padding-left: 0.5rem;
             font-size: 1rem;
             font-weight: 700;
         }
@@ -87,17 +95,13 @@
 .message-container {
     display: flex;
     flex-direction: column;
-    box-sizing: border-box;
-    position: relative;
+    position: absolute;
+    bottom: 0;
     background: #303030;
-    border: 2px solid grey;
+    border: 1px solid rgb(87, 87, 87);
     border-radius: 5px;
-    padding: 0.25rem;
-
-    quill-editor {
-        width: 100%;
-        color: white;
-    }
+    padding: 8px 10px;
+    width: 100%;
 
     .button-send {
         background-color: transparent;
