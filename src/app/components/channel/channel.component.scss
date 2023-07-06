@@ -95,11 +95,10 @@
 .message-container {
     display: flex;
     flex-direction: column;
-    position: absolute;
+    position: relative;
     bottom: 0;
     background: #303030;
-    border: 1px solid rgb(87, 87, 87);
-    border-radius: 5px;
+    border-top: 1px solid rgb(87, 87, 87);
     padding: 8px 10px;
     width: 100%;
 
@@ -107,6 +106,7 @@
         background-color: transparent;
         border: unset;
         color: white;
+        margin-right: 0.5rem;
         cursor: pointer;
     }
 
@@ -116,6 +116,7 @@
         align-items: center;
 
         .hint {
+            margin-left: 0.5rem;
             font-size: 10px;
             color: rgb(165, 165, 165);
         }
