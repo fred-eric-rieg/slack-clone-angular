@@ -1,5 +1,5 @@
-<div class="row">
-  <div class="col-8">
+<div>
+  <div>
     <label>
       <input
         type="file"
@@ -9,9 +9,9 @@
     </label>
   </div>
 
-  <div class="col-4">
+  <div>
     <button
-      class="btn btn-success btn-sm"
+      mat-flat-button color="primary"
       [disabled]="!file"
       (click)="uploadFile.uploadFile(file)"
     >
@@ -20,9 +20,8 @@
   </div>
 </div>
 
-<div *ngIf="currentFileUpload" class="progress mt-2">
+<div *ngIf="currentFileUpload">
   <div
-    class="progress-bar progress-bar-info"
     role="progressbar"
     attr.aria-valuenow="{{ percentage }}"
     aria-valuemin="0"

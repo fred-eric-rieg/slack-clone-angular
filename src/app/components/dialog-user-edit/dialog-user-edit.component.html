@@ -64,7 +64,7 @@
     </div>
   <!-- Action buttons -->
   <div mat-dialog-actions>
-      <button [disabled]="loading" mat-button (click)="dialogRef.close()">Cancel</button>
-      <button [disabled]="loading" mat-button (click)="updateUserInfo()" cdkFocusInitial>Save changes</button>
+      <button [disabled]="loading" mat-stroked-button color="primary" (click)="dialogRef.close()">Cancel</button>
+      <button [disabled]="loading" mat-flat-button color="primary" (click)="updateUserInfo()" cdkFocusInitial>Save changes</button>
   </div>
 </div>

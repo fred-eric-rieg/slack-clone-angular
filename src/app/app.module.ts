@@ -53,7 +53,6 @@ import { ForgotPasswordComponent } from './components/auth/forgot-password/forgo
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 /** Components for File Storage */
 import { UploadFormComponent } from './components/upload-form/upload-form.component';
-import { UploadListComponent } from './components/upload-list/upload-list.component';
 import { UploadDetailsComponent } from './components/upload-details/upload-details.component';
 import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
 import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
@@ -82,7 +81,6 @@ import { DialogPictureEditComponent } from './components/dialog-picture-edit/dia
     ForgotPasswordComponent,
     SignUpComponent,
     UploadFormComponent,
-    UploadListComponent,
     UploadDetailsComponent,
     SignUpComponent,
     DirectMessageChannelComponent,
