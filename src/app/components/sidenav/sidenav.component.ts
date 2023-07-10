@@ -5,6 +5,7 @@ import { Channel } from 'src/models/channel.class';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Timestamp } from '@angular/fire/firestore';
+import { SidenavService } from 'src/app/shared/services/sidenav.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -18,12 +19,14 @@ export class sidenavComponent implements OnInit {
 
   channel: Channel = new Channel();
   allChannels!: Array<Channel>;
+  isLeftSidenavHidden = false;
 
-  
+
   constructor(
     public dialog: MatDialog,
     public auth: AngularFireAuth,
-    private channelService: ChannelService
+    private channelService: ChannelService,
+    public sidenavService: SidenavService,
   ) { }
 
 
@@ -41,6 +44,15 @@ export class sidenavComponent implements OnInit {
     this.channelService.channels.subscribe((channels) => {
       this.allChannels = channels;
     })
+
+
+    /**
+    * Opens and closes the left sidenav.
+    * Checks if sidenav is oppened. If oppened, then the sidenav will be closed after pushing the button in vice-versa.
+    */
+    this.sidenavService.leftSidenavOpened.subscribe(() => {
+      this.sidenavService.isLeftSidenavHidden = !this.sidenavService.isLeftSidenavHidden;
+    });
   }
 
 

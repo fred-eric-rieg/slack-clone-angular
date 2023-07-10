@@ -5,6 +5,8 @@ import { Injectable, EventEmitter } from '@angular/core';
 })
 export class SidenavService {
   sidenavOpened = new EventEmitter<void>();
+  leftSidenavOpened = new EventEmitter<void>();
+  isLeftSidenavHidden = false;
 
   constructor() { }
 }

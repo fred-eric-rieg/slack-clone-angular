@@ -1,4 +1,4 @@
-<mat-drawer-container class="resizable">
+<mat-drawer-container class="resizable" [ngClass]="{'hidden-sidenav': sidenavService.isLeftSidenavHidden}">
   <mat-drawer mode="side" opened>
     <div class="server-name">
       <div class="logo">

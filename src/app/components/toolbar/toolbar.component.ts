@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogHelpComponent } from '../dialog-help/dialog-help.component';
 import { DialogLegalComponent } from '../dialog-legal/dialog-legal.component';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
+// import { User } from 'src/models/user.class';
 // Import des AngularFireAuth Service
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
@@ -16,6 +17,7 @@ import { ChannelService } from 'src/app/shared/services/channel.service';
 })
 export class ToolbarComponent {
   @Output() sidenavOpened = new EventEmitter<void>();
+drawer: any;
 
 
   constructor(public dialog: MatDialog,
@@ -45,6 +47,11 @@ export class ToolbarComponent {
 
   openUserProfile() {
     this.sidenavService.sidenavOpened.emit();
+  }
+
+
+  openLeftSidenav() {
+    this.sidenavService.leftSidenavOpened.emit();
   }
 
 
