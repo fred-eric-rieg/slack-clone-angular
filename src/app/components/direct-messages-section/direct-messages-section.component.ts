@@ -27,7 +27,7 @@ export class DirectMessagesSectionComponent implements OnInit {
     private userService: UserService,
     public chatService: ChatService,
   ) {
-    this.currentUserId = this.userService.currentUser;
+    //this.currentUserId = this.userService.currentUser;
     // this.getCurrentUserChats();
   }
 
@@ -57,16 +57,18 @@ export class DirectMessagesSectionComponent implements OnInit {
   }
 
   getChatDataById(chatIds: Array<string>) {
-    chatIds.forEach(chatId => {
-      const data = this.chatService.returnChatData(chatId);
-      data
-      .pipe(take(1))
-      .subscribe(chat => {
-        this.creationDate.push(chat['creationDate']);
-        this.memberIds.push(chat['members']);
-        this.threads.push(chat['threads']);
+    if (chatIds != undefined){
+      chatIds.forEach(chatId => {
+        const data = this.chatService.returnChatData(chatId);
+        data
+        .pipe(take(1))
+        .subscribe(chat => {
+          this.creationDate.push(chat['creationDate']);
+          this.memberIds.push(chat['members']);
+          this.threads.push(chat['threads']);
+        })
       })
-    })
+    }
   }
 
   setNameFirstUser(){

@@ -14,11 +14,12 @@
       *ngFor="let chat of chatIds; let i = index"
       class="user-direct-msg flex-ac"
       [routerLink]="['chat/' + chat]"
+      routerLinkActive="activeLink"
     >
       <!-- <img src="" alt="Profilbild"> -->
       <mat-icon>person</mat-icon>
       <p>{{memberNames[i]}}</p>
-      <div class="extra-members">+{{memberIds[i].length-1}}</div>
+      <div class="extra-members" *ngIf="memberIds[i].length > 1">+{{memberIds[i].length-1}}</div>
     </div>
     <div>
       <div class="channelitem channel flex-ac" [routerLink]="'create-chat'">
