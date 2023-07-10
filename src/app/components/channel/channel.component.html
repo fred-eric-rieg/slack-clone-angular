@@ -29,20 +29,27 @@
             </div>
         </div>
 
-        <!-- Das hier ist abenteuerlich, aber funktioniert...
-                 ich kann mir aber nicht vorstellen, dass das eine performante Lösung ist. -->
+        <div>{{ sortMessagesByDate() }}</div>
+        <!-- Every message is rendered here -->
         <div class="chat-container">
-            <div *ngFor="let message of messages">
-                <mat-card>
-                    <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                        <mat-card-title>
-                            {{ getUserName(message.creatorId) }}
-                        </mat-card-title>
-                        {{ message.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
-                        {{ message.creationDate.toDate() | date : "h:mm a" }}
-                    </div>
-                    <mat-card-content [innerHTML]="message.text"></mat-card-content>
-                </mat-card>
+            <div *ngIf="messages != undefined">
+                <div *ngFor="let message of messages">
+                    <mat-card>
+                        <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
+                            <img src="{{ getUserProfile(message) }}" alt="profile picture">
+                            <mat-card-title>
+                                {{ getUserName(message.creatorId) }}
+                            </mat-card-title>
+                            {{ message.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
+                            {{ message.creationDate.toDate() | date : "h:mm a" }}
+                        </div>
+                        <mat-card-content [innerHTML]="message.text"></mat-card-content>
+                        <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
+                            <p *ngIf="countThreadMessages(message.messageId)! > 0">{{
+                                countThreadMessages(message.messageId) }} replies</p>
+                        </div>
+                    </mat-card>
+                </div>
             </div>
         </div>
     </div>

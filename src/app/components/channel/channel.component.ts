@@ -128,30 +128,28 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Calls the threadService to load the threads of the active channel.
-   * Is destroyed on component destruction.
-   * Subscribes to the channelThreads observable.
+   * Subscribes to the threadService to load all threads and filters
+   * the threads that are in the active channel.
    */
   loadThreads() {
-    this.threadService.loadRelevantThreads(this.activeChannel.threads);
-    this.threadService.channelThreads.pipe(
+    this.threadService.allThreads.pipe(
       takeUntil(this.destroy$)
     ).subscribe((threads: Thread[]) => {
-      this.threads = threads;
-      this.loadMessages(); // After threads are loaded, load the messages.
+      this.threads = threads.filter(thread => this.activeChannel.threads.includes(thread.threadId));
+      this.loadMessages(); // After the threads are loaded, load the messages.
     });
   }
 
   /**
-   * Calls the messageService to load the messages of the active channel.
-   * Only the first message of each thread is loaded and sorted by creationDate.
+   * Subscribes to the messageService to load all messages and filters
+   * the messages that are in the filtered threads.
    */
   loadMessages() {
     let messageIds = this.threads.map(thread => thread.messages[0]).flat();
-    this.messageService.loadRelevantMessages(messageIds);
     this.messageService.messages.pipe(
       takeUntil(this.destroy$)
     ).subscribe((messages: Message[]) => {
+      messages = messages.filter(message => messageIds.includes(message.messageId));
       messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
       this.messages = messages;
     });
@@ -205,5 +203,33 @@ export class ChannelComponent implements OnInit, OnDestroy {
       let threadId = this.threadService.createThread(messageId); // Create thread and add message
       this.channelService.addThreadToChannel(this.activeChannel, threadId); // Add thread to channel
     }
+  }
+
+
+  countThreadMessages(messageId: string) {
+    let counter;
+    this.threads.forEach(thread => {
+      counter = 0;
+      if (thread.messages[0].includes(messageId)) {
+        thread.messages.length == 1 ? null : counter = thread.messages.length;
+      }
+    });
+    return counter;
+  }
+
+
+  // TODO: This function shall sort the messages by dates and cluster them by days.
+  sortMessagesByDate() {
+    if (this.messages) {
+      this.messages.forEach((message) => {
+        message.creationDate.toDate();
+      });
+    }
+  }
+
+
+  getUserProfile(message: Message) {
+    let user = this.users.find(user => user.userId === message.creatorId);
+    return user?.profilePicture != '' ? user?.profilePicture : '/../../assets/img/profile.png';
   }
 }

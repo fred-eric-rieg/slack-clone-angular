@@ -73,11 +73,17 @@
 .chat-container {
     box-sizing: border-box;
     position: relative;
-    padding: 8px 10px;
+
+    img {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+    }
 
     mat-card {
         background-color: unset;
         box-shadow: unset;
+        padding: 8px 10px;
 
         &:hover {
             background-color: #424242;
@@ -86,6 +92,10 @@
         mat-card-title {
             font-size: 1rem;
             font-weight: 700;
+        }
+
+        mat-card-content {
+            margin-left: 40px;
         }
     }
 }
