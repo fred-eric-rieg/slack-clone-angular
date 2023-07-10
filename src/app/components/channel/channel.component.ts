@@ -75,10 +75,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.loadThreads();
-    this.loadUsers();
-    this.loadMessages();
     this.loadActiveChannel();
+    this.loadUsers();
   }
 
   /**
@@ -115,6 +113,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.activeChannelId = params['id'];
       this.channelService.getChannel(this.activeChannelId).then((response) => {
         this.activeChannel = response.data() as Channel;
+        this.loadThreads(); // After the active channel is loaded, load the threads.
       });
     });
   }
@@ -128,20 +127,32 @@ export class ChannelComponent implements OnInit, OnDestroy {
     });
   }
 
-
+  /**
+   * Calls the threadService to load the threads of the active channel.
+   * Is destroyed on component destruction.
+   * Subscribes to the channelThreads observable.
+   */
   loadThreads() {
-    this.threadService.threads.pipe(
+    this.threadService.loadRelevantThreads(this.activeChannel.threads);
+    this.threadService.channelThreads.pipe(
       takeUntil(this.destroy$)
-    ).subscribe(threads => {
+    ).subscribe((threads: Thread[]) => {
       this.threads = threads;
+      this.loadMessages(); // After threads are loaded, load the messages.
     });
   }
 
-
+  /**
+   * Calls the messageService to load the messages of the active channel.
+   * Only the first message of each thread is loaded and sorted by creationDate.
+   */
   loadMessages() {
+    let messageIds = this.threads.map(thread => thread.messages[0]).flat();
+    this.messageService.loadRelevantMessages(messageIds);
     this.messageService.messages.pipe(
       takeUntil(this.destroy$)
     ).subscribe((messages: Message[]) => {
+      messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
       this.messages = messages;
     });
   }
