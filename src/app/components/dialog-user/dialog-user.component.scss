@@ -36,7 +36,7 @@
 .mat-drawer {
   top: 64px;
   width: 25%;
-  min-width: 200px;
+  min-width: 250px;
   max-width: 300px;
   background-color: var(--bg-color-side-nav);
 }
@@ -140,6 +140,7 @@ h4 {
   img {
     height: 200px;
     width: 200px;
+    cursor: pointer;
   }
 }
 

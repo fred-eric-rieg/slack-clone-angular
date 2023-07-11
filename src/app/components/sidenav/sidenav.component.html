@@ -1,8 +1,8 @@
-<mat-drawer-container class="resizable">
+<mat-drawer-container class="resizable" [ngClass]="{'hidden-sidenav': sidenavService.isLeftSidenavHidden}">
   <mat-drawer mode="side" opened>
     <div class="server-name">
       <div class="logo">
-        <span>Slack Clone</span>
+        <span>Slacky</span>
         <button class="new-msg-btn" mat-mini-fab>
           <mat-icon [ngStyle]="{ color: 'black' }">edit_note</mat-icon>
         </button>

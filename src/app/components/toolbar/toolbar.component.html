@@ -2,7 +2,7 @@
   <mat-toolbar color="primary">
     <mat-toolbar-row>
       <div class="toolbar-logo-container">
-        <button mat-icon-button>
+        <button (click)="openLeftSidenav()" mat-icon-button>
           <mat-icon>swap_horiz</mat-icon>
         </button>
         <!-- So können wir auf den aktuell eingeloggten User zugreifen -->
@@ -23,6 +23,7 @@
         </button>
         <button mat-icon-button [matMenuTriggerFor]="menu" #menuTrigger>
           <img src="assets/img/profile.png">
+          <!--<img [src]="user.profilePicture || 'assets/img/profile.png'">-->
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="openUserProfile()">My Profile</button>

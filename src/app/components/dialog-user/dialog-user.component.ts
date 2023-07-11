@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Firestore, collection, collectionData, doc, docData } from '@angular/fire/firestore';
 import { User } from 'src/models/user.class';
 import { DialogUserEditComponent } from '../dialog-user-edit/dialog-user-edit.component';
+import { DialogPictureEditComponent } from '../dialog-picture-edit/dialog-picture-edit.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { SidenavService } from './../../shared/services/sidenav.service';
@@ -19,7 +20,7 @@ export class DialogUserComponent implements OnInit {
   userId: string = '';
   user: User = new User();
   isSidenavHidden = false;
-  imgUrl: string = ''; // TEST
+  imgUrl: string = '';
 
 
   constructor(
@@ -101,6 +102,16 @@ export class DialogUserComponent implements OnInit {
     dialog.componentInstance.user = new User(this.user.toJson());
     dialog.componentInstance.userId = this.userId;
   }
+
+
+    /**
+   * Opens the dialog for editing the user's profile pic.
+   */
+    editPictureDetail() {
+      const dialog = this.dialog.open(DialogPictureEditComponent);
+      dialog.componentInstance.user = new User(this.user.toJson());
+      dialog.componentInstance.userId = this.userId;
+    }
 
 
   /**

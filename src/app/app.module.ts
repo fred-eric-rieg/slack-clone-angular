@@ -51,9 +51,9 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
+import { DialogPictureEditComponent } from './components/dialog-picture-edit/dialog-picture-edit.component';
 /** Components for File Storage */
 import { UploadFormComponent } from './components/upload-form/upload-form.component';
-import { UploadListComponent } from './components/upload-list/upload-list.component';
 import { UploadDetailsComponent } from './components/upload-details/upload-details.component';
 import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
 import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
@@ -62,7 +62,6 @@ import { NewChatComponent } from './components/new-chat/new-chat.component';
 /** Services */
 import { AuthService } from './shared/services/auth.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
-
 
 
 @NgModule({
@@ -81,12 +80,12 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     ForgotPasswordComponent,
     SignUpComponent,
     UploadFormComponent,
-    UploadListComponent,
     UploadDetailsComponent,
     SignUpComponent,
     DirectMessageChannelComponent,
     DirectMessagesSectionComponent,
-    NewChatComponent
+    NewChatComponent,
+    DialogPictureEditComponent
   ],
   imports: [
     BrowserModule,

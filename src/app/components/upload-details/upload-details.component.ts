@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FileUpload } from './../../../models/file-upload.class';
-import { FileUploadService } from './../../shared/services/file-upload.service';
+import { UploadService } from 'src/app/shared/services/upload.service';
+
 
 @Component({
   selector: 'app-upload-details',
@@ -9,13 +10,15 @@ import { FileUploadService } from './../../shared/services/file-upload.service';
 })
 export class UploadDetailsComponent implements OnInit {
   @Input() fileUpload!: FileUpload;
+  private basePath = '/uploads';
 
-  constructor(private uploadService: FileUploadService) { }
+  constructor(public uploadFile: UploadService) { }
 
   ngOnInit(): void {
   }
 
-  deleteFileUpload(fileUpload: FileUpload): void {
-    this.uploadService.deleteFile(fileUpload);
+
+  deleteFile(fileUpload: FileUpload): void {
+    this.uploadFile.deleteFile();
   }
 }
