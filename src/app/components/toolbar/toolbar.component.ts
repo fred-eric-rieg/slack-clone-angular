@@ -16,7 +16,7 @@ import { ChannelService } from 'src/app/shared/services/channel.service';
   styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent {
-  @Output() sidenavOpened = new EventEmitter<void>();
+  @Output() sidenavOpened = new EventEmitter<boolean>();
 
 
   constructor(public dialog: MatDialog,
@@ -45,7 +45,7 @@ export class ToolbarComponent {
 
 
   openUserProfile() {
-    this.sidenavService.sidenavOpened.emit();
+    this.sidenavService.sidenavOpened.emit(false);
   }
 
 

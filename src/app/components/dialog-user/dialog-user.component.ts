@@ -19,7 +19,7 @@ export class DialogUserComponent implements OnInit {
   users: any;
   userId: string = '';
   user: User = new User();
-  isSidenavHidden = false;
+  isSidenavHidden = true;
   imgUrl: string = '';
 
 
@@ -72,8 +72,10 @@ export class DialogUserComponent implements OnInit {
     /**
      * Checks if sidenav with profile info is oppened.
      */
-    this.sidenavService.sidenavOpened.subscribe(() => {
-      this.isSidenavHidden = false;
+    this.sidenavService.sidenavOpened.subscribe((response) => {
+      console.log(this.isSidenavHidden);
+      this.isSidenavHidden = response;
+      console.log(this.isSidenavHidden);
     });
   }
 
