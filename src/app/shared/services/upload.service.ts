@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { UserService } from './user.service';
+import { User } from 'src/models/user.class';
 
 @Injectable({
   providedIn: 'root'
@@ -71,7 +72,15 @@ export class UploadService {
   }
 
 
-  deleteFile() {
-  }
+  async deleteFile(userId: string) {
+    console.log(userId);
+    let user = await this.userService.getUserNotObservable(userId)
+      .then(response => {
+        return response.data() as User
+      });
+    user.profilePicture = '';
 
+    this.userService.update(user);
+    console.log("user successfully deleted", user);
+  }
 }
