@@ -75,6 +75,11 @@ h4 {
   }
 }
 
+.activeLink {
+  border-radius: 5px;
+  background-color: rgb(35, 33, 39);
+}
+
 .user-direct-msg {
   gap: 8px;
   font-size: 14px;
@@ -94,7 +99,7 @@ h4 {
     border-radius: 5px;
   }
 
-  .extra-members{
+  .extra-members {
     font-size: 12px;
     padding: 0px 4px;
     border: 1px solid #555;
