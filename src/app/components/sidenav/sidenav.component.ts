@@ -38,9 +38,19 @@ export class sidenavComponent implements OnInit {
         this.channel.members = ['Zta41sUcC7rLGHbpMmn4'];
       }
     });
-    this.channelService.channels.subscribe((channels) => {
-      this.allChannels = channels;
-    })
+    this.loadChannels();
+  }
+
+
+  /**
+   * Loads all channels from the database once on initialization.
+   */
+  loadChannels() {
+    this.channelService.onetimeLoadChannels().then((querySnapshot) => {
+      this.allChannels = querySnapshot.docs.map(doc => {
+        return doc.data() as Channel;
+      });
+    });
   }
 
 

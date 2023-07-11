@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, getDoc, getDocs, setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Channel } from 'src/models/channel.class';
 
@@ -12,13 +12,16 @@ export class ChannelService {
   channels!: Observable<any>;
 
   constructor(private firestore: Firestore) {
-    this.loadChannel();
    }
 
 
-  loadChannel() {
+  /**
+   * Loads all channels from the database once.
+   * @returns a promise with all channels from the database.
+   */
+  onetimeLoadChannels() {
     const channelCollection = collection(this.firestore, 'channels');
-    this.channels = collectionData(channelCollection);
+    return getDocs(channelCollection);
   }
 
   /**
@@ -58,9 +61,9 @@ export class ChannelService {
   }
 
   /**
-   * Retrieves a channel from the database.
+   * Retrieves a single channel from the database with a single read.
    * @param channelId as string.
-   * @returns a document snapshot of the channel.
+   * @returns a single document from the database.
    */
   getChannel(channelId: string) {
     const channelCollection = collection(this.firestore, 'channels');
