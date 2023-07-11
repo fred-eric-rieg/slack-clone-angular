@@ -48,6 +48,7 @@ export class sidenavComponent implements OnInit {
   loadChannels() {
     this.channelService.onetimeLoadChannels().then((querySnapshot) => {
       this.allChannels = querySnapshot.docs.map(doc => {
+        console.log(doc.data());
         return doc.data() as Channel;
       });
     });
