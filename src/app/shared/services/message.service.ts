@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, setDoc, collectionData } from '@angular/fire/firestore';
+import { Firestore, collection, doc, setDoc, getDocs, query, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Message } from 'src/models/message.class';
 
@@ -10,14 +10,19 @@ export class MessageService {
 
   messages!: Observable<any>;
 
-  constructor(private firestore: Firestore) {
-    this.loadMessages();
+  constructor(private firestore: Firestore) {}
+
+
+  loadAllMessages() {
+    const messageCollection = collection(this.firestore, 'messages');
+    return getDocs(messageCollection);
   }
 
 
-  loadMessages() {
+  loadThreadMessages(messageIds: string[]) {
     const messageCollection = collection(this.firestore, 'messages');
-    this.messages = collectionData(messageCollection);
+    const q = query(messageCollection, where('messageId', 'in', messageIds));
+    return getDocs(q);
   }
 
   /**

@@ -128,30 +128,26 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Subscribes to the threadService to load all threads and filters
-   * the threads that are in the active channel.
+   * Load all threads of the active channel once.
    */
   loadThreads() {
-    this.threadService.allThreads.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((threads: Thread[]) => {
-      this.threads = threads.filter(thread => this.activeChannel.threads.includes(thread.threadId));
+    this.threadService.loadChannelThreads(this.activeChannel.threads).then((querySnapshot) => {
+      this.threads = querySnapshot.docs.map((doc) => {
+        return doc.data() as Thread;
+      });
       this.loadMessages(); // After the threads are loaded, load the messages.
     });
   }
 
   /**
-   * Subscribes to the messageService to load all messages and filters
-   * the messages that are in the filtered threads.
+   * Load all messages of the active channel once.
    */
   loadMessages() {
     let messageIds = this.threads.map(thread => thread.messages[0]).flat();
-    this.messageService.messages.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((messages: Message[]) => {
-      messages = messages.filter(message => messageIds.includes(message.messageId));
-      messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
-      this.messages = messages;
+    this.messageService.loadThreadMessages(messageIds).then((querySnapshot) => {
+      this.messages = querySnapshot.docs.map((doc) => {
+        return doc.data() as Message;
+      });
     });
   }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, setDoc } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Thread } from 'src/models/thread.class';
 
@@ -10,9 +10,7 @@ export class ThreadService {
 
   allThreads!: Observable<any>;
 
-  constructor(private firestore: Firestore) {
-    this.loadAllThreads();
-  }
+  constructor(private firestore: Firestore) {}
 
   /**
    * Creating a new thread in the database, sets the threadId to the document id
@@ -37,6 +35,13 @@ export class ThreadService {
 
   loadAllThreads() {
     const threadCollection = collection(this.firestore, 'threads');
-    this.allThreads = collectionData(threadCollection);
+    return getDocs(threadCollection);
+  }
+
+
+  loadChannelThreads(threadIds: string[]) {
+    const threadCollection = collection(this.firestore, 'threads');
+    const q = query(threadCollection, where('threadId', 'in', threadIds));
+    return getDocs(q);
   }
 }
