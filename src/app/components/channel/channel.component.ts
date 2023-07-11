@@ -148,6 +148,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.messages = querySnapshot.docs.map((doc) => {
         return doc.data() as Message;
       });
+      this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
     });
   }
 
