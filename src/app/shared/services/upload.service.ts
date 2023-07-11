@@ -71,4 +71,7 @@ export class UploadService {
   }
 
 
+  deleteFile() {
+  }
+
 }

@@ -17,7 +17,6 @@ import { ChannelService } from 'src/app/shared/services/channel.service';
 })
 export class ToolbarComponent {
   @Output() sidenavOpened = new EventEmitter<void>();
-drawer: any;
 
 
   constructor(public dialog: MatDialog,
