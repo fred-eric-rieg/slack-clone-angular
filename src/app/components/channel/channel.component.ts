@@ -146,6 +146,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     let messageIds = this.threads.map(thread => thread.messages[0]).flat();
     this.messageService.loadThreadMessages(messageIds).then((querySnapshot) => {
       this.messages = querySnapshot.docs.map((doc) => {
+        console.log("Message loaded: " + doc.data());
         return doc.data() as Message;
       });
       this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
