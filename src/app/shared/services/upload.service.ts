@@ -81,6 +81,6 @@ export class UploadService {
     user.profilePicture = '';
 
     this.userService.update(user);
-    console.log("user successfully deleted", user);
+    console.log("user successfully deleted!", user);
   }
 }
