@@ -88,11 +88,15 @@ export class UserService {
    * @param email email to get the name
    */
   setNewUser(uID: string, email: string) {
-    console.log("New email: ", email + " New uID: ", uID)
-    this.user.userId = uID;
-    this.user.displayName = this.splitMail(email);
-    this.user.email = email;
-    setDoc(doc(this.userCollection, uID), this.user.toJson())
+    if (this.get(uID)) {
+      console.log("User already exists");
+    } else {
+      console.log("New email: ", email + " New uID: ", uID)
+      this.user.userId = uID;
+      this.user.displayName = this.splitMail(email);
+      this.user.email = email;
+      setDoc(doc(this.userCollection, uID), this.user.toJson());
+    }
   }
 
   /**
