@@ -114,6 +114,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.channelService.getChannel(this.activeChannelId).then((response) => {
         this.activeChannel = response.data() as Channel;
         this.loadThreads(); // After the active channel is loaded, load the threads.
+        /**
+         * WARNING: This subscription loads the active channel again, when the active channel changes and
+         * then loads the Threads & Messages again from Firestore. Instead, caching could be an option.
+         */
       });
     });
   }
@@ -133,6 +137,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   loadThreads() {
     this.threadService.loadChannelThreads(this.activeChannel.threads).then((querySnapshot) => {
       this.threads = querySnapshot.docs.map((doc) => {
+        console.log("Channel Threads loaded: ", doc.data());
         return doc.data() as Thread;
       });
       this.loadMessages(); // After the threads are loaded, load the messages.
@@ -146,7 +151,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     let messageIds = this.threads.map(thread => thread.messages[0]).flat();
     this.messageService.loadThreadMessages(messageIds).then((querySnapshot) => {
       this.messages = querySnapshot.docs.map((doc) => {
-        console.log("Message loaded: " + doc.data());
+        console.log("Channel Messages loaded: ", doc.data());
         return doc.data() as Message;
       });
       this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
