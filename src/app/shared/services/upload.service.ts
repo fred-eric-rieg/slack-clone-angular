@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getStorage, deleteObject, ref, uploadBytesResumable, getDownloadURL, listAll} from "firebase/storage";
 import { UserService } from './user.service';
 import { User } from 'src/models/user.class';
 
@@ -78,6 +78,23 @@ export class UploadService {
       .then(response => {
         return response.data() as User
       });
+
+    const storage = getStorage();
+
+    // Create a reference to the file to delete
+    let path = 'uploads/' + user.profilePicture.split('?')[0].split('%2F')[1];
+    console.log(path);
+    const desertRef = ref(storage, path);
+
+    // Delete the file
+    deleteObject(desertRef).then(() => {
+      console.log('file deleted');
+
+      // File deleted successfully
+    }).catch((error) => {
+      console.log(error);
+    });
+
     user.profilePicture = '';
 
     this.userService.update(user);
