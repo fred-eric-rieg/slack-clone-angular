@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { getStorage, deleteObject, ref, uploadBytesResumable, getDownloadURL, listAll} from "firebase/storage";
+import { getStorage, deleteObject, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { UserService } from './user.service';
 import { User } from 'src/models/user.class';
 
@@ -8,14 +8,14 @@ import { User } from 'src/models/user.class';
 })
 export class UploadService {
 
+  storage = getStorage();
+
   constructor(private userService: UserService) { }
 
 
   uploadFile(file: File) {
-    const storage = getStorage();
-
     // Upload file and metadata to the object 'images/mountains.jpg'
-    const storageRef = ref(storage, 'uploads/' + file.name);
+    const storageRef = ref(this.storage, 'uploads/' + file.name);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     // Listen for state changes, errors, and completion of the upload.
@@ -34,8 +34,6 @@ export class UploadService {
         }
       },
       (error) => {
-        // A full list of error codes is available at
-        // https://firebase.google.com/docs/storage/web/handle-errors
         switch (error.code) {
           case 'storage/unauthorized':
             // User doesn't have permission to access the object
@@ -43,9 +41,6 @@ export class UploadService {
           case 'storage/canceled':
             // User canceled the upload
             break;
-
-          // ...
-
           case 'storage/unknown':
             // Unknown error occurred, inspect error.serverResponse
             break;
@@ -54,10 +49,11 @@ export class UploadService {
       () => {
         // Upload completed successfully, now we can get the download URL
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log('File available at', downloadURL);
+
           this.userService.getCurrentUser().then((userId: any) => {
-            console.log(userId);
+
             this.userService.users.subscribe((users: any) => {
+
               users.forEach((user: any) => {
                 if (user.userId === userId) {
                   user.profilePicture = downloadURL;
@@ -73,31 +69,25 @@ export class UploadService {
 
 
   async deleteFile(userId: string) {
-    console.log(userId);
+    // Get the current logged in client-user
     let user = await this.userService.getUserNotObservable(userId)
       .then(response => {
         return response.data() as User
       });
 
-    const storage = getStorage();
-
     // Create a reference to the file to delete
     let path = 'uploads/' + user.profilePicture.split('?')[0].split('%2F')[1];
-    console.log(path);
-    const desertRef = ref(storage, path);
+    const desertRef = ref(this.storage, path);
 
     // Delete the file
     deleteObject(desertRef).then(() => {
-      console.log('file deleted');
-
       // File deleted successfully
+      // Update user profile picture reference
+      user.profilePicture = '';
+      this.userService.update(user);
+      console.log("Profile picture successfully deleted from: ", user);
     }).catch((error) => {
       console.log(error);
     });
-
-    user.profilePicture = '';
-
-    this.userService.update(user);
-    console.log("user successfully deleted!", user);
   }
 }
