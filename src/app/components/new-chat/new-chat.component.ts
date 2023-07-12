@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { take } from 'rxjs';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { UserService } from 'src/app/shared/services/user.service';
@@ -15,6 +16,7 @@ export class NewChatComponent {
   constructor(
     private userService: UserService,
     private chatService: ChatService,
+    private snackBar: MatSnackBar,
   ){
     this.getAllUsers();
   }
@@ -25,8 +27,22 @@ export class NewChatComponent {
    */
   getAllUsers(){
     this.userService.users.subscribe(data => {
-      this.allUsers = data;
+      this.allUsers = this.removeCurrentUser(data);
     });
+  }
+
+  /** compare all users with current user and
+   * remove it from array
+    */
+  removeCurrentUser(allUsers: any){
+    const currentUser = this.userService.currentUser;
+    let newAllUsers: Array<any> = [];
+    allUsers.forEach((e: any) => {
+      if (currentUser != e.userId){
+        newAllUsers.push(e);
+      }
+    });
+    return newAllUsers;
   }
 
   /**
@@ -56,13 +72,19 @@ export class NewChatComponent {
    * @param users added Users as Object
    */
   createNewChat(users: any){
-    const chatId = this.generateRandomId();
-    this.chatService.updateUserChatData(chatId);
-    this.chatService.setChatData(chatId, users);
+    if (users.length >= 1){
+      const chatId = this.generateRandomId();
+      this.chatService.updateUserChatData(chatId);
+      this.chatService.setChatData(chatId, users);
+    } else this.snackBar.open("Add atleast one member to chat", "OK", {
+      duration: 5000,
+    });
   }
 
-  removeUser(user: any){
-    console.log(user);
+  /** removes user in html of already added users 
+   * based on index of addedUsers array */
+  removeUser(userIndex: number){
+    this.addedUsers.splice(userIndex, 1);
   }
 
   
