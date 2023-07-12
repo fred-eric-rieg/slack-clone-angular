@@ -110,7 +110,9 @@ export class UserService {
           this.currentUser = user.uid;
           resolve(this.currentUser);
         } else {
-          reject(new Error("User is not logged in."))
+          console.log("%cGuest logged in", "color:lightgreen");
+          console.log("%cTodo: Zeile 115 im UserService", "color:orange;font-size:1.2rem;font-weight: 800;text-shadow: 6px 6px 6px #17c0eb;");
+          //reject(new Error("User is not logged in."))
         }
       })
     })
