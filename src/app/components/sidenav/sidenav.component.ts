@@ -60,9 +60,6 @@ export class sidenavComponent implements OnInit {
         console.log("Loading Channels for sidenav: ", doc.data());
         return doc.data() as Channel;
       });
-      this.channelService.channels.subscribe((channels) => {
-        this.allChannels = channels;
-      })
     });
   }
 
