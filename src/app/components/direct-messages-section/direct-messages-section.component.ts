@@ -56,21 +56,17 @@ export class DirectMessagesSectionComponent implements OnInit {
   }
 
   getChatDataById(chatIds: Array<string>) {
-    if (chatIds != undefined){
-      chatIds.forEach(chatId => {
-        const data = this.chatService.returnChatData(chatId);
-        data
-        .pipe(take(1))
-        .subscribe(chat => {
-          this.creationDate.push(chat['creationDate']);
-          this.memberIds.push(chat['members']);
-          this.threads.push(chat['threads']);
-        })
+    if (chatIds != undefined) {
+      chatIds.forEach(async (chatId: string) => {
+        const chatData: any = await this.chatService.returnQueryChatData(chatId);
+        this.creationDate.push([...chatData][0]['creationDate']);
+        this.memberIds.push([...chatData][0]['members']);
+        this.threads.push([...chatData][0]['threads']);
       })
     }
   }
 
-  setNameFirstUser(){
+  setNameFirstUser() {
     setTimeout(() => {
       this.memberIds.forEach((user: any) => {
         this.userService.getUserData(user[0])
@@ -82,11 +78,11 @@ export class DirectMessagesSectionComponent implements OnInit {
     }, 600)
   }
 
-  test(){
+  test() {
     this.userService.getUserData(this.currentUserId)
-        .subscribe(name => {
-          // console.log(name);
-        })
+      .subscribe(name => {
+        // console.log(name);
+      })
   }
 
   toggleDropdown() {

@@ -50,6 +50,17 @@ export class ChatService implements OnInit {
     return docData(docRef);
   }
 
+  async returnQueryChatData(chatId: string){
+    let userChats: Array<any> = [];
+    const snap = await getDocs(this.chatCollection);
+    snap.forEach((doc) => {
+      if (doc.id === chatId){
+        userChats.push(doc.data())
+      }
+    })
+    return userChats;
+  }
+
   /** After a new chat was created this function updates
    * and push chatIds into the document of current user
    */

@@ -83,6 +83,7 @@ export class NewChatComponent {
         this.chatService.updateUserChatData(chatId);
       } else this.chatService.setUserChatData(chatId);
       this.chatService.setChatData(chatId, users);
+      this.addedUsers = [];
     } else this.snackBar.open("Add atleast one member to chat", "OK", {
       duration: 5000,
     });
