@@ -17,7 +17,7 @@ export class NewChatComponent {
     private userService: UserService,
     private chatService: ChatService,
     private snackBar: MatSnackBar,
-  ){
+  ) {
     this.getAllUsers();
   }
 
@@ -25,7 +25,7 @@ export class NewChatComponent {
    * Get all users of 'users' document in firestore and
    * push whole Object to 'allUsers'
    */
-  getAllUsers(){
+  getAllUsers() {
     this.userService.users.subscribe(data => {
       this.allUsers = this.removeCurrentUser(data);
     });
@@ -34,11 +34,11 @@ export class NewChatComponent {
   /** compare all users with current user and
    * remove it from array
     */
-  removeCurrentUser(allUsers: any){
+  removeCurrentUser(allUsers: any) {
     const currentUser = this.userService.currentUser;
     let newAllUsers: Array<any> = [];
     allUsers.forEach((e: any) => {
-      if (currentUser != e.userId){
+      if (currentUser != e.userId) {
         newAllUsers.push(e);
       }
     });
@@ -49,9 +49,13 @@ export class NewChatComponent {
    * get data as Object of specific user and filter duplicates
    * @param userId input id of user as string
    */
-  addUser(userId: string){
+  addUser(userId: string) {
     this.userService.get(userId).pipe(take(1)).subscribe(data => {
-      this.filterDuplicates(data);
+      if (this.addedUsers.length < 5) {
+        this.filterDuplicates(data);
+      } else this.snackBar.open("Limit of chat members reached. (max 5)", "OK", {
+        duration: 5000,
+      })
     })
   }
 
@@ -59,7 +63,7 @@ export class NewChatComponent {
    * filter duplicates in addedUsers Array 
    * @param user input as a Object
    */
-  filterDuplicates(user: any){
+  filterDuplicates(user: any) {
     this.addedUsers.push(user);
     this.addedUsers = this.addedUsers.filter((value, index, self) =>
       index === self.findIndex((t) => (
@@ -71,23 +75,35 @@ export class NewChatComponent {
    * create a new chat with all added users
    * @param users added Users as Object
    */
-  createNewChat(users: any){
-    if (users.length >= 1){
+  async createNewChat(users: any) {
+    const userExists = await this.checkCurrentUserChats();
+    if (users.length >= 1) {
       const chatId = this.generateRandomId();
-      this.chatService.updateUserChatData(chatId);
+      if (userExists === true){
+        this.chatService.updateUserChatData(chatId);
+      } else this.chatService.setUserChatData(chatId);
       this.chatService.setChatData(chatId, users);
     } else this.snackBar.open("Add atleast one member to chat", "OK", {
       duration: 5000,
     });
   }
 
+  /** get all userChat IDs and compare with current user
+   * @returns true - if currentUser has already a doc
+   */
+  async checkCurrentUserChats() {
+    const chatIds = await this.chatService.returnUserChatIds();
+    const currentUser = this.userService.currentUser;
+    return chatIds.includes(currentUser);
+  }
+
   /** removes user in html of already added users 
    * based on index of addedUsers array */
-  removeUser(userIndex: number){
+  removeUser(userIndex: number) {
     this.addedUsers.splice(userIndex, 1);
   }
 
-  
+
   /** Generate a random ID with 20 chars
    * @returns string
    */

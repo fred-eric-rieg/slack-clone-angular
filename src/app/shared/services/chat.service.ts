@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { CollectionReference, DocumentData, DocumentReference, Firestore, Timestamp, arrayUnion, collectionData, doc, docData, docSnapshots, setDoc, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, DocumentReference, Firestore, Timestamp, arrayUnion, collectionData, doc, docData, docSnapshots, getDocs, onSnapshot, setDoc, updateDoc } from '@angular/fire/firestore';
 import { collection } from '@firebase/firestore';
 import { UserService } from './user.service';
 import { Chat } from 'src/models/chat.class';
@@ -33,6 +33,16 @@ export class ChatService implements OnInit {
       return docSnapshots(docRef);
   }
 
+  async returnUserChatIds(){
+    let chatIds: Array<any> = [];
+    const querySnapshot = await getDocs(this.userChatCollection);
+    querySnapshot.forEach((doc) => {
+      chatIds.push(doc.id);
+    })
+
+    return chatIds;
+  }
+
 
   /** returns fs document data for a specific chat id */
   returnChatData(chatId: string){
@@ -47,6 +57,19 @@ export class ChatService implements OnInit {
     this.userService.getCurrentUser().then((userId) => {
       this.currentUserId = userId;
       updateDoc(doc(this.userChatCollection, this.currentUserId),
+        {
+          chatIds: arrayUnion(chatId)
+        })
+    });
+  }
+  /** After a new chat was created but no chat already exists
+   * this function sets a new doc
+   * and push chatIds into the document of current user
+   */
+  setUserChatData(chatId: string) {
+    this.userService.getCurrentUser().then((userId) => {
+      this.currentUserId = userId;
+      setDoc(doc(this.userChatCollection, this.currentUserId),
         {
           chatIds: arrayUnion(chatId)
         })

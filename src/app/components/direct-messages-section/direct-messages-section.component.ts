@@ -52,7 +52,6 @@ export class DirectMessagesSectionComponent implements OnInit {
       .subscribe(snap => {
         this.chatIds = snap.get('chatIds');
         this.getChatDataById(this.chatIds);
-
       })
   }
 

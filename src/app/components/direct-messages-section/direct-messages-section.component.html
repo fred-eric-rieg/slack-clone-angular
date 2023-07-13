@@ -19,7 +19,7 @@
       <!-- <img src="" alt="Profilbild"> -->
       <mat-icon>person</mat-icon>
       <p>{{memberNames[i]}}</p>
-      <div class="extra-members" *ngIf="memberIds[i].length > 1">+{{memberIds[i].length-1}}</div>
+      <!-- <div class="extra-members" *ngIf="memberIds[i].length > 1">+{{memberIds[i].length-1}}</div> -->
     </div>
     <div>
       <div class="channelitem channel flex-ac" [routerLink]="'create-chat'">
