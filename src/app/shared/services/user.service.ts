@@ -1,7 +1,7 @@
 import { User } from './../../../models/user.class';
 import { Injectable } from '@angular/core';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, getDoc, getDocs, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -82,21 +82,28 @@ export class UserService {
 
 
   /**
-   * after signup (with mail/with google) it creates a new user
+   * after signup (with mail/with google) create a new user
+   * if user dont already exist
    * in firestore database with uID as doc id
    * @param uID id of user in fs authentication
    * @param email email to get the name
    */
-  setNewUser(uID: string, email: string) {
-    if (this.get(uID)) {
-      console.log("User already exists");
-    } else {
-      console.log("New email: ", email + " New uID: ", uID)
-      this.user.userId = uID;
-      this.user.displayName = this.splitMail(email);
-      this.user.email = email;
-      setDoc(doc(this.userCollection, uID), this.user.toJson());
-    }
+  async setNewUser(uID: string, email: string) {
+    await this.getCurrentUser().then(async (res: any) => {
+      let allUsers = await this.snapAllUsers();
+      let allUserIds: Array<string> = [];
+      allUsers.forEach((user: any) => {
+        allUserIds.push(user.userId);
+      })
+      if (!allUserIds.includes(res)) this.createUser(uID, email);
+    })
+  }
+
+  createUser(uID: string, email: string){
+    this.user.userId = uID;
+    this.user.displayName = this.splitMail(email);
+    this.user.email = email;
+    setDoc(doc(this.userCollection, uID), this.user.toJson());
   }
 
   /**
@@ -158,6 +165,15 @@ export class UserService {
   getAllUsers() {
     const userCollection = collection(this.firestore, 'users');
     this.users = collectionData(userCollection);
+  }
+
+  async snapAllUsers(){
+    let allUsers: Array<any> = [];
+    const userSnapshot = await getDocs(this.userCollection);
+    userSnapshot.forEach((doc) => {
+      allUsers.push(doc.data());
+    })
+    return allUsers;
   }
 
 
