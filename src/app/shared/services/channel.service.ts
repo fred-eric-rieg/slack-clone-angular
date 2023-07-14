@@ -46,6 +46,19 @@ export class ChannelService {
   }
 
 
+  updateChannel(channel: Channel) {
+    const channelCollection = collection(this.firestore, 'channels');
+    const channelDocument = doc(channelCollection, channel.channelId);
+
+    setDoc(channelDocument, channel).then(() => {
+      console.log('Channel updated successfully!');
+    }).catch((error: any) => {
+      console.log(error);
+    }
+    );
+  }
+
+
   createNewChannel(channel: Channel) {
     const channelCollection = collection(this.firestore, 'channels');
     const channelDocument = doc(channelCollection);
