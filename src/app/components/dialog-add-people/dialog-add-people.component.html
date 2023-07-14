@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Add People</h1>
+<div mat-dialog-content id="dialog-content">
+    <mat-form-field>
+        <mat-label>Select...</mat-label>
+        <mat-select multiple [(ngModel)]="dialogData.people">
+          <mat-option *ngFor="let user of users" [value]="user.userId" [value]="user.userId">{{ user.displayName }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+</div>
+
+
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button [mat-dialog-close]="dialogData" [disabled]="dialogData.people.length == 0">
+        OK
+    </button>
+</div>
