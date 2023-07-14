@@ -2,18 +2,33 @@
 
     <div class="sticky-header">
         # {{ activeChannel.name }}
+
+        <div *ngIf="getMembers()!.length == 1">
+            <img class="mini-profile" src="{{ getUserProfileAlt(0) }}" alt="small profile picture">
+        </div>
+        <div *ngIf="getMembers()!.length > 1 && getMembers()!.length < 4" class="align-profiles">
+            <div *ngFor="let member of activeChannel.members; let i = index">
+                <img class="mini-profile" src="{{ getUserProfileAlt(i) }}" alt="small profile picture">
+            </div>
+        </div>
+        <div *ngIf="getMembers()!.length >= 4" class="align-profiles">
+            <img class="mini-profile" src="{{ getUserProfileAlt(0) }}" alt="small profile picture">
+            <img class="mini-profile" src="{{ getUserProfileAlt(1) }}" alt="small profile picture">
+            <img class="mini-profile" src="{{ getUserProfileAlt(2) }}" alt="small profile picture">
+            <p class="counter">+ {{ activeChannel.members.length - 3}}</p>
+        </div>
     </div>
 
     <div class="scroll-wrapper">
         <div class="title-container">
             <h1>{{ activeChannel.name }}</h1>
-                <!-- REFERENZEN ZU USER MUESSEN NOCH ANGEPASST WERDEN-->
-                <h2>{{ getCreator() }} has created this Channel
-                    on the {{ activeChannel.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} |
-                    {{ activeChannel.creationDate.toDate() | date : "h:mm a"}}. This is the start of the
-                    {{ activeChannel.name }} Channel.</h2>
+            <!-- REFERENZEN ZU USER MUESSEN NOCH ANGEPASST WERDEN-->
+            <h2>{{ getCreator() }} has created this Channel
+                on the {{ activeChannel.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} |
+                {{ activeChannel.creationDate.toDate() | date : "h:mm a"}}. This is the start of the
+                {{ activeChannel.name }} Channel.</h2>
 
-                <p *ngIf="activeChannel.description != ''">Description: {{ activeChannel.description }}</p>
+            <p *ngIf="activeChannel.description != ''">Description: {{ activeChannel.description }}</p>
 
 
             <div class="row">

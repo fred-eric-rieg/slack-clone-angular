@@ -19,6 +19,7 @@ import { Thread } from 'src/models/thread.class';
 import { getAuth } from '@angular/fire/auth';
 import { Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { DialogAddPeopleComponent } from '../dialog-add-people/dialog-add-people.component';
 
 
 @Component({
@@ -136,6 +137,13 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
 
+  getMembers() {
+    if (!this.users) return "";
+    let members = this.users.filter(user => this.activeChannel.members.includes(user.userId));
+    return members;
+  }
+
+
   loadUsers() {
     this.userService.users.pipe(
       takeUntil(this.destroy$)
@@ -250,6 +258,12 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
 
+  getUserProfileAlt(index: number) {
+    let user = this.users.find(user => user.userId === this.activeChannel.members[index]);
+    return user?.profilePicture != '' ? user?.profilePicture : '/../../assets/img/profile.png';
+  }
+
+
   /**
    * Opens the description dialog and subscribes to the dialog data
    * to update the channel description.
@@ -278,5 +292,28 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   openAddPeopleDialog() {
     console.log('Open add people dialog');
+    const dialogRef = this.dialog.open(DialogAddPeopleComponent, {
+      width: '350px',
+      data: {
+        people: this.activeChannel.members,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(async (dialogData) => {
+      if (dialogData && dialogData.people) {
+        this.addPeople(dialogData.people);
+      }
+    });
+  }
+
+
+  addPeople(people: string[]) {
+    people.forEach((person) => {
+      let user = this.users.find(user => user.userId === person);
+      if (user) {
+        this.activeChannel.members.push(user.userId);
+      }
+    });
+    this.channelService.updateChannel(this.activeChannel);
   }
 }
