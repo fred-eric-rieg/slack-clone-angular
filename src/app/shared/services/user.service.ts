@@ -1,7 +1,7 @@
 import { User } from './../../../models/user.class';
 import { Injectable } from '@angular/core';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, getDoc, getDocs, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -158,6 +158,12 @@ export class UserService {
   getAllUsers() {
     const userCollection = collection(this.firestore, 'users');
     this.users = collectionData(userCollection);
+  }
+
+
+  getAllUsersNotObservable() {
+    const userCollection = collection(this.firestore, 'users');
+    return getDocs(userCollection);
   }
 
 
