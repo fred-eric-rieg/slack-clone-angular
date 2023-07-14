@@ -62,6 +62,7 @@ import { NewChatComponent } from './components/new-chat/new-chat.component';
 /** Services */
 import { AuthService } from './shared/services/auth.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
+import { DialogAddDescriptionComponent } from './components/dialog-add-description/dialog-add-description.component';
 
 
 @NgModule({
@@ -85,7 +86,8 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     DirectMessageChannelComponent,
     DirectMessagesSectionComponent,
     NewChatComponent,
-    DialogPictureEditComponent
+    DialogPictureEditComponent,
+    DialogAddDescriptionComponent
   ],
   imports: [
     BrowserModule,

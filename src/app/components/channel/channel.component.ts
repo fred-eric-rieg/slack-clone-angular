@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
-
+import { DialogAddDescriptionComponent } from '../dialog-add-description/dialog-add-description.component';
+import { MatDialog } from '@angular/material/dialog';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill/public-api';
 import 'quill-emoji/dist/quill-emoji.js';
 
@@ -66,6 +67,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject();
 
   constructor(
+    public dialog: MatDialog,
     private messageService: MessageService,
     private threadService: ThreadService,
     private channelService: ChannelService,
@@ -120,6 +122,17 @@ export class ChannelComponent implements OnInit, OnDestroy {
          */
       });
     });
+  }
+
+
+  /**
+   * 
+   * @returns the displayName of the creator of the active channel.
+   */
+  getCreator() {
+    if (!this.users) return;
+    let user = this.users.find(user => user.userId === this.activeChannel.creatorId);
+    return user?.displayName;
   }
 
 
@@ -234,5 +247,36 @@ export class ChannelComponent implements OnInit, OnDestroy {
   getUserProfile(message: Message) {
     let user = this.users.find(user => user.userId === message.creatorId);
     return user?.profilePicture != '' ? user?.profilePicture : '/../../assets/img/profile.png';
+  }
+
+
+  /**
+   * Opens the description dialog and subscribes to the dialog data
+   * to update the channel description.
+   */
+  openDescriptionDialog() {
+    console.log('Open description dialog');
+    const dialogRef = this.dialog.open(DialogAddDescriptionComponent);
+
+    dialogRef.afterClosed().subscribe(async (dialogData) => {
+      if (dialogData && dialogData.description) {
+        this.updateDescription(dialogData.description);
+      }
+    });
+  }
+
+
+  /**
+   * Calls the channelService to update the channel description.
+   * @param dialogData as string.
+   */
+  updateDescription(dialogData: string) {
+    this.activeChannel.description = dialogData;
+    this.channelService.updateChannel(this.activeChannel);
+  }
+
+
+  openAddPeopleDialog() {
+    console.log('Open add people dialog');
   }
 }
