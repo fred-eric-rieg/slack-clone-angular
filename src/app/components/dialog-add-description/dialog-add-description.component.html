@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Add channel description</h1>
+<div mat-dialog-content id="dialog-content">
+    <mat-form-field class="mr-16 mt-4" appearance="fill">
+      <mat-label>Channnel description</mat-label>
+      <input matInput [(ngModel)]="dialogData.description">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="dialogData" [disabled]="dialogData.description.length == 0">
+    OK
+  </button>
+</div>
