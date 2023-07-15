@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>{{ activeChannel.name }}</h1>
+<div mat-dialog-content>
+
+    <div class="center blue" (click)="openAddPeopleDialog()">
+        <mat-icon>person_add</mat-icon>
+        Add people
+    </div>
+
+    <div class="container">
+        <div *ngFor="let user of users; let i = index">
+            <mat-card *ngIf="activeChannel.members.includes(user.userId)">
+                <div class="align-center">
+                    <img src="{{ user.profilePicture || '/../../assets/img/profile.png' }}" alt="user profile picture">
+                    {{ user.displayName }}
+                </div>
+                <div class="center blue" (click)="removeUserFromChannel(user.userId)">
+                    <mat-icon>remove_circle</mat-icon>
+                    Remove
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    
+
+</div>
+
+
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+</div>

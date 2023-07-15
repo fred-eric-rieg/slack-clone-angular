@@ -1,0 +1,45 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+mat-card {
+    width: 100%;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .align-center {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    img {
+        width: 32px;
+        height: 32px;
+    }
+
+    &:hover {
+        background-color: #565555;
+    }
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.blue {
+    color: #2196F3;
+}

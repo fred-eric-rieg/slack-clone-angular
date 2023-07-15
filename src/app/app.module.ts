@@ -64,6 +64,7 @@ import { AuthService } from './shared/services/auth.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { DialogAddDescriptionComponent } from './components/dialog-add-description/dialog-add-description.component';
 import { DialogAddPeopleComponent } from './components/dialog-add-people/dialog-add-people.component';
+import { DialogViewPeopleComponent } from './components/dialog-view-people/dialog-view-people.component';
 
 
 @NgModule({
@@ -89,7 +90,8 @@ import { DialogAddPeopleComponent } from './components/dialog-add-people/dialog-
     NewChatComponent,
     DialogPictureEditComponent,
     DialogAddDescriptionComponent,
-    DialogAddPeopleComponent
+    DialogAddPeopleComponent,
+    DialogViewPeopleComponent
   ],
   imports: [
     BrowserModule,
