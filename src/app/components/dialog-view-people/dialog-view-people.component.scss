@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    max-height: 300px;
 }
 
 mat-card {
@@ -42,4 +43,12 @@ mat-card {
 
 .blue {
     color: #2196F3;
+}
+
+.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #424242;
+    padding-bottom: 0.5rem;
 }
