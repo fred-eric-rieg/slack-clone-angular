@@ -23,7 +23,7 @@
       <!-- Channels -->
       <div class="channel-container">
         <div (click)="toggleChannelsDropdown()" class="channel-hl flex-ac">
-          <mat-icon [ngClass]="{ rotate90: !channelsCollapsed }" style="transition: all 125ms ease-in-out"
+          <mat-icon [ngClass]="{ rotate90: channelsCollapsed }" style="transition: all 125ms ease-in-out"
             fontIcon="arrow_drop_down"></mat-icon>
           <p>Channels</p>
         </div>
