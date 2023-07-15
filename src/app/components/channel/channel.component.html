@@ -3,15 +3,15 @@
     <div class="sticky-header">
         # {{ activeChannel.name }}
 
-        <div *ngIf="getMembers()!.length == 1">
+        <div *ngIf="getMembers()!.length == 1" class="hover" (click)="openViewPeopleDialog()">
             <img class="mini-profile" src="{{ getUserProfileAlt(0) }}" alt="small profile picture">
         </div>
-        <div *ngIf="getMembers()!.length > 1 && getMembers()!.length < 4" class="align-profiles">
+        <div *ngIf="getMembers()!.length > 1 && getMembers()!.length < 4" class="align-profiles hover" (click)="openViewPeopleDialog()">
             <div *ngFor="let member of activeChannel.members; let i = index">
                 <img class="mini-profile" src="{{ getUserProfileAlt(i) }}" alt="small profile picture">
             </div>
         </div>
-        <div *ngIf="getMembers()!.length >= 4" class="align-profiles">
+        <div *ngIf="getMembers()!.length >= 4" class="align-profiles hover" (click)="openViewPeopleDialog()">
             <img class="mini-profile" src="{{ getUserProfileAlt(0) }}" alt="small profile picture">
             <img class="mini-profile" src="{{ getUserProfileAlt(1) }}" alt="small profile picture">
             <img class="mini-profile" src="{{ getUserProfileAlt(2) }}" alt="small profile picture">

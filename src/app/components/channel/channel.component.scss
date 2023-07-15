@@ -36,6 +36,15 @@
         width: 32px;
         height: 32px;
     }
+
+    .hover {
+        border-radius: 10px;
+        cursor: pointer;
+        
+        &:hover {
+            background-color: #565555;
+        }
+    }
 }
 
 .scroll-wrapper {

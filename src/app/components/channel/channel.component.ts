@@ -20,6 +20,7 @@ import { getAuth } from '@angular/fire/auth';
 import { Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { DialogAddPeopleComponent } from '../dialog-add-people/dialog-add-people.component';
+import { DialogViewPeopleComponent } from '../dialog-view-people/dialog-view-people.component';
 
 
 @Component({
@@ -315,5 +316,17 @@ export class ChannelComponent implements OnInit, OnDestroy {
       }
     });
     this.channelService.updateChannel(this.activeChannel);
+  }
+
+
+  openViewPeopleDialog() {
+    console.log('Open view people dialog');
+    const dialogRef = this.dialog.open(DialogViewPeopleComponent, {
+      width: '350px',
+      data: {
+        channel: this.activeChannel,
+        users: this.users
+      }
+    });
   }
 }
