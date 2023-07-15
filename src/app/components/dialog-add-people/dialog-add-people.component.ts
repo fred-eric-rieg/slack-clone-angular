@@ -23,9 +23,11 @@ export class DialogAddPeopleComponent {
       this.users = querySnapshot.docs.map(doc => {
         return doc.data() as User;
       });
+      let filteredUsers: User[] = [];
       this.users.forEach(user => {
-        this.data.people.includes(user.userId) ? this.users.splice(this.users.indexOf(user), 1) : null;
+        !this.data.people.includes(user.userId) ? filteredUsers.push(user) : null;
       });
+      this.users = filteredUsers;
     });
   }
 }

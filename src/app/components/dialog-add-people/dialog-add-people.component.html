@@ -1,9 +1,9 @@
 <h1 mat-dialog-title>Add People</h1>
-<div mat-dialog-content id="dialog-content">
+<div mat-dialog-content>
     <mat-form-field>
         <mat-label>Select...</mat-label>
         <mat-select multiple [(ngModel)]="dialogData.people">
-          <mat-option *ngFor="let user of users" [value]="user.userId" [value]="user.userId">{{ user.displayName }}</mat-option>
+          <mat-option *ngFor="let user of users" [value]="user.userId">{{ user.displayName }}</mat-option>
         </mat-select>
       </mat-form-field>
 </div>
