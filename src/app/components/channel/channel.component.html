@@ -6,7 +6,8 @@
         <div *ngIf="getMembers()!.length == 1" class="hover" (click)="openViewPeopleDialog()">
             <img class="mini-profile" src="{{ getUserProfileAlt(0) }}" alt="small profile picture">
         </div>
-        <div *ngIf="getMembers()!.length > 1 && getMembers()!.length < 4" class="align-profiles hover" (click)="openViewPeopleDialog()">
+        <div *ngIf="getMembers()!.length > 1 && getMembers()!.length < 4" class="align-profiles hover"
+            (click)="openViewPeopleDialog()">
             <div *ngFor="let member of activeChannel.members; let i = index">
                 <img class="mini-profile" src="{{ getUserProfileAlt(i) }}" alt="small profile picture">
             </div>
@@ -49,7 +50,14 @@
         <div class="chat-container">
             <div *ngIf="messages != undefined">
                 <div *ngFor="let message of messages">
-                    <mat-card>
+                    <mat-card class="thread">
+
+                        <mat-card class="overlay">
+                            <div class="btn" [routerLink]="openThread(message)">
+                                <mat-icon>reply</mat-icon>
+                            </div>
+                        </mat-card>
+
                         <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
                             <img src="{{ getUserProfile(message) }}" alt="profile picture">
                             <mat-card-title>
@@ -60,7 +68,7 @@
                         </div>
                         <mat-card-content [innerHTML]="message.text"></mat-card-content>
                         <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                            <p *ngIf="countThreadMessages(message.messageId)! > 0">{{
+                            <p *ngIf="countThreadMessages(message.messageId)! > 1">{{
                                 countThreadMessages(message.messageId) }} replies</p>
                         </div>
                     </mat-card>
