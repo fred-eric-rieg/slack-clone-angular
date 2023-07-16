@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, getDoc, getDocs, setDoc } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDoc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Channel } from 'src/models/channel.class';
 
@@ -83,5 +83,12 @@ export class ChannelService {
     const channelDocument = doc(channelCollection, channelId);
 
     return getDoc(channelDocument);
+  }
+
+
+  getChannelViaThread(threadId: string) {
+    const channelCollection = collection(this.firestore, 'channels');
+    const q = query(channelCollection, where('threads', 'array-contains', threadId));
+    return getDocs(q);
   }
 }
