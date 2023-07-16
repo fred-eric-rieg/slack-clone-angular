@@ -1,7 +1,7 @@
 import { User } from './../../../models/user.class';
 import { Injectable } from '@angular/core';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, getDoc, getDocs, setDoc, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, getDoc, getDocs, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -171,5 +171,12 @@ export class UserService {
     const userCollection = collection(this.firestore, 'users');
     const userDocument = doc(userCollection, userId);
     return getDoc(userDocument);
+  }
+
+
+  getAllUsersInThread(userIds: string[]) {
+    const userCollection = collection(this.firestore, 'users');
+    const q = query(userCollection, where('userId', 'in', userIds));
+    return getDocs(q);
   }
 }

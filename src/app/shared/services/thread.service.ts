@@ -33,6 +33,18 @@ export class ThreadService {
   }
 
 
+  addMessageToThread(thread: Thread, messageId: string) {
+    const threadCollection = collection(this.firestore, 'threads');
+    const threadDocument = doc(threadCollection, thread.threadId);
+
+    thread.messages.push(messageId);
+
+    setDoc(threadDocument, thread).then(() => {
+      console.log('Message added to thread successfully!');
+    });
+  }
+
+
   loadAllThreads() {
     const threadCollection = collection(this.firestore, 'threads');
     return getDocs(threadCollection);

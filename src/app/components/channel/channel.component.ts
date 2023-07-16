@@ -18,7 +18,7 @@ import { Channel } from 'src/models/channel.class';
 import { Thread } from 'src/models/thread.class';
 import { getAuth } from '@angular/fire/auth';
 import { Subject, takeUntil } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DialogAddPeopleComponent } from '../dialog-add-people/dialog-add-people.component';
 import { DialogViewPeopleComponent } from '../dialog-view-people/dialog-view-people.component';
 
@@ -232,14 +232,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   countThreadMessages(messageId: string) {
-    let counter;
-    this.threads.forEach(thread => {
-      counter = 0;
-      if (thread.messages[0].includes(messageId)) {
-        thread.messages.length == 1 ? null : counter = thread.messages.length;
-      }
-    });
-    return counter;
+    let thread = this.threads.find(thread => thread.messages[0].includes(messageId));
+    if (thread) return thread.messages.length;
+    else return 0;
   }
 
 
@@ -328,5 +323,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
         users: this.users
       }
     });
+  }
+
+
+  openThread(message: Message) {
+    return `/dashboard/thread/${this.threads.find(thread => thread.messages[0].includes(message.messageId))?.threadId}`;
   }
 }
