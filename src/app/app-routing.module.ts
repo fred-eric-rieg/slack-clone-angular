@@ -10,6 +10,7 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
 import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
 import { NewChatComponent } from './components/new-chat/new-chat.component';
+import { ThreadComponent } from './components/thread/thread.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'user/:id', component: DialogUserComponent },
       { path: 'chat/:id', component: DirectMessageChannelComponent },
       { path: 'create-chat', component: NewChatComponent },
+      { path: 'thread/:id', component: ThreadComponent }
     ]
   },
   { path: 'sidenav', component: sidenavComponent },
