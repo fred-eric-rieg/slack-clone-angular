@@ -1,7 +1,7 @@
 <div class="content-box">
 
-    <div class="sticky-header">
-        Thread # Placeholder
+    <div class="sticky-header" *ngIf="channel">
+        Thread <span># {{ channel.name }} </span>
     </div>
 
     <div class="scroll-wrapper">
