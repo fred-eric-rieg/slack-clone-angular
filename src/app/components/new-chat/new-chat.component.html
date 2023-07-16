@@ -3,9 +3,9 @@
       <div class="added-partners">
         <span>Send to: </span>
         <div class="added-box">
-          <div class="partner" *ngFor="let user of addedUsers">
+          <div class="partner" *ngFor="let user of addedUsers; let i = index">
             <span>{{user.displayName}}</span>
-            <mat-icon (click)="removeUser(user)">close</mat-icon>
+            <mat-icon (click)="removeUser(i)">close</mat-icon>
           </div>
         </div>
       </div>
@@ -18,7 +18,7 @@
       <div class="user-box">
         <div class="info-box">
           <div class="profileImg">
-            <mat-icon>person</mat-icon>
+            <img src="{{user.profilePicture || '/../../assets/img/profile.png'}}">
           </div>
           <div class="user-infos">
             <div class="head">
