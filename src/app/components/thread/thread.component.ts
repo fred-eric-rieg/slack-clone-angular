@@ -4,9 +4,11 @@ import { Timestamp, onSnapshot } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { Subject, takeUntil } from 'rxjs';
+import { ChannelService } from 'src/app/shared/services/channel.service';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { ThreadService } from 'src/app/shared/services/thread.service';
 import { UserService } from 'src/app/shared/services/user.service';
+import { Channel } from 'src/models/channel.class';
 import { Message } from 'src/models/message.class';
 import { Thread } from 'src/models/thread.class';
 import { User } from 'src/models/user.class';
@@ -24,6 +26,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
   thread!: Thread;
   messageIds!: string[];
   messages!: Message[];
+  channel!: Channel;
 
   config = {
     toolbar: [
@@ -56,6 +59,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
     private threadService: ThreadService,
     private messageService: MessageService,
     private userService: UserService,
+    private channelService: ChannelService,
     private route: ActivatedRoute
   ) {
 
@@ -73,6 +77,12 @@ export class ThreadComponent implements OnInit, OnDestroy {
     ).subscribe(async (params) => {
       if (params['id']) {
         console.log(params['id']);
+
+        // Loading the channel
+        this.channelService.getChannelViaThread(params['id']).then((querySnapshot) => {
+          this.channel = querySnapshot.docs[0].data() as Channel;
+        });
+
         this.loadThread(params['id']);
       }
     });
