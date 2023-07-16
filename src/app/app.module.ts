@@ -65,6 +65,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 import { DialogAddDescriptionComponent } from './components/dialog-add-description/dialog-add-description.component';
 import { DialogAddPeopleComponent } from './components/dialog-add-people/dialog-add-people.component';
 import { DialogViewPeopleComponent } from './components/dialog-view-people/dialog-view-people.component';
+import { ThreadComponent } from './components/thread/thread.component';
 
 
 @NgModule({
@@ -91,7 +92,8 @@ import { DialogViewPeopleComponent } from './components/dialog-view-people/dialo
     DialogPictureEditComponent,
     DialogAddDescriptionComponent,
     DialogAddPeopleComponent,
-    DialogViewPeopleComponent
+    DialogViewPeopleComponent,
+    ThreadComponent
   ],
   imports: [
     BrowserModule,
