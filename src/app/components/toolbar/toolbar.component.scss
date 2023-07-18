@@ -10,23 +10,12 @@
     display: flex;
     align-items: center;
   }
-
-  .toolbar-search-container {
-  }
-
-  .mat-form-field {
-    width: 50vw;
-  }
-}
-
-.mat-mdc-form-field {
-  flex-direction: unset;
 }
 
 .profile-icon {
   width: 35px;
   height: 35px;
-  /*border: 0.5px solid rgba(100,37,136,1);*/
+  border: 5.5px solid white;
   border-radius: 10px;
   cursor: pointer;
 }

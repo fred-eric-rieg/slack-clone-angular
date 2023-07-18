@@ -1,0 +1,14 @@
+<mat-form-field appearance="outline" class="toolbar-search-container">
+  <mat-label>Search Channel</mat-label>
+  <input matInput
+    type="text" [(ngModel)]="searchTerm" (input)="search()"
+  />
+  <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
+
+<!-- SUCHERGEBNISSE TEST-->
+<!--
+<ul>
+  <li *ngFor="let item of searchResults">{{ item }}</li>
+</ul>
+-->

@@ -66,6 +66,7 @@ import { DialogAddDescriptionComponent } from './components/dialog-add-descripti
 import { DialogAddPeopleComponent } from './components/dialog-add-people/dialog-add-people.component';
 import { DialogViewPeopleComponent } from './components/dialog-view-people/dialog-view-people.component';
 import { ThreadComponent } from './components/thread/thread.component';
+import { SearchComponent } from './components/search/search.component';
 
 
 @NgModule({
@@ -93,7 +94,8 @@ import { ThreadComponent } from './components/thread/thread.component';
     DialogAddDescriptionComponent,
     DialogAddPeopleComponent,
     DialogViewPeopleComponent,
-    ThreadComponent
+    ThreadComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

@@ -7,7 +7,9 @@ import { SidenavService } from 'src/app/shared/services/sidenav.service';
 // Import des AngularFireAuth Service
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router'; // TEST SEARCH
 import { ChannelService } from 'src/app/shared/services/channel.service';
+import { SearchComponent } from '../search/search.component';
 
 
 @Component({
@@ -18,6 +20,10 @@ import { ChannelService } from 'src/app/shared/services/channel.service';
 export class ToolbarComponent {
   @Output() sidenavOpened = new EventEmitter<boolean>();
 
+  url: string = 'channel'; // SEARCH TEST
+  searchValue!: string;
+
+
 
   constructor(public dialog: MatDialog,
     public asService: AngularFireAuth,
@@ -25,6 +31,17 @@ export class ToolbarComponent {
     private router: Router,
     public channelService: ChannelService
     ) {}
+
+
+
+    // TEST SEARCH ANFANG //
+    handleSearch(searchTerm: string): void {
+      // Perform search-related logic here
+      // You can access the search term in the searchTerm variable
+      console.log('Search term:', searchTerm);
+    }
+
+    // TEST SEARCH ENDE //
 
   openDialogHelp() {
     const dialogRef = this.dialog.open(DialogHelpComponent);

@@ -35,14 +35,14 @@
 
 .mat-drawer {
   top: 64px;
-  width: 25%;
-  min-width: 250px;
+  min-width: 280px;
   max-width: 300px;
   background-color: var(--bg-color-side-nav);
 }
 
 .mat-drawer-container {
   position: unset;
+  background-color: green;
 }
 
 .mat-drawer-content {
@@ -141,6 +141,8 @@ h4 {
     height: 200px;
     width: 200px;
     cursor: pointer;
+    border: 1px solid rgb(87, 87, 87);
+    border-radius: 50px;
   }
 }
 

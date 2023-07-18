@@ -8,15 +8,8 @@
         <!-- So können wir auf den aktuell eingeloggten User zugreifen -->
         <!--<span style="color:red" *ngIf="asService.authState| async as user" class="login">Logged in as {{ user.email }}</span>-->
       </div>
-      <mat-form-field appearance="outline" class="toolbar-search-container" >
-        <mat-label>Search Channel</mat-label>
-        <input matInput
-          type="text"
-          placeholder="Search..."
-          [(ngModel)]="channelService.searchValue"
-        />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
+      <!-- Suchfunktion einfügen -->
+      <app-search></app-search>
       <div>
         <button mat-icon-button (click)="openDialogHelp()">
           <mat-icon>help</mat-icon>
