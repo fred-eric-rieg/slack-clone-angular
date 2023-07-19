@@ -16,6 +16,9 @@ export class SearchService {
    */
   setSearchResults(results: string[]): void {
     this.searchResults = results;
+
+    // Feed the searchResultsChanged-Subject with the new search results.
+    this.searchResultsChanged.next(results);
   }
 
 

@@ -48,6 +48,7 @@
         <div>{{ sortMessagesByDate() }}</div>
         <!-- Every message is rendered here -->
         <div class="chat-container">
+            <app-search-results></app-search-results>
             <div *ngIf="messages != undefined">
                 <div *ngFor="let message of messages">
                     <mat-card class="thread">
