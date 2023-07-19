@@ -15,28 +15,12 @@ export class UserService {
   users!: Observable<any>;
   private userCollection: CollectionReference<DocumentData>;
 
+  
   constructor(
     private firestore: Firestore) {
     this.userCollection = collection(this.firestore, 'users');
     this.getAllUsers();
   }
-
-
-  /**
- * Retrieves user data from Firestore based on the provided user ID.
- * Subscribes to the document data and maps it to a User object.
- * 'userCollection' is a firestore collection representing the 'users' collection.
- * 'docRef' is a document reference representing a specific user document.
- */
-  getUser() {
-    const userCollection = collection(this.firestore, 'users');
-    const docRef = doc(userCollection, this.user.userId);
-
-    docData(docRef).subscribe((userCollection: any) => {
-      this.user = new User(userCollection);
-    });
-  }
-
 
   /**
    * Gets user info based on id.
@@ -48,7 +32,6 @@ export class UserService {
     return docData(userDocRef, { idField: 'customIdName' });
   }
 
-
   /**
    * Creates new user.
    * @param user
@@ -57,7 +40,6 @@ export class UserService {
   create(user: User) {
     return addDoc(this.userCollection, user);
   }
-
 
   /**
    * Updates user info.
@@ -69,7 +51,6 @@ export class UserService {
     return updateDoc(userDocRef, { ...user });
   }
 
-
   /**
    * Deletes selected user.
    * @param id
@@ -80,7 +61,6 @@ export class UserService {
     return deleteDoc(userDocRef);
   }
 
-
   /**
    * after signup (with mail/with google) create a new user
    * if user dont already exist
@@ -90,14 +70,15 @@ export class UserService {
    */
   async setNewUser(uID: string, email: string) {
     await this.getCurrentUser().then(async (res: any) => {
-      let allUsers = await this.snapAllUsers();
+      let allUsers = await this.getAllUsersNotObservable();
       let allUserIds: Array<string> = [];
-      allUsers.forEach((user: any) => {
-        allUserIds.push(user.userId);
+      allUsers.forEach(user => {
+        allUserIds.push(user.id);
       })
       if (!allUserIds.includes(res)) this.createUser(uID, email);
     })
   }
+
 
   createUser(uID: string, email: string){
     this.user.userId = uID;
@@ -117,13 +98,12 @@ export class UserService {
           this.currentUser = user.uid;
           resolve(this.currentUser);
         } else {
-          console.log("%cGuest logged in", "color:lightgreen");
-          console.log("%cTodo: Zeile 115 im UserService", "color:orange;font-size:1.2rem;font-weight: 800;text-shadow: 6px 6px 6px #17c0eb;");
-          //reject(new Error("User is not logged in."))
+          reject(new Error("User is not logged in."))
         }
       })
     })
   }
+
 
   async getCompleteCurrentUser() {
     const auth = getAuth();
@@ -138,6 +118,7 @@ export class UserService {
       })
     })
   }
+
 
   getUserData(userId: string) {
     const docRef = doc(this.userCollection, userId);
@@ -163,36 +144,23 @@ export class UserService {
 
 
   getAllUsers() {
-    const userCollection = collection(this.firestore, 'users');
-    this.users = collectionData(userCollection);
-  }
-
-  async snapAllUsers(){
-    let allUsers: Array<any> = [];
-    const userSnapshot = await getDocs(this.userCollection);
-    userSnapshot.forEach((doc) => {
-      allUsers.push(doc.data());
-    })
-    return allUsers;
+    this.users = collectionData(this.userCollection);
   }
 
 
   getAllUsersNotObservable() {
-    const userCollection = collection(this.firestore, 'users');
-    return getDocs(userCollection);
+    return getDocs(this.userCollection);
   }
 
 
   getUserNotObservable(userId: string) {
-    const userCollection = collection(this.firestore, 'users');
-    const userDocument = doc(userCollection, userId);
+    const userDocument = doc(this.userCollection, userId);
     return getDoc(userDocument);
   }
 
 
   getAllUsersInThread(userIds: string[]) {
-    const userCollection = collection(this.firestore, 'users');
-    const q = query(userCollection, where('userId', 'in', userIds));
+    const q = query(this.userCollection, where('userId', 'in', userIds));
     return getDocs(q);
   }
 }
