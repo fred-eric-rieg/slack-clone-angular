@@ -9,7 +9,7 @@
         <!--<span style="color:red" *ngIf="asService.authState| async as user" class="login">Logged in as {{ user.email }}</span>-->
       </div>
       <!-- Suchfunktion einfügen -->
-      <app-search></app-search>
+      <app-search (searchEvent)="onSearchText($event)"></app-search>
       <div>
         <button mat-icon-button (click)="openDialogHelp()">
           <mat-icon>help</mat-icon>
