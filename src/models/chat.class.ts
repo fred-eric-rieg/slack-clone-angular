@@ -4,13 +4,13 @@ export class Chat {
     chatId: string = '';
     creationDate: Timestamp = Timestamp.now();
     members: string[] = [];
-    threads: string[] = [];
+    messages: string[] = [];
 
     constructor(obj: any) {
-        this.chatId = obj && obj.channelId || '';
+        this.chatId = obj && obj.chatId || '';
         this.creationDate = obj && obj.creationDate;
         this.members = obj && obj.members || [];
-        this.threads = obj && obj.threads || [];
+        this.messages = obj && obj.messages || [];
     }
 
 
@@ -19,7 +19,7 @@ export class Chat {
             chatid: this.chatId,
             creationdate: this.creationDate,
             members: this.members,
-            threads: this.threads
+            messages: this.messages
         };
     }
 }

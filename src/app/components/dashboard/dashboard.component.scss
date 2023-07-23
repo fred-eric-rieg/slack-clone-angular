@@ -21,7 +21,8 @@ mat-toolbar, mat-toolbar-row {
     width: 100%;
 }
 
-.router-container {
+.router-container { //NOTE: Width 100%
+    width: 100%;
     box-sizing: border-box;
     position: relative;
 }

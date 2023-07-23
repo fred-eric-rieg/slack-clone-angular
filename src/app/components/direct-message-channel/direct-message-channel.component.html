@@ -21,12 +21,23 @@
             </div>
           </div>
         </div>
-        <div class="answers">
+        <!-- <div class="answers">
           <span (click)="sendMessage()">3 answers</span>
-        </div>
+        </div> -->
       </div>
     </div>
   
     <!-- CHAT INPUT -->
-    <quill-editor class="txt-editor"></quill-editor>
+    <div class="message-container">
+      <quill-editor theme="snow" (onEditorChanged)="collectContent($event)" style="height: 150px;" [modules]="config"
+          [placeholder]="placeholder">
+
+      </quill-editor>
+      <div class="message-bottom">
+          <p class="hint">Send with command/ctrl & enter.</p>
+          <button class="button-send" (click)="sendMessage()">
+              <mat-icon matTooltip="send">send</mat-icon>
+          </button>
+      </div>
+  </div>
   </div>
