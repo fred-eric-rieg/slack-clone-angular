@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { getAuth } from '@angular/fire/auth';
+import { set } from '@angular/fire/database';
 import { CollectionReference, DocumentData, Firestore, Timestamp, collection, getDocs } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
@@ -25,6 +26,7 @@ export class DirectMessageChannelComponent implements OnInit {
   members: Array<string> = [];
   messageIds: any = [];
   messages: Array<any> = [];
+  isLoading: boolean = true;
 
   collectedContent!: any;
   placeholder = 'Type your message here...';
@@ -78,6 +80,7 @@ export class DirectMessageChannelComponent implements OnInit {
   async ngOnInit(): Promise<any> {
     this.allUsers = await this.getAllUsers();
     this.route.params.subscribe((params) => {
+      this.isLoading = true;
       this.resetAllVariables();
       this.chatId = params['id'];
       this.chat.chatId = this.chatId;
@@ -97,7 +100,11 @@ export class DirectMessageChannelComponent implements OnInit {
             });
             this.sortMessagesByDate();
           });
-      });
+        });
+        // Cheat
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 600);
     });
   }
 

@@ -16,7 +16,6 @@ export class DirectMessagesSectionComponent implements OnInit {
   chatIds: Array<string> = [];
   currentUserId: any;
   allChats: any[] = [];
-  allUsers: User[] = [];
   creationDate: any = [];
   memberIds: any = [];
   memberNames: any = [];
@@ -33,7 +32,6 @@ export class DirectMessagesSectionComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    await this.getAllUsers();
     await this.getCurrentUserId();
     this.getCurrentUserChats();
     this.setNameFirstUser();
@@ -80,15 +78,6 @@ export class DirectMessagesSectionComponent implements OnInit {
           })
       })
     }, 600)
-  }
-
-  async getAllUsers() {
-    const allUsers: any = [];
-    const qSnap = await this.userService.getAllUsersNotObservable();
-    qSnap.forEach((doc) => {
-      allUsers.push(doc.data());
-    });
-    return allUsers;
   }
 
   toggleDropdown() {
