@@ -78,6 +78,7 @@ export class DirectMessageChannelComponent implements OnInit {
   async ngOnInit(): Promise<any> {
     this.allUsers = await this.getAllUsers();
     this.route.params.subscribe((params) => {
+      this.resetAllVariables();
       this.chatId = params['id'];
       this.chat.chatId = this.chatId;
       this.chatService.returnChatData(this.chatId).subscribe(data => {
@@ -85,18 +86,18 @@ export class DirectMessageChannelComponent implements OnInit {
         this.messageIds.push(...data['messages']);
         this.chat.members.push(...data['members']);
       })
-    })
-    this.getMemberNames();
-    this.getAllMessages().then((msgs) => {
-      this.chatService.returnQueryChatData(this.chatId)
-        .then((chatMsgs: any) => {
-          msgs.forEach((msg: any) => {
-            if (chatMsgs[0]['messages'].includes(msg.messageId)) {
-              this.messages.push(msg);
-            }
+      this.getMemberNames();
+      this.getAllMessages().then((msgs) => {
+        this.chatService.returnQueryChatData(this.chatId)
+          .then((chatMsgs: any) => {
+            msgs.forEach((msg: any) => {
+              if (chatMsgs[0]['messages'].includes(msg.messageId)) {
+                this.messages.push(msg);
+              }
+            });
+            this.sortMessagesByDate();
           });
-          this.sortMessagesByDate();
-        });
+      });
     });
   }
 
@@ -104,13 +105,22 @@ export class DirectMessageChannelComponent implements OnInit {
    * Querysnapshot of all users in the database
    * @returns all users from the database
    */
-  async getAllUsers() {	
+  async getAllUsers() {
     const allUsers: any = [];
     const qSnap = await this.userService.getAllUsersNotObservable();
     qSnap.forEach((doc) => {
       allUsers.push(doc.data());
     });
     return allUsers;
+  }
+
+  resetAllVariables() {
+    //this.allUsers = [];
+    this.chatId = '';
+    this.memberIds = [];
+    this.members = [];
+    this.messageIds = [];
+    this.messages = [];
   }
 
 
@@ -157,7 +167,7 @@ export class DirectMessageChannelComponent implements OnInit {
   sortMessagesByDate() {
     this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
   }
-  
+
 
   /**
    * get the username of the user
