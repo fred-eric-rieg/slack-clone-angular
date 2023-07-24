@@ -77,8 +77,6 @@ export class DirectMessageChannelComponent implements OnInit {
 
   async ngOnInit(): Promise<any> {
     this.allUsers = await this.getAllUsers();
-    console.log(this.allUsers);
-
     this.route.params.subscribe((params) => {
       this.chatId = params['id'];
       this.chat.chatId = this.chatId;
@@ -92,12 +90,12 @@ export class DirectMessageChannelComponent implements OnInit {
     this.getAllMessages().then((msgs) => {
       this.chatService.returnQueryChatData(this.chatId)
         .then((chatMsgs: any) => {
-          console.log("Mögliche: ", chatMsgs);
           msgs.forEach((msg: any) => {
             if (chatMsgs[0]['messages'].includes(msg.messageId)) {
               this.messages.push(msg);
             }
           });
+          this.sortMessagesByDate();
         });
     });
   }
@@ -143,6 +141,29 @@ export class DirectMessageChannelComponent implements OnInit {
 
   }
 
+  formatDateTime(timestamp: any) {
+    let date = new Date(timestamp.seconds * 1000);
+    let hours = date.getHours() % 12 || 12;
+    let minutes = date.getMinutes().toLocaleString();
+    if (minutes.length == 1) {
+      minutes = 0 + minutes;
+    }
+    return `${hours}:${minutes} ${date.getHours() >= 12 ? 'PM' : 'AM'}`;
+  }
+
+  /**
+   * Sorts the messages by date.
+   */
+  sortMessagesByDate() {
+    this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+  }
+  
+
+  /**
+   * get the username of the user
+   * @param userId as string
+   * @returns username of the user
+   */
   getChatUserName(userId: string) {
     let name = '';
     this.allUsers.forEach((user: any) => {
@@ -153,6 +174,11 @@ export class DirectMessageChannelComponent implements OnInit {
     return name;
   }
 
+  /**
+   * get the profile picture of the user
+   * @param userId as string
+   * @returns the profile image url of the user
+   */
   getChatUserImage(userId: string) {
     let img = '';
     this.allUsers.forEach((user: any) => {
