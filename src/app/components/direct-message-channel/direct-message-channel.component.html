@@ -2,21 +2,22 @@
     <div class="chat-partners">
         <div class="person" *ngFor="let member of members">{{member}}</div>
     </div>
-    <div *ngFor="let msg of test" class="chat-window">
+    <div *ngFor="let msg of messages" class="chat-window">
       <div class="chat-box">
         <div class="msg-box">
           <div class="profileImg">
-            <mat-icon>person</mat-icon>
+            <img src="{{getChatUserImage(msg.creatorId) || '/../../assets/img/profile.png'}}" alt="Avatar">
+            <!-- <mat-icon>person</mat-icon> -->
           </div>
           <div class="msg-infos">
             <div class="head">
-              <span>Max Muster</span>
-              <span>Sat, 24. June 23 - 16:35</span>
+              <!-- <span>{{msg.creatorId}}</span> -->
+              <span>{{getChatUserName(msg.creatorId)}}</span>
+              <span>{{msg.creationDate}}</span>
             </div>
             <div class="msg">
-              <div class="msg-txt">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.<br /><br />
-                <a href="https://google.de/">https://google.de/</a>
+              <div class="msg-txt" [innerHTML]="msg.text">
+                <!-- {{msg.text}} -->
               </div>
             </div>
           </div>

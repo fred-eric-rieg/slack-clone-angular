@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { getAuth } from '@angular/fire/auth';
 import { CollectionReference, DocumentData, Firestore, Timestamp, collection, getDocs } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
@@ -10,6 +10,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 import { Channel } from 'src/models/channel.class';
 import { Chat } from 'src/models/chat.class';
 import { Message } from 'src/models/message.class';
+import { User } from 'src/models/user.class';
 
 @Component({
   selector: 'app-direct-message-channel',
@@ -17,18 +18,19 @@ import { Message } from 'src/models/message.class';
   styleUrls: ['./direct-message-channel.component.scss']
 })
 export class DirectMessageChannelComponent implements OnInit {
+  allUsers: User[] = [];
   private msgCollection!: CollectionReference<DocumentData>;
   chatId: string = '';
   memberIds: Array<string> = [];
   members: Array<string> = [];
   messageIds: any = [];
   messages: Array<any> = [];
-  
+
   collectedContent!: any;
   placeholder = 'Type your message here...';
-  
+
   test = [1, 2];
-  
+
   chatObj = {
     chatId: "",
     creationDate: Timestamp.now(),
@@ -37,7 +39,7 @@ export class DirectMessageChannelComponent implements OnInit {
   };
 
   chat = new Chat(this.chatObj);
-  
+
   config = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
@@ -66,14 +68,17 @@ export class DirectMessageChannelComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private chatService: ChatService,
-    private userService: UserService,
+    public userService: UserService,
     private messageService: MessageService,
     private fs: Firestore
   ) {
     this.msgCollection = collection(this.fs, 'messages');
-   }
+  }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<any> {
+    this.allUsers = await this.getAllUsers();
+    console.log(this.allUsers);
+
     this.route.params.subscribe((params) => {
       this.chatId = params['id'];
       this.chat.chatId = this.chatId;
@@ -84,8 +89,30 @@ export class DirectMessageChannelComponent implements OnInit {
       })
     })
     this.getMemberNames();
-    this.getAllMessages();
-    console.log(this.messages);
+    this.getAllMessages().then((msgs) => {
+      this.chatService.returnQueryChatData(this.chatId)
+        .then((chatMsgs: any) => {
+          console.log("Mögliche: ", chatMsgs);
+          msgs.forEach((msg: any) => {
+            if (chatMsgs[0]['messages'].includes(msg.messageId)) {
+              this.messages.push(msg);
+            }
+          });
+        });
+    });
+  }
+
+  /**
+   * Querysnapshot of all users in the database
+   * @returns all users from the database
+   */
+  async getAllUsers() {	
+    const allUsers: any = [];
+    const qSnap = await this.userService.getAllUsersNotObservable();
+    qSnap.forEach((doc) => {
+      allUsers.push(doc.data());
+    });
+    return allUsers;
   }
 
 
@@ -93,11 +120,11 @@ export class DirectMessageChannelComponent implements OnInit {
    * get all members of the chat
    * and push them into the members array
    */
-  getMemberNames(){
+  getMemberNames() {
     setTimeout(() => {
       this.memberIds.forEach((user: any) => {
         this.userService.getUserData(user)
-        .pipe(take(1))
+          .pipe(take(1))
           .subscribe((user) => {
             this.members.push(user['displayName']);
           })
@@ -106,30 +133,52 @@ export class DirectMessageChannelComponent implements OnInit {
     }, 600)
   }
 
-  async getAllMessages(){
-     const querySnapshot = await getDocs(this.msgCollection);
-     querySnapshot.forEach((doc) => {
-      this.messages.push(doc.data());
+  async getAllMessages() {
+    const allMessages: any = [];
+    const querySnapshot = await getDocs(this.msgCollection);
+    querySnapshot.forEach((doc) => {
+      allMessages.push(doc.data());
     })
-    console.log("2::::::",this.messages);
+    return allMessages;
 
   }
 
+  getChatUserName(userId: string) {
+    let name = '';
+    this.allUsers.forEach((user: any) => {
+      if (user.userId === userId) {
+        name = user.displayName
+      }
+    });
+    return name;
+  }
+
+  getChatUserImage(userId: string) {
+    let img = '';
+    this.allUsers.forEach((user: any) => {
+      if (user.userId === userId) {
+        img = user.profilePicture
+      }
+    });
+    return img;
+  }
+
+  /**
+   * Sends a message to the database.
+   */
   sendMessage() {
-    // console.log(this.chat.chatId);
-    console.log(this.memberIds);
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
       let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
-      let messageId = this.messageService.createMessage(message);// Create thread and add message
+      let messageId = this.messageService.createMessage(message)
       this.chatService.addMessageToChat(this.chat, messageId);
     }
   }
 
-   /**
-   * Returns either the logged user or a default user id.
-   * @returns the logged user id.
-   */
+  /**
+  * Returns either the logged user or a default user id.
+  * @returns the logged user id.
+  */
   loggedUser() {
     const auth = getAuth();
     if (auth.currentUser) {
@@ -139,15 +188,13 @@ export class DirectMessageChannelComponent implements OnInit {
     }
   }
 
-    /**
-   * Filles collectedContent with the current content in the editor.
-   * @param event
-   */
-    async collectContent(event: EditorChangeContent | EditorChangeSelection) {
-      console.log(event);
-      if (event.event === 'text-change') {
-        this.collectedContent = event.html;
-      }
-      console.log("COLLECT CONTENT: ",event.event)
+  /**
+ * Filles collectedContent with the current content in the editor.
+ * @param event
+ */
+  async collectContent(event: EditorChangeContent | EditorChangeSelection) {
+    if (event.event === 'text-change') {
+      this.collectedContent = event.html;
     }
+  }
 }

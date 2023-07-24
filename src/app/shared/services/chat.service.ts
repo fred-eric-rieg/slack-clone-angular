@@ -102,13 +102,15 @@ export class ChatService implements OnInit {
     })
   }
 
-  addMessageToChat(chat: Chat, messageId: string) {
+  addMessageToChat(chat: Chat, messageId: string, ) {
     const chatDocument = doc(this.chatCollection, chat.chatId);
-    chat.messages.push(messageId);
+    updateDoc(chatDocument, {
+      messages: arrayUnion(messageId)
+    })
 
-    setDoc(chatDocument, chat.toJSON()).then(() => {
-      console.log("Message added to chat successfully!");
-    });
+    // setDoc(chatDocument, chat.toJSON()).then(() => {
+    //   console.log("Message added to chat successfully!");
+    // });
   }
 
   extractMembers(users: any){

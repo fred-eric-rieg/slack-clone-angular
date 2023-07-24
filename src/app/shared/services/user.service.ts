@@ -1,5 +1,5 @@
 import { User } from './../../../models/user.class';
-import { Injectable } from '@angular/core';
+import { Injectable, Input } from '@angular/core';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, getDoc, getDocs, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
@@ -8,14 +8,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-
   currentUser: any;
   activeUser!: any;
   user: User = new User();
   users!: Observable<any>;
   private userCollection: CollectionReference<DocumentData>;
 
-  
+
   constructor(
     private firestore: Firestore) {
     this.userCollection = collection(this.firestore, 'users');
@@ -80,7 +79,7 @@ export class UserService {
   }
 
 
-  createUser(uID: string, email: string){
+  createUser(uID: string, email: string) {
     this.user.userId = uID;
     this.user.displayName = this.splitMail(email);
     this.user.email = email;
@@ -123,6 +122,16 @@ export class UserService {
   getUserData(userId: string) {
     const docRef = doc(this.userCollection, userId);
     return docData(docRef);
+  }
+
+  async getUser(userId: string) {
+    const userData = await this.returnUserData(userId);
+    console.log(userData);
+  }
+
+  async returnUserData(userId: string) {
+    const snap = await getDoc(doc(this.userCollection, userId));
+    return snap.data();
   }
 
   /**
