@@ -3,7 +3,7 @@ import { CollectionReference, DocumentData } from '@angular/fire/firestore';
 import { Observable, take } from 'rxjs';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { UserService } from 'src/app/shared/services/user.service';
-import { Chat } from 'src/models/chat.class';
+import { User } from 'src/models/user.class';
 
 
 @Component({
@@ -16,10 +16,11 @@ export class DirectMessagesSectionComponent implements OnInit {
   chatIds: Array<string> = [];
   currentUserId: any;
   allChats: any[] = [];
-
+  allUsers: User[] = [];
   creationDate: any = [];
   memberIds: any = [];
   memberNames: any = [];
+  memberImages: any = [];
   threads: any = [];
 
 
@@ -32,6 +33,7 @@ export class DirectMessagesSectionComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    await this.getAllUsers();
     await this.getCurrentUserId();
     this.getCurrentUserChats();
     this.setNameFirstUser();
@@ -72,17 +74,21 @@ export class DirectMessagesSectionComponent implements OnInit {
         this.userService.getUserData(user[0])
           .pipe(take(1))
           .subscribe((user) => {
+            console.log("DM SECTION USER: ", user);
             this.memberNames.push(user['displayName']);
+            this.memberImages.push(user['profilePicture']);
           })
       })
     }, 600)
   }
 
-  test() {
-    this.userService.getUserData(this.currentUserId)
-      .subscribe(name => {
-        // console.log(name);
-      })
+  async getAllUsers() {
+    const allUsers: any = [];
+    const qSnap = await this.userService.getAllUsersNotObservable();
+    qSnap.forEach((doc) => {
+      allUsers.push(doc.data());
+    });
+    return allUsers;
   }
 
   toggleDropdown() {

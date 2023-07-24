@@ -17,7 +17,7 @@
       routerLinkActive="activeLink"
     >
       <!-- <img src="" alt="Profilbild"> -->
-      <img src="/../../assets/img/profile.png">
+      <img src="{{memberImages[i] || '/../../assets/img/profile.png'}}">
       <p>{{memberNames[i]}}</p>
       <!-- <div class="extra-members" *ngIf="memberIds[i].length > 1">+{{memberIds[i].length-1}}</div> -->
     </div>
