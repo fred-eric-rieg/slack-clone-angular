@@ -51,11 +51,13 @@
 
             <div *ngIf="messages != undefined">
                 <ng-container *ngFor="let message of messages">
-                  <!-- Search filter: specify below which elements to search. -->
+
+                  <!-- Search filter: specify below which elements to search for. -->
                   <main *ngIf="searchResults.length === 0
-                      || message.text.toLowerCase().includes(searchResults[0])
-                      || message.creatorId.toLowerCase().includes(searchResults[0])
-                  ">
+                    || message.text.toLowerCase().includes(searchResults[0].toLowerCase())
+                    || message.creatorId.toLowerCase().includes(searchResults[0].toLowerCase())
+                    || message.messageId.toLowerCase().includes(searchResults[0].toLowerCase())">
+
                     <mat-card class="thread">
 
                         <mat-card class="overlay">
