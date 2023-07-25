@@ -55,8 +55,7 @@
                   <!-- Search filter: specify below which elements to search for. -->
                   <main *ngIf="searchResults.length === 0
                     || message.text.toLowerCase().includes(searchResults[0].toLowerCase())
-                    || message.creatorId.toLowerCase().includes(searchResults[0].toLowerCase())
-                    || message.messageId.toLowerCase().includes(searchResults[0].toLowerCase())">
+                    || getUserName(message.creatorId).toLowerCase().includes(searchResults[0].toLowerCase())">
 
                     <mat-card class="thread">
 
