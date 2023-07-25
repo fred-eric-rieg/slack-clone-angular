@@ -48,9 +48,15 @@
         <div>{{ sortMessagesByDate() }}</div>
         <!-- Every message is rendered here -->
         <div class="chat-container">
-            <app-search-results></app-search-results>
+
             <div *ngIf="messages != undefined">
-                <div *ngFor="let message of messages">
+                <ng-container *ngFor="let message of messages">
+
+                  <!-- Search filter: specify below which elements to search for. -->
+                  <main *ngIf="searchResults.length === 0
+                    || message.text.toLowerCase().includes(searchResults[0].toLowerCase())
+                    || getUserName(message.creatorId).toLowerCase().includes(searchResults[0].toLowerCase())">
+
                     <mat-card class="thread">
 
                         <mat-card class="overlay">
@@ -73,7 +79,8 @@
                                 countThreadMessages(message.messageId) }} replies</p>
                         </div>
                     </mat-card>
-                </div>
+                  </main>
+                </ng-container>
             </div>
         </div>
     </div>
@@ -90,4 +97,3 @@
             </button>
         </div>
     </div>
-</div>

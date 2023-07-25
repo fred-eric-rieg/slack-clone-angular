@@ -4,6 +4,7 @@ import { DialogAddDescriptionComponent } from '../dialog-add-description/dialog-
 import { MatDialog } from '@angular/material/dialog';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill/public-api';
 import 'quill-emoji/dist/quill-emoji.js';
+import { SearchService } from 'src/app/shared/services/search.service';
 
 // Models
 import { Message } from 'src/models/message.class';
@@ -65,6 +66,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
   activeChannelId!: string;
   activeChannel!: Channel;
   placeholder = 'Type your message here...';
+  searchResults!: string[];
+
 
   private destroy$ = new Subject();
 
@@ -74,14 +77,22 @@ export class ChannelComponent implements OnInit, OnDestroy {
     private threadService: ThreadService,
     private channelService: ChannelService,
     private userService: UserService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private searchService: SearchService,
   ) { }
 
 
   ngOnInit(): void {
     this.loadActiveChannel();
     this.loadUsers();
+
+    // Search filter (import from searchService)
+    this.searchResults = this.searchService.getSearchResults();
+    this.searchService.searchResultsChanged.subscribe((results: string[]) => {
+      this.searchResults = results;
+    });
   }
+
 
   /**
    * To avoid memory leaks, unsubscribe from all subscriptions on destruction of the component.
@@ -128,7 +139,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   /**
-   * 
+   *
    * @returns the displayName of the creator of the active channel.
    */
   getCreator() {
@@ -209,7 +220,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   /**
    * Filles collectedContent with the current content in the editor.
-   * @param event 
+   * @param event
    */
   async collectContent(event: EditorChangeContent | EditorChangeSelection) {
     console.log(event);

@@ -29,11 +29,11 @@ export class ToolbarComponent {
     ) {}
 
 
-    onSearchText(searchTerm: string): void {
-      const searchResults = [searchTerm];
-      this.searchService.setSearchResults(searchResults);
-      console.log(searchResults);
-    }
+  onSearchText(searchTerm: string): void {
+    const searchResults = [searchTerm];
+    this.searchService.setSearchResults(searchResults);
+    console.log(searchResults);
+  }
 
 
   openDialogHelp() {
