@@ -8,7 +8,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class SearchComponent {
   searchTerm: string = ''; // linked to input
-  @Output() searchEvent = new EventEmitter<string>(); // EventEmitter requires Output
+  @Output() searchEvent: EventEmitter<string> = new EventEmitter<string>(); // EventEmitter requires Output
 
 
   /**
@@ -18,5 +18,10 @@ export class SearchComponent {
    */
   search(): void {
     this.searchEvent.emit(this.searchTerm);
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.searchEvent.emit('');
   }
 }

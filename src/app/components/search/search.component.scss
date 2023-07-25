@@ -1,3 +1,29 @@
 .mat-mdc-form-field {
   flex-direction: unset;
 }
+
+.search-field {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+mat-form-field {
+  margin-right: 8px;
+}
+
+mat-icon {
+  cursor: pointer;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 16px;
+}
+
+.close-icon {
+  position: absolute;
+  right: 10px;
+  top: 16px;
+}
