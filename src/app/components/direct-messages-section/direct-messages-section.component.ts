@@ -18,6 +18,7 @@ export class DirectMessagesSectionComponent implements OnInit {
   allChats: any[] = [];
   creationDate: any = [];
   memberIds: any = [];
+  memberLength: any = [];
   memberNames: any = [];
   memberImages: any = [];
   threads: any = [];
@@ -33,36 +34,40 @@ export class DirectMessagesSectionComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.getCurrentUserId();
-    this.getCurrentUserChats();
+    await this.getCurrentUserChats();
     this.setNameFirstUser();
   }
-
+  
   /**
    * Get current logged in user id from UserServie
-   */
-  async getCurrentUserId() {
-    await this.userService.getCurrentUser()
-      .then((currentUserId) => {
-        this.currentUserId = currentUserId;
-      })
+  */
+ async getCurrentUserId() {
+   await this.userService.getCurrentUser()
+   .then((currentUserId) => {
+     this.currentUserId = currentUserId;
+    })
   }
-
-  getCurrentUserChats() {
+  
+  async getCurrentUserChats() {
     this.chatService.returnCurrentUserChats(this.currentUserId)
-      .subscribe(snap => {
-        this.chatIds = snap.get('chatIds');
-        this.getChatDataById(this.chatIds);
-      })
+    .subscribe(snap => {
+      this.chatIds = snap.get('chatIds');
+      this.getChatDataById(this.chatIds);
+    })
   }
-
-  getChatDataById(chatIds: Array<string>) {
+  
+  async getChatDataById(chatIds: Array<string>) {
+    let i = 0;
     if (chatIds != undefined) {
       chatIds.forEach(async (chatId: string) => {
         const chatData: any = await this.chatService.returnQueryChatData(chatId);
         this.creationDate.push([...chatData][0]['creationDate']);
         this.memberIds.push([...chatData][0]['members']);
         this.threads.push([...chatData][0]['threads']);
+        this.memberLength.push(this.memberIds[i].length);
+        i++;
       })
+      console.log(this.memberLength);
     }
   }
 
@@ -72,7 +77,6 @@ export class DirectMessagesSectionComponent implements OnInit {
         this.userService.getUserData(user[0])
           .pipe(take(1))
           .subscribe((user) => {
-            console.log("DM SECTION USER: ", user);
             this.memberNames.push(user['displayName']);
             this.memberImages.push(user['profilePicture']);
           })
