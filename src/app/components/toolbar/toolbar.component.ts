@@ -61,8 +61,13 @@ export class ToolbarComponent {
   }
 
 
+  /**
+   * This needs to be refactored.
+   * Emmiter emits false, if the user clicks on the toggle-button.
+   */
   openLeftSidenav() {
-    this.sidenavService.leftSidenavOpened.emit();
+    this.sidenavService.leftSidenavOpened.emit(false);
+    console.log('%cEvent emiter must be refactored',  "color: orange; font-size: x-large");
   }
 
   /**
