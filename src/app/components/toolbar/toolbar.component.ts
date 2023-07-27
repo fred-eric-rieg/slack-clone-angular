@@ -6,6 +6,7 @@ import { SidenavService } from 'src/app/shared/services/sidenav.service';
 // import { User } from 'src/models/user.class';
 // Import des AngularFireAuth Service
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { getAuth, signOut } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { SearchService } from './../../shared/services/search.service';
@@ -20,12 +21,13 @@ export class ToolbarComponent {
   @Output() sidenavOpened = new EventEmitter<boolean>();
 
 
-  constructor(public dialog: MatDialog,
+  constructor(
+    public dialog: MatDialog,
     public asService: AngularFireAuth,
     private sidenavService: SidenavService,
     private router: Router,
     public channelService: ChannelService,
-    public searchService: SearchService,
+    public searchService: SearchService
     ) {}
 
 
@@ -63,9 +65,15 @@ export class ToolbarComponent {
     this.sidenavService.leftSidenavOpened.emit();
   }
 
-
+  /**
+   * This is the way.
+   */
   logoutUser() {
-    this.asService.signOut();
-    this.router.navigate(['']);
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      this.router.navigate(['']);
+      localStorage.removeItem('logged-token');
+    });
   }
+
 }
