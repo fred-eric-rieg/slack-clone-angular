@@ -18,20 +18,20 @@ const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent,
     children: [
-      { path: 'channel/:id', component: ChannelComponent },
-      { path: 'channel-threads', component: ChannelThreadsComponent }, // NEW
-      { path: 'channel-users', component: ChannelUsersComponent }, // NEW
-      { path: 'user/:id', component: DialogUserComponent },
-      { path: 'chat/:id', component: DirectMessageChannelComponent },
-      { path: 'create-chat', component: NewChatComponent },
-      { path: 'thread/:id', component: ThreadComponent }
-    ]
+      { path: 'channel/:id', component: ChannelComponent, canActivate: [AuthGuard] },
+      { path: 'channel-threads', component: ChannelThreadsComponent, canActivate: [AuthGuard] }, // NEW
+      { path: 'channel-users', component: ChannelUsersComponent, canActivate: [AuthGuard] }, // NEW
+      { path: 'user/:id', component: DialogUserComponent, canActivate: [AuthGuard] },
+      { path: 'chat/:id', component: DirectMessageChannelComponent, canActivate: [AuthGuard] },
+      { path: 'create-chat', component: NewChatComponent, canActivate: [AuthGuard] },
+      { path: 'thread/:id', component: ThreadComponent, canActivate: [AuthGuard] }
+    ], canActivate: [AuthGuard]
   },
-  { path: 'sidenav', component: sidenavComponent },
+  { path: 'sidenav', component: sidenavComponent, canActivate: [AuthGuard] },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'sign-up', component: SignUpComponent },
-  { path: 'dashboard/channel', component: ChannelComponent },
-  { path: 'user/:id', component: DialogUserComponent},
+  { path: 'dashboard/channel', component: ChannelComponent, canActivate: [AuthGuard] },
+  { path: 'user/:id', component: DialogUserComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({
