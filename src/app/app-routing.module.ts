@@ -11,12 +11,16 @@ import { DialogUserComponent } from './components/dialog-user/dialog-user.compon
 import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
 import { NewChatComponent } from './components/new-chat/new-chat.component';
 import { ThreadComponent } from './components/thread/thread.component';
+import { ChannelThreadsComponent } from './components/channel-threads/channel-threads.component';
+import { ChannelUsersComponent } from './components/channel-users/channel-users.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent,
     children: [
       { path: 'channel/:id', component: ChannelComponent },
+      { path: 'channel-threads', component: ChannelThreadsComponent }, // NEW
+      { path: 'channel-users', component: ChannelUsersComponent }, // NEW
       { path: 'user/:id', component: DialogUserComponent },
       { path: 'chat/:id', component: DirectMessageChannelComponent },
       { path: 'create-chat', component: NewChatComponent },

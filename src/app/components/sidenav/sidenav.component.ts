@@ -6,6 +6,9 @@ import { ChannelService } from 'src/app/shared/services/channel.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Timestamp } from '@angular/fire/firestore';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
+import { ChannelThreadsComponent } from '../channel-threads/channel-threads.component';
+import { RouterModule, Routes } from '@angular/router';
+
 
 @Component({
   selector: 'app-sidenav',
@@ -13,7 +16,7 @@ import { SidenavService } from 'src/app/shared/services/sidenav.service';
   styleUrls: ['./sidenav.component.scss']
 })
 export class sidenavComponent implements OnInit {
-
+ 
   channelsCollapsed = false;
   messagesCollapsed = false;
 

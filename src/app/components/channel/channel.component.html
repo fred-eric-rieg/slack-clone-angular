@@ -1,6 +1,6 @@
 <div *ngIf="activeChannel" class="content-box">
 
-    <div class="sticky-header">
+  <div class="sticky-header">
         # {{ activeChannel.name }}
 
         <div *ngIf="getMembers()!.length == 1" class="hover" (click)="openViewPeopleDialog()">
@@ -97,3 +97,5 @@
             </button>
         </div>
     </div>
+
+    <app-dialog-user></app-dialog-user>

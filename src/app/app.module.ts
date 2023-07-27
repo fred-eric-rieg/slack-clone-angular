@@ -67,6 +67,8 @@ import { DialogAddPeopleComponent } from './components/dialog-add-people/dialog-
 import { DialogViewPeopleComponent } from './components/dialog-view-people/dialog-view-people.component';
 import { ThreadComponent } from './components/thread/thread.component';
 import { SearchComponent } from './components/search/search.component';
+import { ChannelThreadsComponent } from './components/channel-threads/channel-threads.component';
+import { ChannelUsersComponent } from './components/channel-users/channel-users.component';
 
 
 @NgModule({
@@ -96,6 +98,8 @@ import { SearchComponent } from './components/search/search.component';
     DialogViewPeopleComponent,
     ThreadComponent,
     SearchComponent,
+    ChannelThreadsComponent,
+    ChannelUsersComponent,
   ],
   imports: [
     BrowserModule,
