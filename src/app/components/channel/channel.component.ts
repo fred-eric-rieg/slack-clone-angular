@@ -170,7 +170,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   loadThreads() {
     this.threadService.loadChannelThreads(this.activeChannel.threads).then((querySnapshot) => {
       this.threads = querySnapshot.docs.map((doc) => {
-        console.log("Channel Threads loaded: ", doc.data());
         return doc.data() as Thread;
       });
       this.loadMessages(); // After the threads are loaded, load the messages.
@@ -184,7 +183,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     let messageIds = this.threads.map(thread => thread.messages[0]).flat();
     this.messageService.loadThreadMessages(messageIds).then((querySnapshot) => {
       this.messages = querySnapshot.docs.map((doc) => {
-        console.log("Channel Messages loaded: ", doc.data());
         return doc.data() as Message;
       });
       this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
@@ -227,7 +225,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     if (event.event === 'text-change') {
       this.collectedContent = event.html;
     }
-    console.log(event.event)
   }
 
 
@@ -276,7 +273,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
    * to update the channel description.
    */
   openDescriptionDialog() {
-    console.log('Open description dialog');
     const dialogRef = this.dialog.open(DialogAddDescriptionComponent);
 
     dialogRef.afterClosed().subscribe(async (dialogData) => {
@@ -298,7 +294,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   openAddPeopleDialog() {
-    console.log('Open add people dialog');
     const dialogRef = this.dialog.open(DialogAddPeopleComponent, {
       width: '350px',
       data: {
@@ -326,7 +321,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   openViewPeopleDialog() {
-    console.log('Open view people dialog');
     const dialogRef = this.dialog.open(DialogViewPeopleComponent, {
       width: '350px',
       data: {
