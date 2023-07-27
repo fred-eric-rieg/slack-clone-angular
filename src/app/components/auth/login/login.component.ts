@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { signInAnonymously, getAuth } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,6 +19,7 @@ export class LoginComponent implements OnInit {
   minLengthPassword: number = 6;
   form!: FormGroup;
 
+
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
@@ -28,12 +30,14 @@ export class LoginComponent implements OnInit {
 
   }
 
+  
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     })
   }
+
 
   login() {
     this.authService.signIn(
@@ -52,10 +56,18 @@ export class LoginComponent implements OnInit {
     })
   }
 
+  /**
+   * This function logs in the user as a anaonymous user without
+   * the need of email and password.
+   */
   guestLogin() {
-    localStorage.setItem(this.tokenName, 'guest-login');
-    this.router.navigate(['dashboard']);
+    const auth = getAuth();
+    signInAnonymously(auth).then(() => {
+      localStorage.setItem(this.tokenName, 'guest-login');
+      this.router.navigate(['dashboard']);
+    });
   }
+
 
   signInWithGoogle() {
     this.authService.signInWithGoogle();
