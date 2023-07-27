@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { signInAnonymously, getAuth } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -24,13 +22,12 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar,
-    private userService: UserService,
+    private snackBar: MatSnackBar
   ) {
 
   }
 
-  
+
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
