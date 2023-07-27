@@ -98,16 +98,13 @@ export class ThreadComponent implements OnInit, OnDestroy {
   loadThread(threadId: string) {
     this.threadService.loadChannelThreads([threadId]).then(thread => {
       this.thread = thread.docs[0].data() as Thread;
-      console.log(this.thread);
       this.messageIds = thread.docs[0].data()['messages'];
-      console.log(this.messageIds);
 
       this.messageService.loadThreadMessages(this.messageIds).then((querySnapshot) => {
         this.messages = querySnapshot.docs.map((doc) => {
           return doc.data() as Message;
         });
         this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
-        console.log(this.messages);
 
         // Loading all users in the thread
         this.userService.getAllUsersInThread(this.messages.map(message => message.creatorId)).then((querySnapshot) => {
@@ -125,11 +122,9 @@ export class ThreadComponent implements OnInit, OnDestroy {
    * @param event 
    */
   async collectContent(event: EditorChangeContent | EditorChangeSelection) {
-    console.log(event);
     if (event.event === 'text-change') {
       this.collectedContent = event.html;
     }
-    console.log(event.event)
   }
 
 
