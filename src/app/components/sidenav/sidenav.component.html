@@ -12,14 +12,14 @@
     <div class="nav-scroll-container">
       <div class="navigation">
         <!-- Threads -->
-        <div class="nav-hl flex-ac">
+        <div class="nav-hl flex-ac" [routerLink]="'channel-threads/'">
           <mat-icon font-icon>comment</mat-icon>
-          <p [routerLink]="'channel-threads/'">Threads</p>
+          <p>Threads</p>
         </div>
         <!-- Users -->
-        <div class="nav-hl flex-ac">
+        <div class="nav-hl flex-ac" [routerLink]="'channel-users/'">
           <mat-icon font-icon>supervisor_account</mat-icon>
-          <p [routerLink]="'channel-users/'">Users</p>
+          <p>Users</p>
         </div>
       </div>
 
