@@ -65,12 +65,7 @@ export class AuthService {
    * This function logs out the user from firebase.
    */
   logout() {
-    this.fireAuth.signOut().then(() => {
-      this.router.navigate(['/']);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    });
+    this.fireAuth.signOut();
   }
 
 
