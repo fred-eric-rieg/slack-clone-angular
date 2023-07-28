@@ -3,13 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogHelpComponent } from '../dialog-help/dialog-help.component';
 import { DialogLegalComponent } from '../dialog-legal/dialog-legal.component';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
-// import { User } from 'src/models/user.class';
-// Import des AngularFireAuth Service
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { getAuth, signOut } from '@angular/fire/auth';
-import { Router } from '@angular/router';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { SearchService } from './../../shared/services/search.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 
 @Component({
@@ -18,6 +15,7 @@ import { SearchService } from './../../shared/services/search.service';
   styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent {
+
   @Output() sidenavOpened = new EventEmitter<boolean>();
 
 
@@ -25,16 +23,19 @@ export class ToolbarComponent {
     public dialog: MatDialog,
     public asService: AngularFireAuth,
     private sidenavService: SidenavService,
-    private router: Router,
     public channelService: ChannelService,
-    public searchService: SearchService
-    ) {}
+    public searchService: SearchService,
+    private authService: AuthService
+  ) { }
 
 
+  /**
+   * Transfers the search term to the search service.
+   * @param searchTerm as string.
+   */
   onSearchText(searchTerm: string): void {
     const searchResults = [searchTerm];
     this.searchService.setSearchResults(searchResults);
-    console.log(searchResults);
   }
 
 
@@ -42,7 +43,7 @@ export class ToolbarComponent {
     const dialogRef = this.dialog.open(DialogHelpComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+
     });
   }
 
@@ -51,7 +52,7 @@ export class ToolbarComponent {
     const dialogRef = this.dialog.open(DialogLegalComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+
     });
   }
 
@@ -62,23 +63,15 @@ export class ToolbarComponent {
 
 
   /**
-   * This needs to be refactored.
    * Emmiter emits false, if the user clicks on the toggle-button.
    */
   openLeftSidenav() {
     this.sidenavService.leftSidenavOpened.emit(false);
-    console.log('%cEvent emiter must be refactored',  "color: orange; font-size: x-large");
   }
 
-  /**
-   * This is the way.
-   */
+
   logoutUser() {
-    const auth = getAuth();
-    signOut(auth).then(() => {
-      this.router.navigate(['']);
-      localStorage.removeItem('logged-token');
-    });
+    this.authService.logout();
   }
 
 }
