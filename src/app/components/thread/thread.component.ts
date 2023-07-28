@@ -3,7 +3,7 @@ import { getAuth } from '@angular/fire/auth';
 import { Timestamp, onSnapshot } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
-import { Subject, takeUntil } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { ThreadService } from 'src/app/shared/services/thread.service';
@@ -27,6 +27,9 @@ export class ThreadComponent implements OnInit, OnDestroy {
   messageIds!: string[];
   messages!: Message[];
   channel!: Channel;
+
+  // Subscriptions
+  paramsSub!: Subscription;
 
   config = {
     toolbar: [
@@ -53,7 +56,6 @@ export class ThreadComponent implements OnInit, OnDestroy {
     },
   };
 
-  private destroy$ = new Subject();
 
   constructor(
     private threadService: ThreadService,
@@ -72,11 +74,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
       this.users.push(onSnapshot.data() as User);
     });
 
-    this.route.params.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(async (params) => {
+    this.paramsSub = this.route.params.subscribe(async (params) => {
       if (params['id']) {
-        console.log(params['id']);
 
         // Loading the channel
         this.channelService.getChannelViaThread(params['id']).then((querySnapshot) => {
@@ -91,7 +90,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('ThreadComponent destroyed');
-    this.destroy$.next(true);
+    this.paramsSub.unsubscribe();
   }
 
 

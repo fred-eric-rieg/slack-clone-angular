@@ -38,6 +38,7 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
 
   ngOnDestroy(): void {
+    console.log('ToolbarComponent destroyed');
     this.sidenavService.openSidenav.unsubscribe();
   }
 

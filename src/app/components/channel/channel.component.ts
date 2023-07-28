@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill/public-api';
 import 'quill-emoji/dist/quill-emoji.js';
 import { SearchService } from 'src/app/shared/services/search.service';
+import { Subscription } from 'rxjs';
 
 // Models
 import { Message } from 'src/models/message.class';
@@ -18,7 +19,6 @@ import { UserService } from 'src/app/shared/services/user.service';
 import { Channel } from 'src/models/channel.class';
 import { Thread } from 'src/models/thread.class';
 import { getAuth } from '@angular/fire/auth';
-import { Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DialogAddPeopleComponent } from '../dialog-add-people/dialog-add-people.component';
 import { DialogViewPeopleComponent } from '../dialog-view-people/dialog-view-people.component';
@@ -68,8 +68,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
   placeholder = 'Type your message here...';
   searchResults!: string[];
 
+  // Subscriptions
+  searchSub!: Subscription;
+  paramsSub!: Subscription;
+  userServiceSub!: Subscription;
 
-  private destroy$ = new Subject();
 
   constructor(
     public dialog: MatDialog,
@@ -88,7 +91,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
     // Search filter (import from searchService)
     this.searchResults = this.searchService.getSearchResults();
-    this.searchService.searchResultsChanged.subscribe((results: string[]) => {
+    this.searchSub = this.searchService.searchResultsChanged.subscribe((results: string[]) => {
       this.searchResults = results;
     });
   }
@@ -99,7 +102,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     console.log('ChannelComponent destroyed');
-    this.destroy$.next(true);
+    this.searchSub.unsubscribe();
+    this.paramsSub.unsubscribe();
+    this.userServiceSub.unsubscribe();
   }
 
   /**
@@ -122,9 +127,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
    * Is destroyed on component destruction.
    */
   loadActiveChannel() {
-    this.route.params.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(params => {
+    this.paramsSub = this.route.params
+    .subscribe(params => {
       this.activeChannelId = params['id'];
       this.channelService.getChannel(this.activeChannelId).then((response) => {
         this.activeChannel = response.data() as Channel;
@@ -157,9 +161,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   loadUsers() {
-    this.userService.users.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((users: User[]) => {
+    this.userServiceSub = this.userService.users.subscribe((users: User[]) => {
       this.users = users;
     });
   }
@@ -275,11 +277,12 @@ export class ChannelComponent implements OnInit, OnDestroy {
   openDescriptionDialog() {
     const dialogRef = this.dialog.open(DialogAddDescriptionComponent);
 
-    dialogRef.afterClosed().subscribe(async (dialogData) => {
+    let sub = dialogRef.afterClosed().subscribe(async (dialogData) => {
       if (dialogData && dialogData.description) {
         this.updateDescription(dialogData.description);
       }
     });
+    sub.unsubscribe();
   }
 
 
@@ -301,11 +304,12 @@ export class ChannelComponent implements OnInit, OnDestroy {
       }
     });
 
-    dialogRef.afterClosed().subscribe(async (dialogData) => {
+    let sub = dialogRef.afterClosed().subscribe(async (dialogData) => {
       if (dialogData && dialogData.people) {
         this.addPeople(dialogData.people);
       }
     });
+    sub.unsubscribe();
   }
 
 

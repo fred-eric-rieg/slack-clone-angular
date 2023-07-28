@@ -9,6 +9,7 @@ import { SidenavService } from './../../shared/services/sidenav.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserService } from 'src/app/shared/services/user.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -22,6 +23,10 @@ export class DialogUserComponent implements OnInit, OnDestroy {
   user: User = new User();
   userDialogOpen = false;
   imgUrl: string = '';
+
+  // Subscriptions
+  userSub!: Subscription;
+  sidenavSub!: Subscription;
 
 
   constructor(
@@ -42,12 +47,15 @@ export class DialogUserComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
+    console.log('DialogUserComponent destroyed');
     this.sidenavService.openUserProfile.unsubscribe();
+    this.userSub.unsubscribe();
+    this.sidenavSub.unsubscribe();
   }
 
 
   getLoggedInUser() {
-    this.auth.user.subscribe((user: any) => {
+    this.userSub = this.auth.user.subscribe((user: any) => {
       user ? (this.userId = user.uid, this.getUser()) : null;
     });
   }
@@ -64,7 +72,7 @@ export class DialogUserComponent implements OnInit, OnDestroy {
 
 
   listenToSidenavService() {
-    this.sidenavService.openUserProfile.subscribe((response) => {
+    this.sidenavSub = this.sidenavService.openUserProfile.subscribe((response) => {
       this.userDialogOpen = response;
     });
   }

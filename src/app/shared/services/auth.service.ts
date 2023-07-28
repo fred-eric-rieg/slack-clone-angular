@@ -67,6 +67,9 @@ export class AuthService {
   logout() {
     this.fireAuth.signOut().then(() => {
       this.router.navigate(['/']);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     });
   }
 

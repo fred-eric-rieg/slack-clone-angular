@@ -27,6 +27,8 @@ export class LoginComponent implements OnInit {
 
 
   ngOnInit(): void {
+    console.log('LoginComponent initialized');
+    console.log('%c1000ms timeout nach logout, dann lädt die Seite neu... timeout entfernen, um den Firebase Error zur Subscription zu sehen', 'color: orange; font-weight: bold');
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]

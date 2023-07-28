@@ -41,6 +41,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
+    console.log('SidenavComponent destroyed');
     this.sidenavService.openSidenav.unsubscribe();
   }
 
