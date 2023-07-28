@@ -1,4 +1,4 @@
-<mat-drawer-container [ngClass]="{'hidden-sidenav': sidenavService.isLeftSidenavHidden}">
+<mat-drawer-container [ngClass]="{'hidden-sidenav': !sidenavOpened}">
   <mat-drawer mode="side" opened>
     <div class="server-name">
       <div class="logo">
