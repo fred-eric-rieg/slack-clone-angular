@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { signInAnonymously, getAuth } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -11,10 +10,9 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  
   isPasswordVisible: boolean = false;
   visibiltyIcon: string = 'visibility';
-  tokenName = 'logged-token';
-  minLengthPassword: number = 6;
   form!: FormGroup;
 
 
@@ -31,7 +29,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required, Validators.minLength(6)]]
     })
   }
 
@@ -42,7 +40,6 @@ export class LoginComponent implements OnInit {
       this.form.value.password
     ).subscribe({
       next: () => {
-        localStorage.setItem(this.tokenName, 'logged-token');
         this.router.navigate(['dashboard'])
       },
       error: error => {
@@ -62,7 +59,6 @@ export class LoginComponent implements OnInit {
       'guest1'
     ).subscribe({
       next: () => {
-        localStorage.setItem(this.tokenName, 'logged-token')
         this.router.navigate(['dashboard'])
       },
       error: error => {
