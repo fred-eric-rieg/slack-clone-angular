@@ -8,7 +8,7 @@
     <!-- Children Router Outlet for Channels & Chats -->
     <!-- Dynamische Klasse d-none wird vergeben, wenn sidenav offen und mobile width < 768px ist -->
     <!-- Damit soll in mobile entweder nur das Sidenav oder nur der Channel angezeigt werden -->
-    <div class="router-container" [ngClass]="{'d-none': !sidenavService.isLeftSidenavHidden && width < 768}">
+    <div class="router-container" [ngClass]="{'d-none': leftSidenavOpen && width < 768}">
       <router-outlet></router-outlet>
     </div>
   </div>
