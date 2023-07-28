@@ -1,9 +1,9 @@
-<mat-drawer-container [class.d-none]="isSidenavHidden">
+<mat-drawer-container [class.d-none]="!userDialogOpen">
   <mat-drawer mode="side" opened class="profile-container">
     <div class="profile-title-container b-bottom">
       <div class="profile-title">
         <span>Profile</span>
-        <button class="close-btn" mat-mini-fab (click)="closeSidenav()">
+        <button class="close-btn" mat-mini-fab (click)="closeDialog()">
           <mat-icon [ngStyle]="{ color: 'black' }">close</mat-icon>
         </button>
       </div>
