@@ -126,7 +126,6 @@ export class UserService {
 
   async getUser(userId: string) {
     const userData = await this.returnUserData(userId);
-    console.log(userData);
   }
 
   async returnUserData(userId: string) {
