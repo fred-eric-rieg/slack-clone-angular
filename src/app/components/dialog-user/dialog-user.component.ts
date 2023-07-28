@@ -48,7 +48,6 @@ export class DialogUserComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('DialogUserComponent destroyed');
-    this.sidenavService.openUserProfile.unsubscribe();
     this.userSub.unsubscribe();
     this.sidenavSub.unsubscribe();
   }
