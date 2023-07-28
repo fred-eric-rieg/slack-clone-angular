@@ -33,6 +33,7 @@ import { DialogViewPeopleComponent } from '../dialog-view-people/dialog-view-peo
   styleUrls: ['./channel-threads.component.scss']
 })
 export class ChannelThreadsComponent implements OnInit {
+  
   searchResults!: string[];
   messages!: Message[];
 

@@ -2,4 +2,42 @@
   box-sizing: border-box;
   position: relative;
   height: calc(100vh - 64px);
+  /*height: calc(100vh - 64px);*/
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.user-card {
+  width: 250px;
+  height: 165px;
+  margin: 10px;
+  background-color: rgb(61, 61, 61);
+  border: 1px solid rgb(87, 87, 87);
+  border-radius: 4px;
+  padding: 24px;
+}
+
+.nav-hl {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 0 8px;
+  padding: 5px 12px;
+  font-size: 16px;
+
+  p {
+    margin: 0 !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+}
+
+.m-left {
+  margin-left: 15px;
 }
