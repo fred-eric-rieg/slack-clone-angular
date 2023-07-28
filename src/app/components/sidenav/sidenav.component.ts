@@ -6,7 +6,7 @@ import { ChannelService } from 'src/app/shared/services/channel.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Timestamp } from '@angular/fire/firestore';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
-import { authState } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -30,6 +30,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
     public auth: AngularFireAuth,
     private channelService: ChannelService,
     public sidenavService: SidenavService,
+    private router: Router
   ) { }
 
 
@@ -45,13 +46,15 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Loads all channels from the database once on initialization.
+   * Loads all channels from the database once on initialization and
+   * navigates to the main channel.
    */
   loadChannels() {
     this.channelService.onetimeLoadChannels().then((querySnapshot) => {
       this.allChannels = querySnapshot.docs.map(doc => {
         return doc.data() as Channel;
       });
+      this.router.navigate(['dashboard/channel/' + this.allChannels.filter(channel => channel.name === 'Main')[0].channelId]);
     });
   }
 
