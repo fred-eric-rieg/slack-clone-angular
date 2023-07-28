@@ -71,7 +71,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   // Subscriptions
   searchSub!: Subscription;
   paramsSub!: Subscription;
-  userServiceSub!: Subscription;
+  usersSub!: Subscription;
 
 
   constructor(
@@ -88,12 +88,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadActiveChannel();
     this.loadUsers();
-
-    // Search filter (import from searchService)
-    this.searchResults = this.searchService.getSearchResults();
-    this.searchSub = this.searchService.searchResultsChanged.subscribe((results: string[]) => {
-      this.searchResults = results;
-    });
+    this.handleSearchbar();
   }
 
 
@@ -103,23 +98,16 @@ export class ChannelComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log('ChannelComponent destroyed');
     this.searchSub.unsubscribe();
-    this.paramsSub.unsubscribe();
-    this.userServiceSub.unsubscribe();
+    this.usersSub.unsubscribe();
   }
 
-  /**
-   * Formatting a timestamp into a sting with the format: HH:MM AM/PM.
-   * @param timestamp as Timestamp.
-   * @returns a formatted date as string.
-   */
-  getFormattedDate(timestamp: Timestamp) {
-    let date = new Date(timestamp.seconds * 1000);
-    let hours = date.getHours() % 12 || 12;
-    let minutes = date.getMinutes().toLocaleString();
-    if (minutes.length == 1) {
-      minutes = 0 + minutes;
-    }
-    return `${hours}:${minutes} ${date.getHours() >= 12 ? 'PM' : 'AM'}`;
+
+  handleSearchbar() {
+    // Search filter (import from searchService)
+    this.searchResults = this.searchService.getSearchResults();
+    this.searchSub = this.searchService.searchResultsChanged.subscribe((results: string[]) => {
+      this.searchResults = results;
+    });
   }
 
   /**
@@ -127,49 +115,19 @@ export class ChannelComponent implements OnInit, OnDestroy {
    * Is destroyed on component destruction.
    */
   loadActiveChannel() {
-    this.paramsSub = this.route.params
-    .subscribe(params => {
-      this.activeChannelId = params['id'];
-      this.channelService.getChannel(this.activeChannelId).then((response) => {
-        this.activeChannel = response.data() as Channel;
-        this.loadThreads(); // After the active channel is loaded, load the threads.
-        /**
-         * WARNING: This subscription loads the active channel again, when the active channel changes and
-         * then loads the Threads & Messages again from Firestore. Instead, caching could be an option.
-         */
+    this.route.params.subscribe(params => {
+        this.activeChannelId = params['id'];
+        this.channelService.getChannel(this.activeChannelId).then((response) => {
+          this.activeChannel = response.data() as Channel;
+          this.loadThreads(); // After the active channel is loaded, load the threads.
+        });
       });
-    });
   }
 
-
-  /**
-   *
-   * @returns the displayName of the creator of the active channel.
-   */
-  getCreator() {
-    if (!this.users) return;
-    let user = this.users.find(user => user.userId === this.activeChannel.creatorId);
-    return user?.displayName;
-  }
-
-
-  getMembers() {
-    if (!this.users) return "";
-    let members = this.users.filter(user => this.activeChannel.members.includes(user.userId));
-    return members;
-  }
-
-
-  loadUsers() {
-    this.userServiceSub = this.userService.users.subscribe((users: User[]) => {
-      this.users = users;
-    });
-  }
-
-  /**
+   /**
    * Load all threads of the active channel once.
    */
-  loadThreads() {
+   loadThreads() {
     this.threadService.loadChannelThreads(this.activeChannel.threads).then((querySnapshot) => {
       this.threads = querySnapshot.docs.map((doc) => {
         return doc.data() as Thread;
@@ -192,6 +150,27 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @returns the displayName of the creator of the active channel.
+   */
+  getCreator() {
+    if (!this.users) return;
+    return this.users.find(user => user.userId === this.activeChannel.creatorId)?.displayName;
+  }
+
+
+  getMembers() {
+    if (!this.users) return "";
+    return this.users.filter(user => this.activeChannel.members.includes(user.userId));
+  }
+
+
+  loadUsers() {
+    this.usersSub = this.userService.users.subscribe((users: User[]) => {
+      this.users = users;
+    });
+  }
+
+  /**
    * Finds the user displayName by the user id.
    * @param userId as string.
    * @returns a string with the user displayName.
@@ -206,27 +185,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns either the logged user or a default user id.
-   * @returns the logged user id.
-   */
-  loggedUser() {
-    const auth = getAuth();
-    if (auth.currentUser) {
-      return auth.currentUser.uid;
-    } else {
-      return 'Zta41sUcC7rLGHbpMmn4';
-    }
-  }
-
-  /**
    * Filles collectedContent with the current content in the editor.
    * @param event
    */
   async collectContent(event: EditorChangeContent | EditorChangeSelection) {
-    console.log(event);
-    if (event.event === 'text-change') {
-      this.collectedContent = event.html;
-    }
+    event.event === 'text-change' ? this.collectedContent = event.html : null;
   }
 
 
@@ -240,15 +203,33 @@ export class ChannelComponent implements OnInit, OnDestroy {
     }
   }
 
+   /**
+   * Returns either the logged user or a default user id.
+   * @returns the logged user id.
+   */
+   loggedUser() {
+    const auth = getAuth();
+    if (auth.currentUser) {
+      return auth.currentUser.uid;
+    } else {
+      return 'Zta41sUcC7rLGHbpMmn4';
+    }
+  }
 
+  /**
+   * Used in HTML component.
+   * @param messageId as string.
+   * @returns number of messages in a thread.
+   */
   countThreadMessages(messageId: string) {
     let thread = this.threads.find(thread => thread.messages[0].includes(messageId));
-    if (thread) return thread.messages.length;
+    if (thread) return thread.messages.length - 1;
     else return 0;
   }
 
-
-  // TODO: This function shall sort the messages by dates and cluster them by days.
+  /**
+   * Used in HTML component to sort messages by date.
+   */
   sortMessagesByDate() {
     if (this.messages) {
       this.messages.forEach((message) => {
@@ -281,8 +262,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
       if (dialogData && dialogData.description) {
         this.updateDescription(dialogData.description);
       }
+      sub.unsubscribe();
     });
-    sub.unsubscribe();
   }
 
 
@@ -308,8 +289,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
       if (dialogData && dialogData.people) {
         this.addPeople(dialogData.people);
       }
+      sub.unsubscribe();
     });
-    sub.unsubscribe();
   }
 
 

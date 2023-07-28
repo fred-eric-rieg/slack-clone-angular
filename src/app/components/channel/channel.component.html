@@ -75,7 +75,7 @@
                         </div>
                         <mat-card-content [innerHTML]="message.text"></mat-card-content>
                         <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                            <p *ngIf="countThreadMessages(message.messageId)! > 1">{{
+                            <p *ngIf="countThreadMessages(message.messageId)! >= 1">{{
                                 countThreadMessages(message.messageId) }} replies</p>
                         </div>
                     </mat-card>
