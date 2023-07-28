@@ -1,6 +1,7 @@
+import { DirectMessageChannelComponent } from './../direct-message-channel/direct-message-channel.component';
+import { ChannelComponent } from './../channel/channel.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChannelThreadsComponent } from './channel-threads.component';
 
 describe('ChannelThreadsComponent', () => {
   let component: ChannelThreadsComponent;

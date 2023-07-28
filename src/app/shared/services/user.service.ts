@@ -42,6 +42,7 @@ export class UserService {
 
   /**
    * Updates user info.
+   * E.g. used in dialog-user-edit-component.
    * @param user
    * @returns an update to the user collection.
    */
@@ -119,15 +120,25 @@ export class UserService {
   }
 
 
-  getUserData(userId: string) {
-    const docRef = doc(this.userCollection, userId);
+  /**
+   * Retrieves user data from Firestore based on the provided user ID.
+   * E.g. used in dialog-user-component.
+   * @param userId (The ID of the user to retrieve from Firestore.)
+   * @returns An observable that emits the user data as an object.
+   */
+  getUserData(userId: string): Observable<any> {
+    const userCollection = collection(this.firestore, 'users');
+    const docRef = doc(userCollection, userId);
+
     return docData(docRef);
   }
+
 
   async getUser(userId: string) {
     const userData = await this.returnUserData(userId);
     console.log(userData);
   }
+
 
   async returnUserData(userId: string) {
     const snap = await getDoc(doc(this.userCollection, userId));
@@ -152,8 +163,13 @@ export class UserService {
   }
 
 
-  getAllUsers() {
-    this.users = collectionData(this.userCollection);
+  /**
+   * Fetches all users from the Firestore database.
+   * E.g. used in channel-users-component.
+   * @returns an observable that emits an array of all users.
+   */
+  getAllUsers(): Observable<any[]> {
+    return this.users = collectionData(this.userCollection);
   }
 
 

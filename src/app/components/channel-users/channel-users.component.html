@@ -1,5 +1,24 @@
 <div class="content-box">
-  <p>channel-users works!</p>
+  <ng-container *ngFor="let user of allUsers">
+    <div class="user-card"*ngIf="searchResults.length === 0
+      || user.displayName.toLowerCase().includes(searchResults[0].toLowerCase())
+      || user.title.toLowerCase().includes(searchResults[0].toLowerCase())
+      || user.timezone.toLowerCase().includes(searchResults[0].toLowerCase())
+    ">
+
+      <div class="nav-hl">
+        <img class="profile-pic" [src]="user.profilePicture || 'assets/img/profile.png'">
+        {{ user.displayName }}
+      </div>
+      <div class="nav-hl m-left">
+        <mat-icon font-icon>work</mat-icon>{{ user.title }}
+      </div>
+      <div class="nav-hl m-left">
+        <mat-icon font-icon>language</mat-icon>{{ user.timezone }}
+      </div>
+
+    </div>
+  </ng-container>
 </div>
 
 <app-dialog-user></app-dialog-user>

@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SidenavService } from './../../shared/services/sidenav.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { UserService } from 'src/app/shared/services/user.service';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class DialogUserComponent implements OnInit {
     public sidenavService: SidenavService,
     public authService: AuthService,
     private auth: AngularFireAuth,
+    private userService: UserService,
   ) {}
 
 
@@ -68,15 +70,12 @@ export class DialogUserComponent implements OnInit {
   /**
    * Retrieves user data from Firestore based on the provided user ID.
    * Subscribes to the document data and maps it to a User object.
-   * 'userCollection' is a firestore collection representing the 'users' collection.
-   * 'docRef' is a document reference representing a specific user document.
+   * The UserService is used to get user data.
+   * The retrieved user data is used to create a new User object.
    */
   getUser() {
-    const userCollection = collection(this.firestore, 'users');
-    const docRef = doc(userCollection, this.userId);
-
-    docData(docRef).subscribe((userCollection: any) => {
-      this.user = new User(userCollection);
+    this.userService.getUserData(this.userId).subscribe((user: any) => {
+      this.user = new User(user);
     });
   }
 
