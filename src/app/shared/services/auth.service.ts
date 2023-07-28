@@ -10,26 +10,30 @@ import { UserService } from './user.service';
   providedIn: 'root'
 })
 export class AuthService {
+
+  auth = getAuth();
   private provider = new GoogleAuthProvider();
-  public tokenName: string = 'logged-token';
+
 
   constructor(
-    private auth: AngularFireAuth,
+    private fireAuth: AngularFireAuth,
     private userService: UserService,
     private router: Router,
   ) { }
 
+
   signIn(email: string, password: string): Observable<any> {
-    return from(this.auth.signInWithEmailAndPassword(email, password))
+    return from(this.fireAuth.signInWithEmailAndPassword(email, password))
       .pipe(
         catchError((error: FirebaseError) =>
           throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
       )
   }
 
+
   signUp(email: string, password: string): Observable<any> {
     return from(
-      this.auth.createUserWithEmailAndPassword(email, password)
+      this.fireAuth.createUserWithEmailAndPassword(email, password)
         .then((userCred) => {
           this.userService.setNewUser(userCred.user?.uid!, email)
         }))
@@ -39,29 +43,33 @@ export class AuthService {
       )
   }
 
+
   recoverPassword(email: string): Observable<any> {
-    return from(this.auth.sendPasswordResetEmail(email))
+    return from(this.fireAuth.sendPasswordResetEmail(email))
       .pipe(
         catchError((error: FirebaseError) =>
           throwError(() => new Error(this.translateFirebaseErrorMessage(error))))
       )
   }
 
+
   signInWithGoogle() {
-    const auth = getAuth();
-    signInWithPopup(auth, this.provider).then( ()=> {
-      this.userService.setNewUser(auth.currentUser?.uid!, auth.currentUser?.email!);
+    signInWithPopup(this.auth, this.provider).then(() => {
+      this.userService.setNewUser(this.auth.currentUser?.uid!, this.auth.currentUser?.email!);
       this.router.navigate(['/dashboard']);
     });
   }
 
-  isLoggedIn() {
-    return localStorage.getItem(this.tokenName) != null;
+
+  /**
+   * This function logs out the user from firebase.
+   */
+  logout() {
+    this.fireAuth.signOut().then(() => {
+      this.router.navigate(['/']);
+    });
   }
 
-  logout() {
-    localStorage.removeItem(this.tokenName);
-  }
 
   private translateFirebaseErrorMessage({ code, message }: FirebaseError) {
     if (code === "auth/user-not-found") {
