@@ -5,12 +5,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 })
 export class SidenavService {
 
-  /**
-  * HIER MUSS NOCH AUFGERÄUMT WERDEN
-  **/
-  sidenavOpened = new EventEmitter<boolean>();
-  leftSidenavOpened = new EventEmitter<boolean>();
-  isLeftSidenavHidden = false;
+  openUserProfile = new EventEmitter<boolean>();
+  openSidenav = new EventEmitter<boolean>();
 
-  constructor() { }
 }
