@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogHelpComponent } from '../dialog-help/dialog-help.component';
 import { DialogLegalComponent } from '../dialog-legal/dialog-legal.component';
@@ -14,9 +14,10 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss']
 })
-export class ToolbarComponent {
+export class ToolbarComponent implements OnDestroy, OnInit {
 
-  @Output() sidenavOpened = new EventEmitter<boolean>();
+  sidenavOpen: boolean = true;
+  userProfileOpen: boolean = false;
 
 
   constructor(
@@ -27,6 +28,18 @@ export class ToolbarComponent {
     public searchService: SearchService,
     private authService: AuthService
   ) { }
+
+
+  ngOnInit(): void {
+    this.sidenavService.openSidenav.subscribe((response) => {
+      this.sidenavOpen = response;
+    });
+  }
+
+
+  ngOnDestroy(): void {
+    this.sidenavService.openSidenav.unsubscribe();
+  }
 
 
   /**
@@ -58,15 +71,12 @@ export class ToolbarComponent {
 
 
   openUserProfile() {
-    this.sidenavService.sidenavOpened.emit(false);
+    this.sidenavService.openUserProfile.emit(!this.userProfileOpen);
   }
 
 
-  /**
-   * Emmiter emits false, if the user clicks on the toggle-button.
-   */
-  openLeftSidenav() {
-    this.sidenavService.leftSidenavOpened.emit(false);
+  toggleSidenav() {
+    this.sidenavService.openSidenav.emit(!this.sidenavOpen);
   }
 
 
