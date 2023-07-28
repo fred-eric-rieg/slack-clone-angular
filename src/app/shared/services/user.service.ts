@@ -151,8 +151,8 @@ export class UserService {
   }
 
 
-  getAllUsers() {
-    this.users = collectionData(this.userCollection);
+  getAllUsers(): Observable<any> {
+    return this.users = collectionData(this.userCollection);
   }
 
 

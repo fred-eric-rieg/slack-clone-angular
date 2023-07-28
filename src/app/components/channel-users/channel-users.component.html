@@ -11,10 +11,14 @@
         {{ user.displayName }}
       </div>
       <div class="nav-hl m-left">
-        <mat-icon font-icon>work</mat-icon>{{ user.title }}
+        <mat-icon font-icon>work</mat-icon>
+        <ng-container *ngIf="user.title; else noTitle">{{ user.title }}</ng-container>
+        <ng-template #noTitle>n/a</ng-template>
       </div>
       <div class="nav-hl m-left">
-        <mat-icon font-icon>language</mat-icon>{{ user.timezone }}
+        <mat-icon font-icon>language</mat-icon>
+        <ng-container *ngIf="user.timezone; else noTimezone">{{ user.timezone }}</ng-container>
+        <ng-template #noTimezone>n/a</ng-template>
       </div>
 
     </div>
