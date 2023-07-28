@@ -54,21 +54,29 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * This function logs in the user as a anaonymous user without
-   * the need of email and password.
+   * This function logs in the user with the guest account.
    */
   guestLogin() {
-    const auth = getAuth();
-    signInAnonymously(auth).then(() => {
-      localStorage.setItem(this.tokenName, 'guest-login');
-      this.router.navigate(['dashboard']);
+    this.authService.signIn(
+      'guest@user.de',
+      'guest1'
+    ).subscribe({
+      next: () => {
+        localStorage.setItem(this.tokenName, 'logged-token')
+        this.router.navigate(['dashboard'])
+      },
+      error: error => {
+        this.snackBar.open(error.message, "OK", {
+          duration: 5000
+        });
+      }
     });
   }
 
 
   signInWithGoogle() {
-    this.authService.signInWithGoogle();
-  }
+      this.authService.signInWithGoogle();
+    }
 
   /**
    * This function toggles the visibility of password
@@ -76,9 +84,9 @@ export class LoginComponent implements OnInit {
    * @param passwordInput get password input element of html
    */
   togglePwVisibility(passwordInput: HTMLInputElement) {
-    this.isPasswordVisible = !this.isPasswordVisible;
-    passwordInput.type = this.isPasswordVisible ? 'text' : 'password';
-    this.visibiltyIcon = this.isPasswordVisible ? 'visibility_off' : 'visibility';
-  }
+      this.isPasswordVisible = !this.isPasswordVisible;
+      passwordInput.type = this.isPasswordVisible ? 'text' : 'password';
+      this.visibiltyIcon = this.isPasswordVisible ? 'visibility_off' : 'visibility';
+    }
 
 }
