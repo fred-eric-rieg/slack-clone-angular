@@ -99,6 +99,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     console.log('ChannelComponent destroyed');
     this.searchSub.unsubscribe();
     this.usersSub.unsubscribe();
+    this.paramsSub.unsubscribe();
   }
 
 
@@ -115,19 +116,19 @@ export class ChannelComponent implements OnInit, OnDestroy {
    * Is destroyed on component destruction.
    */
   loadActiveChannel() {
-    this.route.params.subscribe(params => {
-        this.activeChannelId = params['id'];
-        this.channelService.getChannel(this.activeChannelId).then((response) => {
-          this.activeChannel = response.data() as Channel;
-          this.loadThreads(); // After the active channel is loaded, load the threads.
-        });
+    this.paramsSub = this.route.params.subscribe(params => {
+      this.activeChannelId = params['id'];
+      this.channelService.getChannel(this.activeChannelId).then((response) => {
+        this.activeChannel = response.data() as Channel;
+        this.loadThreads(); // After the active channel is loaded, load the threads.
       });
+    });
   }
 
-   /**
-   * Load all threads of the active channel once.
-   */
-   loadThreads() {
+  /**
+  * Load all threads of the active channel once.
+  */
+  loadThreads() {
     this.threadService.loadChannelThreads(this.activeChannel.threads).then((querySnapshot) => {
       this.threads = querySnapshot.docs.map((doc) => {
         return doc.data() as Thread;
@@ -203,11 +204,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
-   * Returns either the logged user or a default user id.
-   * @returns the logged user id.
-   */
-   loggedUser() {
+  /**
+  * Returns either the logged user or a default user id.
+  * @returns the logged user id.
+  */
+  loggedUser() {
     const auth = getAuth();
     if (auth.currentUser) {
       return auth.currentUser.uid;
