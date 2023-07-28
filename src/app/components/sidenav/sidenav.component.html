@@ -33,9 +33,9 @@
 
         <div *ngIf="!channelsCollapsed" class="channel-dropdown-menu">
 
-          <div *ngFor="let channel of allChannels" class="flex-ac channel">
+          <div *ngFor="let channel of allChannels" class="flex-ac channel" [routerLink]="'channel/' + channel.channelId">
             <mat-icon>numbers</mat-icon>
-            <p [routerLink]="'channel/' + channel.channelId">{{ channel.name }}</p>
+            <p>{{ channel.name }}</p>
           </div>
 
           <div (click)="openDialog()" class="channelitem channel flex-ac">
