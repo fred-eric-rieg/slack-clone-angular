@@ -18,48 +18,47 @@
     <div class="person" *ngFor="let member of members">{{ member }}</div>
   </div>
   <div *ngFor="let msg of messages" class="chat-window">
-    <div class="chat-box">
-      <div class="msg-box">
-        <div class="profileImg">
-          <img
-            src="{{
+
+    <!-- Search filter: specify below which elements to search for. -->
+    <main *ngIf="searchResults.length === 0
+      || msg.text.toLowerCase().includes(searchResults[0].toLowerCase())
+      || getUserName(msg.creatorId).toLowerCase().includes(searchResults[0].toLowerCase())">
+
+      <div class="chat-box">
+        <div class="msg-box">
+          <div class="profileImg">
+            <img src="{{
               getChatUserImage(msg.creatorId) || '/../../assets/img/profile.png'
-            }}"
-            alt="Avatar"
-          />
-          <!-- <mat-icon>person</mat-icon> -->
-        </div>
-        <div class="msg-infos">
-          <div class="head">
-            <!-- <span>{{msg.creatorId}}</span> -->
-            <span>{{ getChatUserName(msg.creatorId) }}</span>
-            <span>
-              {{ msg.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
-              {{ formatDateTime(msg.creationDate) }}</span
-            >
+            }}" alt="Avatar" />
+            <!-- <mat-icon>person</mat-icon> -->
           </div>
-          <div class="msg">
-            <div class="msg-txt" [innerHTML]="msg.text">
-              <!-- {{msg.text}} -->
+          <div class="msg-infos">
+            <div class="head">
+              <!-- <span>{{msg.creatorId}}</span> -->
+              <span>{{ getChatUserName(msg.creatorId) }}</span>
+              <span>
+                {{ msg.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
+                {{ formatDateTime(msg.creationDate) }}</span>
+            </div>
+            <div class="msg">
+              <div class="msg-txt" [innerHTML]="msg.text">
+                <!-- {{msg.text}} -->
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- <div class="answers">
+        <!-- <div class="answers">
           <span (click)="sendMessage()">3 answers</span>
         </div> -->
-    </div>
+      </div>
+    </main>
   </div>
+
 
   <!-- CHAT INPUT -->
   <div class="message-container">
-    <quill-editor
-      theme="snow"
-      (onEditorChanged)="collectContent($event)"
-      style="height: 150px"
-      [modules]="config"
-      [placeholder]="placeholder"
-    >
+    <quill-editor theme="snow" (onEditorChanged)="collectContent($event)" style="height: 150px" [modules]="config"
+      [placeholder]="placeholder">
     </quill-editor>
     <div class="message-bottom">
       <p class="hint">Send with command/ctrl & enter.</p>

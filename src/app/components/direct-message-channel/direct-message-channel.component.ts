@@ -4,9 +4,10 @@ import { set } from '@angular/fire/database';
 import { CollectionReference, DocumentData, Firestore, Timestamp, collection, getDocs } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
-import { take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { MessageService } from 'src/app/shared/services/message.service';
+import { SearchService } from 'src/app/shared/services/search.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { Channel } from 'src/models/channel.class';
 import { Chat } from 'src/models/chat.class';
@@ -41,6 +42,8 @@ export class DirectMessageChannelComponent implements OnInit {
   };
 
   chat = new Chat(this.chatObj);
+  searchResults!: string[];
+  searchSub!: Subscription;
 
   config = {
     toolbar: [
@@ -72,9 +75,11 @@ export class DirectMessageChannelComponent implements OnInit {
     private chatService: ChatService,
     public userService: UserService,
     private messageService: MessageService,
-    private fs: Firestore
+    private fs: Firestore,
+    private searchService: SearchService,
   ) {
     this.msgCollection = collection(this.fs, 'messages');
+    this.handleSearchbar();
   }
 
   async ngOnInit(): Promise<any> {
@@ -106,6 +111,11 @@ export class DirectMessageChannelComponent implements OnInit {
           this.isLoading = false;
         }, 600);
     });
+  }
+
+
+  ngOnDestroy(): void {
+    this.searchSub.unsubscribe();
   }
 
   /**
@@ -240,4 +250,24 @@ export class DirectMessageChannelComponent implements OnInit {
       this.collectedContent = event.html;
     }
   }
+
+
+  handleSearchbar() {
+    // Search filter (import from searchService)
+    this.searchResults = this.searchService.getSearchResults();
+    this.searchSub = this.searchService.searchResultsChanged.subscribe((results: string[]) => {
+      this.searchResults = results;
+    });
+  }
+
+
+  getUserName(userId: string) {
+    for (let i = 0; i < this.allUsers.length; i++) {
+      if (this.allUsers[i].userId === userId) {
+        return this.allUsers[i].displayName;
+      }
+    }
+    return 'Unknown';
+  }
+
 }
