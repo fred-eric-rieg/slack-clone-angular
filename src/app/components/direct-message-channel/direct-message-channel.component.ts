@@ -209,12 +209,12 @@ export class DirectMessageChannelComponent implements OnInit {
   /**
    * Sends a message to the database.
    */
-  sendMessage() {
+  async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
       let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
-      let messageId = this.messageService.createMessage(message)
-      this.chatService.addMessageToChat(this.chat, messageId);
+      let messageId = await this.messageService.createMessage(message)
+      await this.chatService.addMessageToChat(this.chat, messageId);
     }
   }
 

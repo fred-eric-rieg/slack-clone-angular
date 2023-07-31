@@ -12,6 +12,7 @@ import { Channel } from 'src/models/channel.class';
 import { Message } from 'src/models/message.class';
 import { Thread } from 'src/models/thread.class';
 import { User } from 'src/models/user.class';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-thread',
@@ -65,7 +66,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private userService: UserService,
     private channelService: ChannelService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
 
   }
@@ -98,7 +100,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
   }
 
 
-  loadThread(threadId: string) {
+  async loadThread(threadId: string) {
     this.threadService.loadChannelThreads([threadId]).then(thread => {
       this.thread = thread.docs[0].data() as Thread;
       this.messageIds = thread.docs[0].data()['messages'];
@@ -108,7 +110,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
   }
 
 
-  loadMessages() {
+  async loadMessages() {
     this.messageService.loadThreadMessages(this.messageIds).then((querySnapshot) => {
       this.messages = querySnapshot.docs.map((doc) => {
         return doc.data() as Message;
@@ -129,19 +131,17 @@ export class ThreadComponent implements OnInit, OnDestroy {
    * @param event 
    */
   async collectContent(event: EditorChangeContent | EditorChangeSelection) {
-    if (event.event === 'text-change') {
-      this.collectedContent = event.html;
-    }
+    event.event === 'text-change' ? this.collectedContent = event.html : null;
   }
 
 
-  sendMessage() {
+  async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
       let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
-      let messageId = this.messageService.createMessage(message); // Create message
-      this.threadService.addMessageToThread(this.thread, messageId); // Create thread and add message
-      this.loadThread(this.threadId); // Reload thread
+      let messageId = await this.messageService.createMessage(message); // Create message
+      await this.threadService.addMessageToThread(this.thread, messageId); // Create thread and add message
+      await this.loadThread(this.threadId); // Reload thread
       this.scrollDown(); // Scroll down to lates message
     }
   }
@@ -184,5 +184,10 @@ export class ThreadComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
     }, 500);
+  }
+
+
+  closeThread() {
+    this.router.navigate(['dashboard/channel', this.channel.channelId]);
   }
 }

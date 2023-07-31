@@ -136,7 +136,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   /**
   * Load all threads of the active channel once.
   */
-  loadThreads() {
+  async loadThreads() {
     this.threadService.loadChannelThreads(this.activeChannel.threads).then((querySnapshot) => {
       this.threads = querySnapshot.docs.map((doc) => {
         return doc.data() as Thread;
@@ -202,14 +202,14 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
 
-  sendMessage() {
+  async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
       let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
-      let messageId = this.messageService.createMessage(message); // Create message
-      let threadId = this.threadService.createThread(messageId); // Create thread and add message
-      this.channelService.addThreadToChannel(this.activeChannel, threadId); // Add thread to channel
-      this.loadThreads(); // Reload threads
+      let messageId =  await this.messageService.createMessage(message); // Create message
+      let threadId = await this.threadService.createThread(messageId); // Create thread and add message
+      await this.channelService.addThreadToChannel(this.activeChannel, threadId); // Add thread to channel
+      await this.loadThreads(); // Reload threads
       this.scrollDown(); // Scroll down to the latest message
     }
   }
