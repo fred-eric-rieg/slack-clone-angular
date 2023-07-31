@@ -4,9 +4,8 @@
         Thread <span># {{ channel.name }} </span>
     </div>
 
-    <div class="scroll-wrapper">
+    <div class="scroll-wrapper" #chatContainer>
 
-        <div>{{ sortMessagesByDate() }}</div>
         <!-- Every message is rendered here -->
         <div class="chat-container">
             <div *ngIf="messages != undefined && users != undefined">

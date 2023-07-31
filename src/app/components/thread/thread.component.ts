@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { getAuth } from '@angular/fire/auth';
 import { Timestamp, onSnapshot } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
@@ -20,10 +20,13 @@ import { User } from 'src/models/user.class';
 })
 export class ThreadComponent implements OnInit, OnDestroy {
 
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
+
   collectedContent!: any;
 
   users: User[] = [];
   thread!: Thread;
+  threadId!: string;
   messageIds!: string[];
   messages!: Message[];
   channel!: Channel;
@@ -76,6 +79,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
     this.paramsSub = this.route.params.subscribe(async (params) => {
       if (params['id']) {
+        this.threadId = params['id'];
 
         // Loading the channel
         this.channelService.getChannelViaThread(params['id']).then((querySnapshot) => {
@@ -99,17 +103,22 @@ export class ThreadComponent implements OnInit, OnDestroy {
       this.thread = thread.docs[0].data() as Thread;
       this.messageIds = thread.docs[0].data()['messages'];
 
-      this.messageService.loadThreadMessages(this.messageIds).then((querySnapshot) => {
-        this.messages = querySnapshot.docs.map((doc) => {
-          return doc.data() as Message;
-        });
-        this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+      this.loadMessages();
+    });
+  }
 
-        // Loading all users in the thread
-        this.userService.getAllUsersInThread(this.messages.map(message => message.creatorId)).then((querySnapshot) => {
-          querySnapshot.docs.forEach((doc) => {
-            this.users.push(doc.data() as User);
-          });
+
+  loadMessages() {
+    this.messageService.loadThreadMessages(this.messageIds).then((querySnapshot) => {
+      this.messages = querySnapshot.docs.map((doc) => {
+        return doc.data() as Message;
+      });
+      this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+
+      // Loading all users in the thread
+      this.userService.getAllUsersInThread(this.messages.map(message => message.creatorId)).then((querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
+          this.users.push(doc.data() as User);
         });
       });
     });
@@ -133,6 +142,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
       let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
       let messageId = this.messageService.createMessage(message); // Create message
       this.threadService.addMessageToThread(this.thread, messageId); // Create thread and add message
+      this.loadThread(this.threadId); // Reload thread
+      this.scrollDown(); // Scroll down to lates message
     }
   }
 
@@ -146,15 +157,6 @@ export class ThreadComponent implements OnInit, OnDestroy {
       return auth.currentUser.uid;
     } else {
       return 'Zta41sUcC7rLGHbpMmn4';
-    }
-  }
-
-  // TODO: This function shall sort the messages by dates and cluster them by days.
-  sortMessagesByDate() {
-    if (this.messages) {
-      this.messages.forEach((message) => {
-        message.creationDate.toDate();
-      });
     }
   }
 
@@ -176,5 +178,11 @@ export class ThreadComponent implements OnInit, OnDestroy {
   getUserProfile(message: Message) {
     let user = this.users.find(user => user.userId === message.creatorId);
     return user?.profilePicture != '' ? user?.profilePicture : '/../../assets/img/profile.png';
+  }
+
+  scrollDown() {
+    setTimeout(() => {
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    }, 500);
   }
 }
