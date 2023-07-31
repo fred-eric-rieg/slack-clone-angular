@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 import { DialogAddDescriptionComponent } from '../dialog-add-description/dialog-add-description.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,7 +19,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 import { Channel } from 'src/models/channel.class';
 import { Thread } from 'src/models/thread.class';
 import { getAuth } from '@angular/fire/auth';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { DialogAddPeopleComponent } from '../dialog-add-people/dialog-add-people.component';
 import { DialogViewPeopleComponent } from '../dialog-view-people/dialog-view-people.component';
 
@@ -30,6 +30,8 @@ import { DialogViewPeopleComponent } from '../dialog-view-people/dialog-view-peo
   styleUrls: ['./channel.component.scss']
 })
 export class ChannelComponent implements OnInit, OnDestroy {
+
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
   collectedContent!: any;
 
@@ -91,7 +93,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.handleSearchbar();
   }
 
-
   /**
    * To avoid memory leaks, unsubscribe from all subscriptions on destruction of the component.
    */
@@ -100,6 +101,13 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.searchSub.unsubscribe();
     this.usersSub.unsubscribe();
     this.paramsSub.unsubscribe();
+  }
+
+
+  scrollDown() {
+    setTimeout(() => {
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    }, 500);
   }
 
 
@@ -201,6 +209,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
       let messageId = this.messageService.createMessage(message); // Create message
       let threadId = this.threadService.createThread(messageId); // Create thread and add message
       this.channelService.addThreadToChannel(this.activeChannel, threadId); // Add thread to channel
+      this.loadThreads(); // Reload threads
+      this.scrollDown(); // Scroll down to the latest message
     }
   }
 
