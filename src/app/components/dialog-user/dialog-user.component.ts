@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Firestore, collection, doc, docData } from '@angular/fire/firestore';
 import { User } from 'src/models/user.class';
 import { DialogUserEditComponent } from '../dialog-user-edit/dialog-user-edit.component';
 import { DialogPictureEditComponent } from '../dialog-picture-edit/dialog-picture-edit.component';
@@ -30,7 +29,6 @@ export class DialogUserComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    public firestore: Firestore,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     public sidenavService: SidenavService,

@@ -153,11 +153,9 @@ export class UserService {
     }
   }
 
-  /**
-   * Retruns all users as an observable.
-   */
-  getAllUsers() {
-    this.users = collectionData(this.userCollection);
+
+  getAllUsers(): Observable<any> {
+    return this.users = collectionData(this.userCollection);
   }
 
   /**
