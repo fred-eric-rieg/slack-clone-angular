@@ -1,4 +1,83 @@
-<div class="content-box">
-  <p>threads test</p>
+<div *ngIf="allUsers"  class="content-box">
+  <ng-container *ngFor="let user of allUsers">
+    <div class="user-card"*ngIf="searchResults.length === 0
+      || user.displayName.toLowerCase().includes(searchResults[0].toLowerCase())
+      || user.title.toLowerCase().includes(searchResults[0].toLowerCase())
+      || user.timezone.toLowerCase().includes(searchResults[0].toLowerCase())
+    ">
+
+      <div class="nav-hl">
+        <img class="profile-pic" [src]="user.profilePicture || 'assets/img/profile.png'">
+        {{ user.displayName }}
+      </div>
+      <div class="nav-hl m-left">
+        <mat-icon font-icon>work</mat-icon>
+        <ng-container *ngIf="user.title; else noTitle">{{ user.title }}</ng-container>
+        <ng-template #noTitle>n/a</ng-template>
+      </div>
+      <div class="nav-hl m-left">
+        <mat-icon font-icon>language</mat-icon>
+        <ng-container *ngIf="user.timezone; else noTimezone">{{ user.timezone }}</ng-container>
+        <ng-template #noTimezone>n/a</ng-template>
+      </div>
+
+    </div>
+  </ng-container>
+</div>
+
+<!-- Direct message channel - threads -->
+<div class="load-wrapper" *ngIf="isLoading">
+  <div class="lds-roller">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+
+
+<!--  -->
+<div class="container" *ngIf="!isLoading">
+  <div class="chat-partners">
+    <div class="person" *ngFor="let member of members">{{ member }}</div>
+  </div>
+  <div *ngFor="let msg of messages" class="chat-window">
+    <div class="chat-box">
+      <div class="msg-box">
+        <div class="profileImg">
+          <img
+            src="{{
+              getChatUserImage(msg.creatorId) || '/../../assets/img/profile.png'
+            }}"
+            alt="Avatar"
+          />
+          <!-- <mat-icon>person</mat-icon> -->
+        </div>
+        <div class="msg-infos">
+          <div class="head">
+            <!-- <span>{{msg.creatorId}}</span> -->
+            <span>{{ getChatUserName(msg.creatorId) }}</span>
+            <span>
+              {{ msg.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
+              {{ formatDateTime(msg.creationDate) }}</span
+            >
+          </div>
+          <div class="msg">
+            <div class="msg-txt" [innerHTML]="msg.text">
+              <!-- {{msg.text}} -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
 </div>
+
+
+<app-dialog-user></app-dialog-user>
