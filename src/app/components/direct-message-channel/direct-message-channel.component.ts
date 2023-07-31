@@ -114,7 +114,7 @@ export class DirectMessageChannelComponent implements OnInit {
    */
   async getAllUsers() {
     const allUsers: any = [];
-    const qSnap = await this.userService.getAllUsersNotObservable();
+    const qSnap = await this.userService.getAllUsersSnapshot();
     qSnap.forEach((doc) => {
       allUsers.push(doc.data());
     });

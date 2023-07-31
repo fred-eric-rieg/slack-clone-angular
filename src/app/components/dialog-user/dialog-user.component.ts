@@ -64,7 +64,7 @@ export class DialogUserComponent implements OnInit, OnDestroy {
    * Fetches the current logged-in user from the database according to the userId.
    */
   getUser() {
-    this.userService.getUserNotObservable(this.userId).then((user) => {
+    this.userService.getSingleUserSnapshot(this.userId).then((user) => {
       this.user = new User(user.data());
     });
   }

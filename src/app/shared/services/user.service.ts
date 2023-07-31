@@ -1,7 +1,10 @@
 import { User } from './../../../models/user.class';
-import { Injectable, Input } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, getDoc, getDocs, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
+import { CollectionReference,
+  DocumentData, Firestore, addDoc, collection,
+  collectionData, deleteDoc, doc, docData, getDoc,
+  getDocs, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -69,7 +72,7 @@ export class UserService {
    */
   async setNewUser(uID: string, email: string) {
     await this.getCurrentUser().then(async (res: any) => {
-      let allUsers = await this.getAllUsersNotObservable();
+      let allUsers = await this.getAllUsersSnapshot();
       let allUserIds: Array<string> = [];
       allUsers.forEach(user => {
         allUserIds.push(user.id);
@@ -150,24 +153,37 @@ export class UserService {
     }
   }
 
-
+  /**
+   * Retruns all users as an observable.
+   */
   getAllUsers() {
     this.users = collectionData(this.userCollection);
   }
 
-
-  getAllUsersNotObservable() {
+  /**
+   * Returns all users snapshot.
+   * @returns DocumentData[].
+   */
+  getAllUsersSnapshot() {
     return getDocs(this.userCollection);
   }
 
-
-  getUserNotObservable(userId: string) {
+  /**
+   * Returns a single user snapshot.
+   * @param userId as string.
+   * @returns DocumentSnapshot.
+   */
+  getSingleUserSnapshot(userId: string) {
     const userDocument = doc(this.userCollection, userId);
     return getDoc(userDocument);
   }
 
-
-  getAllUsersInThread(userIds: string[]) {
+  /**
+   * A query snapshot that returns all users that match an array of userIds.
+   * @param userIds as string.
+   * @returns DocumentData[].
+   */
+  getAllUsersThreadSnapshot(userIds: string[]) {
     const q = query(this.userCollection, where('userId', 'in', userIds));
     return getDocs(q);
   }

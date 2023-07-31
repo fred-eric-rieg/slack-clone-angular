@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { getAuth } from '@angular/fire/auth';
-import { Timestamp, onSnapshot } from '@angular/fire/firestore';
+import { Timestamp } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { Subscription } from 'rxjs';
@@ -73,7 +73,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Loading the logged user
-    this.userService.getUserNotObservable(this.loggedUser()).then((onSnapshot) => {
+    this.userService.getSingleUserSnapshot(this.loggedUser()).then((onSnapshot) => {
       this.users.push(onSnapshot.data() as User);
     });
 
@@ -116,14 +116,13 @@ export class ThreadComponent implements OnInit, OnDestroy {
       this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
 
       // Loading all users in the thread
-      this.userService.getAllUsersInThread(this.messages.map(message => message.creatorId)).then((querySnapshot) => {
+      this.userService.getAllUsersThreadSnapshot(this.messages.map(message => message.creatorId)).then((querySnapshot) => {
         querySnapshot.docs.forEach((doc) => {
           this.users.push(doc.data() as User);
         });
       });
     });
   }
-
 
   /**
    * Filles collectedContent with the current content in the editor.
@@ -179,6 +178,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
     let user = this.users.find(user => user.userId === message.creatorId);
     return user?.profilePicture != '' ? user?.profilePicture : '/../../assets/img/profile.png';
   }
+
 
   scrollDown() {
     setTimeout(() => {
