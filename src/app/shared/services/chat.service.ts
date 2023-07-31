@@ -102,7 +102,7 @@ export class ChatService implements OnInit {
     })
   }
 
-  addMessageToChat(chat: Chat, messageId: string, ) {
+  async addMessageToChat(chat: Chat, messageId: string, ) {
     const chatDocument = doc(this.chatCollection, chat.chatId);
     updateDoc(chatDocument, {
       messages: arrayUnion(messageId)

@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { getAuth } from '@angular/fire/auth';
-import { Timestamp, onSnapshot } from '@angular/fire/firestore';
+import { Timestamp } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { Subscription } from 'rxjs';
@@ -12,6 +12,7 @@ import { Channel } from 'src/models/channel.class';
 import { Message } from 'src/models/message.class';
 import { Thread } from 'src/models/thread.class';
 import { User } from 'src/models/user.class';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-thread',
@@ -20,10 +21,13 @@ import { User } from 'src/models/user.class';
 })
 export class ThreadComponent implements OnInit, OnDestroy {
 
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
+
   collectedContent!: any;
 
   users: User[] = [];
   thread!: Thread;
+  threadId!: string;
   messageIds!: string[];
   messages!: Message[];
   channel!: Channel;
@@ -62,7 +66,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private userService: UserService,
     private channelService: ChannelService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
 
   }
@@ -70,12 +75,13 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Loading the logged user
-    this.userService.getUserNotObservable(this.loggedUser()).then((onSnapshot) => {
+    this.userService.getSingleUserSnapshot(this.loggedUser()).then((onSnapshot) => {
       this.users.push(onSnapshot.data() as User);
     });
 
     this.paramsSub = this.route.params.subscribe(async (params) => {
       if (params['id']) {
+        this.threadId = params['id'];
 
         // Loading the channel
         this.channelService.getChannelViaThread(params['id']).then((querySnapshot) => {
@@ -94,45 +100,49 @@ export class ThreadComponent implements OnInit, OnDestroy {
   }
 
 
-  loadThread(threadId: string) {
+  async loadThread(threadId: string) {
     this.threadService.loadChannelThreads([threadId]).then(thread => {
       this.thread = thread.docs[0].data() as Thread;
       this.messageIds = thread.docs[0].data()['messages'];
 
-      this.messageService.loadThreadMessages(this.messageIds).then((querySnapshot) => {
-        this.messages = querySnapshot.docs.map((doc) => {
-          return doc.data() as Message;
-        });
-        this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+      this.loadMessages();
+    });
+  }
 
-        // Loading all users in the thread
-        this.userService.getAllUsersInThread(this.messages.map(message => message.creatorId)).then((querySnapshot) => {
-          querySnapshot.docs.forEach((doc) => {
-            this.users.push(doc.data() as User);
-          });
+
+  async loadMessages() {
+    this.messageService.loadThreadMessages(this.messageIds).then((querySnapshot) => {
+      this.messages = querySnapshot.docs.map((doc) => {
+        return doc.data() as Message;
+      });
+      this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+
+      // Loading all users in the thread
+      this.userService.getAllUsersThreadSnapshot(this.messages.map(message => message.creatorId)).then((querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
+          this.users.push(doc.data() as User);
         });
       });
     });
   }
-
 
   /**
    * Filles collectedContent with the current content in the editor.
    * @param event 
    */
   async collectContent(event: EditorChangeContent | EditorChangeSelection) {
-    if (event.event === 'text-change') {
-      this.collectedContent = event.html;
-    }
+    event.event === 'text-change' ? this.collectedContent = event.html : null;
   }
 
 
-  sendMessage() {
+  async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
       let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
-      let messageId = this.messageService.createMessage(message); // Create message
-      this.threadService.addMessageToThread(this.thread, messageId); // Create thread and add message
+      let messageId = await this.messageService.createMessage(message); // Create message
+      await this.threadService.addMessageToThread(this.thread, messageId); // Create thread and add message
+      await this.loadThread(this.threadId); // Reload thread
+      this.scrollDown(); // Scroll down to lates message
     }
   }
 
@@ -146,15 +156,6 @@ export class ThreadComponent implements OnInit, OnDestroy {
       return auth.currentUser.uid;
     } else {
       return 'Zta41sUcC7rLGHbpMmn4';
-    }
-  }
-
-  // TODO: This function shall sort the messages by dates and cluster them by days.
-  sortMessagesByDate() {
-    if (this.messages) {
-      this.messages.forEach((message) => {
-        message.creationDate.toDate();
-      });
     }
   }
 
@@ -176,5 +177,17 @@ export class ThreadComponent implements OnInit, OnDestroy {
   getUserProfile(message: Message) {
     let user = this.users.find(user => user.userId === message.creatorId);
     return user?.profilePicture != '' ? user?.profilePicture : '/../../assets/img/profile.png';
+  }
+
+
+  scrollDown() {
+    setTimeout(() => {
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    }, 500);
+  }
+
+
+  closeThread() {
+    this.router.navigate(['dashboard/channel', this.channel.channelId]);
   }
 }

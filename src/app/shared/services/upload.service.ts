@@ -70,7 +70,7 @@ export class UploadService {
 
   async deleteFile(userId: string) {
     // Get the current logged in client-user
-    let user = await this.userService.getUserNotObservable(userId)
+    let user = await this.userService.getSingleUserSnapshot(userId)
       .then(response => {
         return response.data() as User
       });

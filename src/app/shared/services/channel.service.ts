@@ -39,7 +39,7 @@ export class ChannelService {
    * @param threadId as string.
    * @param channelId as string.
    */
-  addThreadToChannel(channel: Channel, threadId: string,) {
+  async addThreadToChannel(channel: Channel, threadId: string,) {
     const channelCollection = collection(this.firestore, 'channels');
     const channelDocument = doc(channelCollection, channel.channelId);
 
