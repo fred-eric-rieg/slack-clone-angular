@@ -29,7 +29,7 @@ export class MessageService {
    * Takes in a message object and creates a new message in the database and sets the messageId to the document id.
    * @param message a message object
    */
-  createMessage(message: Message) {
+  async createMessage(message: Message) {
     const messageCollection = collection(this.firestore, 'messages');
     const messageDocument = doc(messageCollection);
     message.messageId = messageDocument.id;

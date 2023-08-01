@@ -2,11 +2,11 @@
 
     <div class="sticky-header" *ngIf="channel">
         Thread <span># {{ channel.name }} </span>
+        <mat-icon style="position: absolute; left: 90%; cursor: pointer;" (click)="closeThread()">close</mat-icon>
     </div>
 
-    <div class="scroll-wrapper">
+    <div class="scroll-wrapper" #chatContainer>
 
-        <div>{{ sortMessagesByDate() }}</div>
         <!-- Every message is rendered here -->
         <div class="chat-container">
             <div *ngIf="messages != undefined && users != undefined">

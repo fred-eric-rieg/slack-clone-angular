@@ -1,7 +1,8 @@
-<mat-drawer-container class="resizable" [ngClass]="{'hidden-sidenav': sidenavService.isLeftSidenavHidden}">
+<mat-drawer-container [ngClass]="{'hidden-sidenav': !sidenavOpened}">
   <mat-drawer mode="side" opened>
     <div class="server-name">
       <div class="logo">
+        <img src="../../assets/img/logo.png" />
         <span>Slacky</span>
         <button class="new-msg-btn" mat-mini-fab>
           <mat-icon [ngStyle]="{ color: 'black' }">edit_note</mat-icon>
@@ -10,11 +11,13 @@
     </div>
     <div class="nav-scroll-container">
       <div class="navigation">
-        <div class="nav-hl flex-ac">
+        <!-- Threads -->
+        <div class="nav-hl flex-ac" [routerLink]="'channel-threads/'">
           <mat-icon font-icon>comment</mat-icon>
           <p>Threads</p>
         </div>
-        <div class="nav-hl flex-ac">
+        <!-- Users -->
+        <div class="nav-hl flex-ac" [routerLink]="'channel-users/'">
           <mat-icon font-icon>supervisor_account</mat-icon>
           <p>Users</p>
         </div>
@@ -30,9 +33,9 @@
 
         <div *ngIf="!channelsCollapsed" class="channel-dropdown-menu">
 
-          <div *ngFor="let channel of allChannels" class="flex-ac channel">
+          <div *ngFor="let channel of allChannels" class="flex-ac channel" [routerLink]="'channel/' + channel.channelId">
             <mat-icon>numbers</mat-icon>
-            <p [routerLink]="'channel/' + channel.channelId">{{ channel.name }}</p>
+            <p>{{ channel.name }}</p>
           </div>
 
           <div (click)="openDialog()" class="channelitem channel flex-ac">

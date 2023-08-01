@@ -19,7 +19,7 @@ export class DialogAddPeopleComponent {
 
   constructor(private userService: UserService, @Inject(MAT_DIALOG_DATA) public data: any) {
 
-    this.userService.getAllUsersNotObservable().then((querySnapshot) => {
+    this.userService.getAllUsersSnapshot().then((querySnapshot) => {
       this.users = querySnapshot.docs.map(doc => {
         return doc.data() as User;
       });

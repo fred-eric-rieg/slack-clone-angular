@@ -155,3 +155,11 @@ h4 {
   display: flex;
   justify-content: space-between;
 }
+
+.profile-container {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: rgb(61, 61, 61);
+  height: calc(100vh - 64px);
+}

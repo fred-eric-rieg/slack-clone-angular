@@ -2,9 +2,8 @@ import { Component } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { User } from 'src/models/user.class';
-import { Firestore, collection, doc, updateDoc} from '@angular/fire/firestore';
 import { AuthService } from 'src/app/shared/services/auth.service';
-// import { UserService } from 'src/app/shared/services/user.service';
+import { UserService } from 'src/app/shared/services/user.service';
 
 
 @Component({
@@ -24,27 +23,25 @@ export class DialogUserEditComponent {
   userId!: string;
 
   constructor(
-    private firestore: Firestore,
     public dialogRef: MatDialogRef<DialogUserEditComponent>,
     public authService: AuthService,
-    // public userService: UserService,
+    public userService: UserService,
   ) {}
 
 
   /**
    * Updates user information in Firestore.
-   * Loading indicates whether the update operation is in progress.
+   * This method is called when the "Save" button is clicked in the dialog.
+   * It uses the UserService to update the user data.
+   * When the update operation is in progress, the loading flag is set to true.
+   * After the update is complete, the loading flag is set to false, and the dialog is closed.
    */
   updateUserInfo() {
     this.loading = true;
-    const userCollection = collection(this.firestore, 'users');
-    const docRef = doc(userCollection, this.userId);
-    updateDoc(docRef, this.user.toJson())
+    this.userService.update(this.user)
       .then(() => {
-        // Stop loader and close dialog
         this.loading = false;
         this.dialogRef.close();
-      }
-    );
+      });
   }
 }

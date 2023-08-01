@@ -18,7 +18,7 @@ export class ThreadService {
    * @param messageId as string.
    * @returns a threadId as string.
    */
-  createThread(messageId: string) {
+  async createThread(messageId: string) {
     const threadCollection = collection(this.firestore, 'threads');
     const threadDocument = doc(threadCollection);
     let thread = new Thread(threadDocument.id, [messageId])
@@ -33,7 +33,7 @@ export class ThreadService {
   }
 
 
-  addMessageToThread(thread: Thread, messageId: string) {
+  async addMessageToThread(thread: Thread, messageId: string) {
     const threadCollection = collection(this.firestore, 'threads');
     const threadDocument = doc(threadCollection, thread.threadId);
 

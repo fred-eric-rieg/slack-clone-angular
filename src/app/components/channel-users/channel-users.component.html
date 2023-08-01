@@ -1,0 +1,28 @@
+<div *ngIf="allUsers"  class="content-box">
+  <ng-container *ngFor="let user of allUsers">
+    <div class="user-card"*ngIf="searchResults.length === 0
+      || user.displayName.toLowerCase().includes(searchResults[0].toLowerCase())
+      || user.title.toLowerCase().includes(searchResults[0].toLowerCase())
+      || user.timezone.toLowerCase().includes(searchResults[0].toLowerCase())
+    ">
+
+      <div class="nav-hl">
+        <img class="profile-pic" [src]="user.profilePicture || 'assets/img/profile.png'">
+        {{ user.displayName }}
+      </div>
+      <div class="nav-hl m-left">
+        <mat-icon font-icon>work</mat-icon>
+        <ng-container *ngIf="user.title; else noTitle">{{ user.title }}</ng-container>
+        <ng-template #noTitle>n/a</ng-template>
+      </div>
+      <div class="nav-hl m-left">
+        <mat-icon font-icon>language</mat-icon>
+        <ng-container *ngIf="user.timezone; else noTimezone">{{ user.timezone }}</ng-container>
+        <ng-template #noTimezone>n/a</ng-template>
+      </div>
+
+    </div>
+  </ng-container>
+</div>
+
+<app-dialog-user></app-dialog-user>

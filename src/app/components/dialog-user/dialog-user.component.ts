@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { Firestore, collection, collectionData, doc, docData } from '@angular/fire/firestore';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from 'src/models/user.class';
 import { DialogUserEditComponent } from '../dialog-user-edit/dialog-user-edit.component';
 import { DialogPictureEditComponent } from '../dialog-picture-edit/dialog-picture-edit.component';
@@ -8,6 +7,8 @@ import { ActivatedRoute } from '@angular/router';
 import { SidenavService } from './../../shared/services/sidenav.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { UserService } from 'src/app/shared/services/user.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -15,68 +16,61 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
   templateUrl: './dialog-user.component.html',
   styleUrls: ['./dialog-user.component.scss']
 })
-export class DialogUserComponent implements OnInit {
-  users: any;
+export class DialogUserComponent implements OnInit, OnDestroy {
+
   userId: string = '';
   user: User = new User();
-  isSidenavHidden = true;
+  userDialogOpen = false;
   imgUrl: string = '';
+
+  // Subscriptions
+  userSub!: Subscription;
+  sidenavSub!: Subscription;
 
 
   constructor(
-    public firestore: Firestore,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     public sidenavService: SidenavService,
     public authService: AuthService,
     private auth: AngularFireAuth,
-  ) {}
+    private userService: UserService
+  ) { }
 
 
-  /**
-   * ngOnInit is called, and the 'users' collection is fetched from Firestore.
-   * The collection is converted into an Observable and stored in this.users.
-   * Within the subscription, you can access the data and make a copy if needed.
-   */
   ngOnInit() {
-    const collectionInstance = collection(this.firestore, 'users');
-    this.users = collectionData(collectionInstance);
-    this.users.subscribe((data: any) => {
-    });
-
-    this.auth.user.subscribe((user: any) => {
-      if (user) {
-        this.userId = user.uid;
-        this.getUser();
-      } else {
-        this.userId = 'Zta41sUcC7rLGHbpMmn4';
-        this.getUser();
-      }
-    });
+    this.getLoggedInUser();
+    this.listenToSidenavService();
+  }
 
 
-    /**
-     * Checks if sidenav with profile info is oppened.
-     */
-    this.sidenavService.sidenavOpened.subscribe((response) => {
-      this.isSidenavHidden = response;
-      //console.log(this.isSidenavHidden);
+  ngOnDestroy(): void {
+    console.log('DialogUserComponent destroyed');
+    this.userSub.unsubscribe();
+    this.sidenavSub.unsubscribe();
+  }
+
+
+  getLoggedInUser() {
+    this.userSub = this.auth.user.subscribe((user: any) => {
+      user ? (this.userId = user.uid, this.getUser()) : null;
     });
   }
 
 
   /**
-   * Retrieves user data from Firestore based on the provided user ID.
-   * Subscribes to the document data and maps it to a User object.
-   * 'userCollection' is a firestore collection representing the 'users' collection.
-   * 'docRef' is a document reference representing a specific user document.
+   * Fetches the current logged-in user from the database according to the userId.
    */
   getUser() {
-    const userCollection = collection(this.firestore, 'users');
-    const docRef = doc(userCollection, this.userId);
+    this.userService.getSingleUserSnapshot(this.userId).then((user) => {
+      this.user = new User(user.data());
+    });
+  }
 
-    docData(docRef).subscribe((userCollection: any) => {
-      this.user = new User(userCollection);
+
+  listenToSidenavService() {
+    this.sidenavSub = this.sidenavService.openUserProfile.subscribe((response) => {
+      this.userDialogOpen = response;
     });
   }
 
@@ -94,17 +88,17 @@ export class DialogUserComponent implements OnInit {
   /**
    * Opens the dialog for editing the user's profile pic.
    */
-    editPictureDetail() {
-      const dialog = this.dialog.open(DialogPictureEditComponent);
-      dialog.componentInstance.user = new User(this.user.toJson());
-      dialog.componentInstance.userId = this.userId;
-    }
+  editPictureDetail() {
+    const dialog = this.dialog.open(DialogPictureEditComponent);
+    dialog.componentInstance.user = new User(this.user.toJson());
+    dialog.componentInstance.userId = this.userId;
+  }
 
 
   /**
-   * Closes Sidenav with profile information
+   * Closes Dialog with profile information
    */
-  closeSidenav() {
-    this.isSidenavHidden = true;
+  closeDialog() {
+    this.sidenavService.openUserProfile.emit(false);
   }
 }

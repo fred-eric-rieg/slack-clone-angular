@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, doc, getDoc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Channel } from 'src/models/channel.class';
 
 @Injectable({
@@ -9,10 +9,18 @@ import { Channel } from 'src/models/channel.class';
 export class ChannelService {
 
   searchValue: string = '';
-  channels!: Observable<any>;
+  channels = new Subject();
 
   constructor(private firestore: Firestore) {
-   }
+    this.channels.next(this.onetimeLoadChannels().then((querySnapshot) => {
+      const channels: Channel[] = [];
+      querySnapshot.forEach((doc) => {
+        const channel = new Channel(doc.data());
+        channels.push(channel);
+      });
+      return channels;
+   }));
+  }
 
 
   /**
@@ -31,7 +39,7 @@ export class ChannelService {
    * @param threadId as string.
    * @param channelId as string.
    */
-  addThreadToChannel(channel: Channel, threadId: string,) {
+  async addThreadToChannel(channel: Channel, threadId: string,) {
     const channelCollection = collection(this.firestore, 'channels');
     const channelDocument = doc(channelCollection, channel.channelId);
 

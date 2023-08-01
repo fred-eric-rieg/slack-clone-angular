@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 import { DialogAddDescriptionComponent } from '../dialog-add-description/dialog-add-description.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill/public-api';
 import 'quill-emoji/dist/quill-emoji.js';
 import { SearchService } from 'src/app/shared/services/search.service';
+import { Subscription } from 'rxjs';
 
 // Models
 import { Message } from 'src/models/message.class';
@@ -18,8 +19,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 import { Channel } from 'src/models/channel.class';
 import { Thread } from 'src/models/thread.class';
 import { getAuth } from '@angular/fire/auth';
-import { Subject, takeUntil } from 'rxjs';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { DialogAddPeopleComponent } from '../dialog-add-people/dialog-add-people.component';
 import { DialogViewPeopleComponent } from '../dialog-view-people/dialog-view-people.component';
 
@@ -30,6 +30,8 @@ import { DialogViewPeopleComponent } from '../dialog-view-people/dialog-view-peo
   styleUrls: ['./channel.component.scss']
 })
 export class ChannelComponent implements OnInit, OnDestroy {
+
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
   collectedContent!: any;
 
@@ -68,8 +70,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
   placeholder = 'Type your message here...';
   searchResults!: string[];
 
+  // Subscriptions
+  searchSub!: Subscription;
+  paramsSub!: Subscription;
+  usersSub!: Subscription;
 
-  private destroy$ = new Subject();
 
   constructor(
     public dialog: MatDialog,
@@ -85,36 +90,33 @@ export class ChannelComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadActiveChannel();
     this.loadUsers();
-
-    // Search filter (import from searchService)
-    this.searchResults = this.searchService.getSearchResults();
-    this.searchService.searchResultsChanged.subscribe((results: string[]) => {
-      this.searchResults = results;
-    });
+    this.handleSearchbar();
   }
-
 
   /**
    * To avoid memory leaks, unsubscribe from all subscriptions on destruction of the component.
    */
   ngOnDestroy(): void {
     console.log('ChannelComponent destroyed');
-    this.destroy$.next(true);
+    this.searchSub.unsubscribe();
+    this.usersSub.unsubscribe();
+    this.paramsSub.unsubscribe();
   }
 
-  /**
-   * Formatting a timestamp into a sting with the format: HH:MM AM/PM.
-   * @param timestamp as Timestamp.
-   * @returns a formatted date as string.
-   */
-  getFormattedDate(timestamp: Timestamp) {
-    let date = new Date(timestamp.seconds * 1000);
-    let hours = date.getHours() % 12 || 12;
-    let minutes = date.getMinutes().toLocaleString();
-    if (minutes.length == 1) {
-      minutes = 0 + minutes;
-    }
-    return `${hours}:${minutes} ${date.getHours() >= 12 ? 'PM' : 'AM'}`;
+
+  scrollDown() {
+    setTimeout(() => {
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    }, 500);
+  }
+
+
+  handleSearchbar() {
+    // Search filter (import from searchService)
+    this.searchResults = this.searchService.getSearchResults();
+    this.searchSub = this.searchService.searchResultsChanged.subscribe((results: string[]) => {
+      this.searchResults = results;
+    });
   }
 
   /**
@@ -122,55 +124,21 @@ export class ChannelComponent implements OnInit, OnDestroy {
    * Is destroyed on component destruction.
    */
   loadActiveChannel() {
-    this.route.params.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(params => {
+    this.paramsSub = this.route.params.subscribe(params => {
       this.activeChannelId = params['id'];
       this.channelService.getChannel(this.activeChannelId).then((response) => {
         this.activeChannel = response.data() as Channel;
         this.loadThreads(); // After the active channel is loaded, load the threads.
-        /**
-         * WARNING: This subscription loads the active channel again, when the active channel changes and
-         * then loads the Threads & Messages again from Firestore. Instead, caching could be an option.
-         */
       });
     });
   }
 
-
   /**
-   *
-   * @returns the displayName of the creator of the active channel.
-   */
-  getCreator() {
-    if (!this.users) return;
-    let user = this.users.find(user => user.userId === this.activeChannel.creatorId);
-    return user?.displayName;
-  }
-
-
-  getMembers() {
-    if (!this.users) return "";
-    let members = this.users.filter(user => this.activeChannel.members.includes(user.userId));
-    return members;
-  }
-
-
-  loadUsers() {
-    this.userService.users.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((users: User[]) => {
-      this.users = users;
-    });
-  }
-
-  /**
-   * Load all threads of the active channel once.
-   */
-  loadThreads() {
+  * Load all threads of the active channel once.
+  */
+  async loadThreads() {
     this.threadService.loadChannelThreads(this.activeChannel.threads).then((querySnapshot) => {
       this.threads = querySnapshot.docs.map((doc) => {
-        console.log("Channel Threads loaded: ", doc.data());
         return doc.data() as Thread;
       });
       this.loadMessages(); // After the threads are loaded, load the messages.
@@ -184,10 +152,30 @@ export class ChannelComponent implements OnInit, OnDestroy {
     let messageIds = this.threads.map(thread => thread.messages[0]).flat();
     this.messageService.loadThreadMessages(messageIds).then((querySnapshot) => {
       this.messages = querySnapshot.docs.map((doc) => {
-        console.log("Channel Messages loaded: ", doc.data());
         return doc.data() as Message;
       });
       this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+    });
+  }
+
+  /**
+   * @returns the displayName of the creator of the active channel.
+   */
+  getCreator() {
+    if (!this.users) return;
+    return this.users.find(user => user.userId === this.activeChannel.creatorId)?.displayName;
+  }
+
+
+  getMembers() {
+    if (!this.users) return "";
+    return this.users.filter(user => this.activeChannel.members.includes(user.userId));
+  }
+
+
+  loadUsers() {
+    this.usersSub = this.userService.users.subscribe((users: User[]) => {
+      this.users = users;
     });
   }
 
@@ -206,9 +194,30 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns either the logged user or a default user id.
-   * @returns the logged user id.
+   * Filles collectedContent with the current content in the editor.
+   * @param event
    */
+  async collectContent(event: EditorChangeContent | EditorChangeSelection) {
+    event.event === 'text-change' ? this.collectedContent = event.html : null;
+  }
+
+
+  async sendMessage() {
+    if (this.collectedContent != null && this.collectedContent != '') {
+      let now = new Date().getTime() / 1000;
+      let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
+      let messageId =  await this.messageService.createMessage(message); // Create message
+      let threadId = await this.threadService.createThread(messageId); // Create thread and add message
+      await this.channelService.addThreadToChannel(this.activeChannel, threadId); // Add thread to channel
+      await this.loadThreads(); // Reload threads
+      this.scrollDown(); // Scroll down to the latest message
+    }
+  }
+
+  /**
+  * Returns either the logged user or a default user id.
+  * @returns the logged user id.
+  */
   loggedUser() {
     const auth = getAuth();
     if (auth.currentUser) {
@@ -219,37 +228,19 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Filles collectedContent with the current content in the editor.
-   * @param event
+   * Used in HTML component.
+   * @param messageId as string.
+   * @returns number of messages in a thread.
    */
-  async collectContent(event: EditorChangeContent | EditorChangeSelection) {
-    console.log(event);
-    if (event.event === 'text-change') {
-      this.collectedContent = event.html;
-    }
-    console.log(event.event)
-  }
-
-
-  sendMessage() {
-    if (this.collectedContent != null && this.collectedContent != '') {
-      let now = new Date().getTime() / 1000;
-      let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
-      let messageId = this.messageService.createMessage(message); // Create message
-      let threadId = this.threadService.createThread(messageId); // Create thread and add message
-      this.channelService.addThreadToChannel(this.activeChannel, threadId); // Add thread to channel
-    }
-  }
-
-
   countThreadMessages(messageId: string) {
     let thread = this.threads.find(thread => thread.messages[0].includes(messageId));
-    if (thread) return thread.messages.length;
+    if (thread) return thread.messages.length - 1;
     else return 0;
   }
 
-
-  // TODO: This function shall sort the messages by dates and cluster them by days.
+  /**
+   * Used in HTML component to sort messages by date.
+   */
   sortMessagesByDate() {
     if (this.messages) {
       this.messages.forEach((message) => {
@@ -276,13 +267,13 @@ export class ChannelComponent implements OnInit, OnDestroy {
    * to update the channel description.
    */
   openDescriptionDialog() {
-    console.log('Open description dialog');
     const dialogRef = this.dialog.open(DialogAddDescriptionComponent);
 
-    dialogRef.afterClosed().subscribe(async (dialogData) => {
+    let sub = dialogRef.afterClosed().subscribe(async (dialogData) => {
       if (dialogData && dialogData.description) {
         this.updateDescription(dialogData.description);
       }
+      sub.unsubscribe();
     });
   }
 
@@ -298,7 +289,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   openAddPeopleDialog() {
-    console.log('Open add people dialog');
     const dialogRef = this.dialog.open(DialogAddPeopleComponent, {
       width: '350px',
       data: {
@@ -306,10 +296,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
       }
     });
 
-    dialogRef.afterClosed().subscribe(async (dialogData) => {
+    let sub = dialogRef.afterClosed().subscribe(async (dialogData) => {
       if (dialogData && dialogData.people) {
         this.addPeople(dialogData.people);
       }
+      sub.unsubscribe();
     });
   }
 
@@ -326,7 +317,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   openViewPeopleDialog() {
-    console.log('Open view people dialog');
     const dialogRef = this.dialog.open(DialogViewPeopleComponent, {
       width: '350px',
       data: {

@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -12,28 +10,31 @@ import { UserService } from 'src/app/shared/services/user.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  
   isPasswordVisible: boolean = false;
   visibiltyIcon: string = 'visibility';
-  tokenName = 'logged-token';
-  minLengthPassword: number = 6;
   form!: FormGroup;
+
 
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar,
-    private userService: UserService,
+    private snackBar: MatSnackBar
   ) {
 
   }
 
+
   ngOnInit(): void {
+    console.log('LoginComponent initialized');
+    console.log('%c1000ms timeout nach logout, dann lädt die Seite neu... timeout entfernen, um den Firebase Error zur Subscription zu sehen', 'color: orange; font-weight: bold');
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required, Validators.minLength(6)]]
     })
   }
+
 
   login() {
     this.authService.signIn(
@@ -41,7 +42,6 @@ export class LoginComponent implements OnInit {
       this.form.value.password
     ).subscribe({
       next: () => {
-        localStorage.setItem(this.tokenName, 'logged-token');
         this.router.navigate(['dashboard'])
       },
       error: error => {
@@ -52,14 +52,29 @@ export class LoginComponent implements OnInit {
     })
   }
 
+  /**
+   * This function logs in the user with the guest account.
+   */
   guestLogin() {
-    localStorage.setItem(this.tokenName, 'guest-login');
-    this.router.navigate(['dashboard']);
+    this.authService.signIn(
+      'guest@user.de',
+      'guest1'
+    ).subscribe({
+      next: () => {
+        this.router.navigate(['dashboard'])
+      },
+      error: error => {
+        this.snackBar.open(error.message, "OK", {
+          duration: 5000
+        });
+      }
+    });
   }
 
+
   signInWithGoogle() {
-    this.authService.signInWithGoogle();
-  }
+      this.authService.signInWithGoogle();
+    }
 
   /**
    * This function toggles the visibility of password
@@ -67,9 +82,9 @@ export class LoginComponent implements OnInit {
    * @param passwordInput get password input element of html
    */
   togglePwVisibility(passwordInput: HTMLInputElement) {
-    this.isPasswordVisible = !this.isPasswordVisible;
-    passwordInput.type = this.isPasswordVisible ? 'text' : 'password';
-    this.visibiltyIcon = this.isPasswordVisible ? 'visibility_off' : 'visibility';
-  }
+      this.isPasswordVisible = !this.isPasswordVisible;
+      passwordInput.type = this.isPasswordVisible ? 'text' : 'password';
+      this.visibiltyIcon = this.isPasswordVisible ? 'visibility_off' : 'visibility';
+    }
 
 }

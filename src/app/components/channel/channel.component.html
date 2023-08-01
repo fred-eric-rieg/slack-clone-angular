@@ -1,6 +1,6 @@
 <div *ngIf="activeChannel" class="content-box">
 
-    <div class="sticky-header">
+  <div class="sticky-header">
         # {{ activeChannel.name }}
 
         <div *ngIf="getMembers()!.length == 1" class="hover" (click)="openViewPeopleDialog()">
@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <div class="scroll-wrapper">
+    <div class="scroll-wrapper" #chatContainer>
         <div class="title-container">
             <h1>{{ activeChannel.name }}</h1>
             <!-- REFERENZEN ZU USER MUESSEN NOCH ANGEPASST WERDEN-->
@@ -75,7 +75,7 @@
                         </div>
                         <mat-card-content [innerHTML]="message.text"></mat-card-content>
                         <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                            <p *ngIf="countThreadMessages(message.messageId)! > 1">{{
+                            <p *ngIf="countThreadMessages(message.messageId)! >= 1">{{
                                 countThreadMessages(message.messageId) }} replies</p>
                         </div>
                     </mat-card>
@@ -97,3 +97,5 @@
             </button>
         </div>
     </div>
+
+    <app-dialog-user></app-dialog-user>

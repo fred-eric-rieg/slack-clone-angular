@@ -1,9 +1,9 @@
-<mat-drawer-container [class.d-none]="isSidenavHidden">
-  <mat-drawer mode="side" opened>
+<mat-drawer-container [class.d-none]="!userDialogOpen">
+  <mat-drawer mode="side" opened class="profile-container">
     <div class="profile-title-container b-bottom">
       <div class="profile-title">
         <span>Profile</span>
-        <button class="close-btn" mat-mini-fab (click)="closeSidenav()">
+        <button class="close-btn" mat-mini-fab (click)="closeDialog()">
           <mat-icon [ngStyle]="{ color: 'black' }">close</mat-icon>
         </button>
       </div>
@@ -24,19 +24,19 @@
             <mat-icon font-icon>person</mat-icon>
             <p>Alias:</p>
             <ng-container *ngIf="user.displayName; else noDisplayName">{{ user.displayName }}</ng-container>
-            <ng-template #noDisplayName>Add a display name</ng-template>
+            <ng-template #noDisplayName>n/a</ng-template>
           </div>
           <div class="nav-hl flex-ac">
             <mat-icon font-icon>work</mat-icon>
             <p>Title:</p>
             <ng-container *ngIf="user.title; else noTitle">{{ user.title }}</ng-container>
-            <ng-template #noTitle>Add a title</ng-template>
+            <ng-template #noTitle>n/a</ng-template>
           </div>
           <div class="nav-hl flex-ac">
             <mat-icon font-icon>language</mat-icon>
             <p>Timezone:</p>
             <ng-container *ngIf="user.timezone; else noTimezone">{{ user.timezone }}</ng-container>
-            <ng-template #noTimezone>Add a timezone</ng-template>
+            <ng-template #noTimezone>n/a</ng-template>
           </div>
         </div>
         <!-- Contact Info -->
@@ -45,19 +45,19 @@
           <mat-icon font-icon>verified_user</mat-icon>
           <p>Name:</p>
           <ng-container *ngIf="user.fullName; else noFullName">{{ user.fullName }}</ng-container>
-          <ng-template #noFullName>Add your name</ng-template>
+          <ng-template #noFullName>n/a</ng-template>
         </div>
         <div class="nav-hl flex-ac">
           <mat-icon font-icon>email</mat-icon>
           <p>Email:</p>
           <ng-container *ngIf="user.email; else noEmail">{{ user.email }}</ng-container>
-          <ng-template #noEmail>Add your email</ng-template>
+          <ng-template #noEmail>n/a</ng-template>
         </div>
         <div class="nav-hl flex-ac">
           <mat-icon font-icon>phone</mat-icon>
           <p>Phone:</p>
           <ng-container *ngIf="user.phone; else noPhone">{{ user.phone }}</ng-container>
-          <ng-template #noPhone>Add a phone number</ng-template>
+          <ng-template #noPhone>n/a</ng-template>
         </div>
       </div>
     </div>
