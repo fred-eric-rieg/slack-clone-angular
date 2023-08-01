@@ -66,6 +66,7 @@ export class AuthService {
    */
   logout() {
     this.fireAuth.signOut();
+    localStorage.clear();
   }
 
 
