@@ -110,13 +110,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
    */
   async loadActiveChannel() {
     this.paramsSub = this.route.params.subscribe(params => {
-      console.log(params['id']);
 
       if (this.isActiveChannelInCache(params['id'])) {
         this.loadChannelFromCache();
         return;
       } else {
-        console.log('loadChannelFromFirestore');
         this.loadChannelFromFirestore(params['id']);
       }
     });
