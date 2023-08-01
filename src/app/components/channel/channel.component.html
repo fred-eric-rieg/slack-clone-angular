@@ -1,18 +1,18 @@
-<div *ngIf="activeChannel" class="content-box">
+<div *ngIf="activeChannel && users" class="content-box">
 
-  <div class="sticky-header">
+    <div class="sticky-header">
         # {{ activeChannel.name }}
 
-        <div *ngIf="getMembers()!.length == 1" class="hover" (click)="openViewPeopleDialog()">
+        <div *ngIf="getMembers().length == 1" class="hover" (click)="openViewPeopleDialog()">
             <img class="mini-profile" src="{{ getUserProfileAlt(0) }}" alt="small profile picture">
         </div>
-        <div *ngIf="getMembers()!.length > 1 && getMembers()!.length < 4" class="align-profiles hover"
+        <div *ngIf="getMembers().length > 1  && getMembers()!.length < 4" class="align-profiles hover"
             (click)="openViewPeopleDialog()">
             <div *ngFor="let member of activeChannel.members; let i = index">
                 <img class="mini-profile" src="{{ getUserProfileAlt(i) }}" alt="small profile picture">
             </div>
         </div>
-        <div *ngIf="getMembers()!.length >= 4" class="align-profiles hover" (click)="openViewPeopleDialog()">
+        <div *ngIf="getMembers().length >= 4" class="align-profiles hover" (click)="openViewPeopleDialog()">
             <img class="mini-profile" src="{{ getUserProfileAlt(0) }}" alt="small profile picture">
             <img class="mini-profile" src="{{ getUserProfileAlt(1) }}" alt="small profile picture">
             <img class="mini-profile" src="{{ getUserProfileAlt(2) }}" alt="small profile picture">
@@ -52,34 +52,34 @@
             <div *ngIf="messages != undefined">
                 <ng-container *ngFor="let message of messages">
 
-                  <!-- Search filter: specify below which elements to search for. -->
-                  <main *ngIf="searchResults.length === 0
+                    <!-- Search filter: specify below which elements to search for. -->
+                    <main *ngIf="searchResults.length === 0
                     || message.text.toLowerCase().includes(searchResults[0].toLowerCase())
-                    || getUserName(message.creatorId).toLowerCase().includes(searchResults[0].toLowerCase())">
+                    || getUserName(message.creatorId)?.toLowerCase()!.includes(searchResults[0].toLowerCase())">
 
-                    <mat-card class="thread">
+                        <mat-card class="thread">
 
-                        <mat-card class="overlay">
-                            <div class="btn" [routerLink]="openThread(message)">
-                                <mat-icon>reply</mat-icon>
+                            <mat-card class="overlay">
+                                <div class="btn" [routerLink]="openThread(message)">
+                                    <mat-icon>reply</mat-icon>
+                                </div>
+                            </mat-card>
+
+                            <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
+                                <img src="{{ getUserProfile(message) }}" alt="profile picture">
+                                <mat-card-title>
+                                    {{ getUserName(message.creatorId) }}
+                                </mat-card-title>
+                                {{ message.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
+                                {{ message.creationDate.toDate() | date : "h:mm a" }}
+                            </div>
+                            <mat-card-content [innerHTML]="message.text"></mat-card-content>
+                            <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
+                                <p *ngIf="countThreadMessages(message.messageId)! >= 1">{{
+                                    countThreadMessages(message.messageId) }} replies</p>
                             </div>
                         </mat-card>
-
-                        <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                            <img src="{{ getUserProfile(message) }}" alt="profile picture">
-                            <mat-card-title>
-                                {{ getUserName(message.creatorId) }}
-                            </mat-card-title>
-                            {{ message.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
-                            {{ message.creationDate.toDate() | date : "h:mm a" }}
-                        </div>
-                        <mat-card-content [innerHTML]="message.text"></mat-card-content>
-                        <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                            <p *ngIf="countThreadMessages(message.messageId)! >= 1">{{
-                                countThreadMessages(message.messageId) }} replies</p>
-                        </div>
-                    </mat-card>
-                  </main>
+                    </main>
                 </ng-container>
             </div>
         </div>
