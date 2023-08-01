@@ -10,13 +10,12 @@
   </div>
 
   <div *ngIf="!collapsed">
-    <div
+    <!-- <div
       *ngFor="let chat of chatIds; let i = index"
       class="user-direct-msg flex-ac"
       [routerLink]="['chat/' + chat]"
       routerLinkActive="activeLink"
     >
-      <!-- <img src="" alt="Profilbild"> -->
       <img src="{{memberImages[i] || '/../../assets/img/profile.png'}}">
       <p>{{memberNames[i]}}</p>
       <div class="extra-members" *ngIf="memberLength[i] > 1">+{{memberLength[i]-1}}</div>
@@ -26,6 +25,25 @@
         <mat-icon class="add-item" fontIcon="add"></mat-icon>
         <p>Create new chat</p>
       </div>
+    </div> -->
+    <div >
+      <div
+        *ngFor="let chat of chatIds; let i = index"
+        class="user-direct-msg flex-ac"
+        [routerLink]="['chat/' + chat]"
+        routerLinkActive="activeLink"
+      >
+        <img src="{{ memberImages[i] || '/../../assets/img/profile.png' }}" />
+        <p>{{ memberNames[i] }}</p>
+        <div class="extra-members" *ngIf="memberLength[i] > 1">
+          +{{ memberLength[i] - 1 }}
+        </div>
+      </div>
+      <div class="channelitem channel flex-ac" [routerLink]="'create-chat'">
+        <mat-icon class="add-item" fontIcon="add"></mat-icon>
+        <p>Create new chat</p>
+      </div>
     </div>
+    <!--  -->
   </div>
 </div>
