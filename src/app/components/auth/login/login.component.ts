@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { ChannelService } from 'src/app/shared/services/channel.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private channelService: ChannelService
   ) {
 
   }
@@ -28,11 +30,11 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('LoginComponent initialized');
-    console.log('%c1000ms timeout nach logout, dann lädt die Seite neu... timeout entfernen, um den Firebase Error zur Subscription zu sehen', 'color: orange; font-weight: bold');
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     })
+    this.channelService.unsubscribe(); // Unsubscribe form Change-Listener to prevent memory leaks.
   }
 
 
