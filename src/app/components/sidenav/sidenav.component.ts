@@ -7,6 +7,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Timestamp } from '@angular/fire/firestore';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
   sidenavOpened = true;
 
   channel: Channel = new Channel();
-  allChannels!: Array<Channel>;
+  allChannels$!: Observable<Channel[]>;
 
 
   constructor(
@@ -35,6 +36,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    console.log('SidenavComponent initialized');
     this.loadChannels();
     this.handleSidenavVisibility();
   }
@@ -47,15 +49,17 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Loads all channels from the database once on initialization and
-   * navigates to the main channel.
+   * Loads all channels from the database as an observable. Then it pipes the response
+   * of the promised observable in order to get the channel with the name 'Main' and
+   * navigates to the dashboard/channel/:channelId route.
    */
-  loadChannels() {
-    this.channelService.onetimeLoadChannels().then((querySnapshot) => {
-      this.allChannels = querySnapshot.docs.map(doc => {
-        return doc.data() as Channel;
-      });
-      this.router.navigate(['dashboard/channel/' + this.allChannels.filter(channel => channel.name === 'Main')[0].channelId]);
+  async loadChannels() {
+    await this.channelService.getAllChannels();
+    this.channelService.getAllChannels().then((response) => {
+      this.allChannels$ = response;
+      response.pipe().subscribe((channels) => {
+        this.router.navigate(['dashboard/channel/' + channels.filter(channel => channel.name === 'Main')[0].channelId]);
+      }).unsubscribe(); // Unsubscribe to prevent memory leaks.
     });
   }
 
