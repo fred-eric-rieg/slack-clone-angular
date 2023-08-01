@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { getAuth } from '@angular/fire/auth';
 import { set } from '@angular/fire/database';
 import { CollectionReference, DocumentData, Firestore, Timestamp, collection, getDocs } from '@angular/fire/firestore';
@@ -215,6 +215,8 @@ export class DirectMessageChannelComponent implements OnInit {
       let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
       let messageId = this.messageService.createMessage(message)
       this.chatService.addMessageToChat(this.chat, messageId);
+      message.messageId = messageId; // Stellen Sie sicher, dass die Nachricht eine messageId hat
+      this.messages.push(message);
     }
   }
 
