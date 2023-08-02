@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="toolbox">
-        <input type="text" placeholder="search for a chat partner">
+        <input type="text" placeholder="search for a chat partner" (keyup)="onInput($event)">
         <button mat-raised-button color="primary" (click)="createNewChat(addedUsers)">Create chat</button>
       </div>
     </div>

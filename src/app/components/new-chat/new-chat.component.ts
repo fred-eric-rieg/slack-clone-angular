@@ -81,6 +81,16 @@ export class NewChatComponent implements OnDestroy {
       )))
   }
 
+  onInput(event: any) {
+    this.allUsers.forEach((e: any) => {
+      const name = e.displayName.toLowerCase();
+      const input = event.target.value.toLowerCase();
+      if (name.includes(input)) {
+        this.allUsers.push(e);
+      }
+    });
+  }
+
   /**
    * create a new chat with all added users
    * @param users added Users as Object

@@ -109,11 +109,11 @@ export class DirectMessageChannelComponent implements OnInit {
             });
             this.sortMessagesByDate();
           });
-        });
-        // Cheat
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 600);
+      });
+      // Cheat
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 600);
     });
   }
 
@@ -234,6 +234,8 @@ export class DirectMessageChannelComponent implements OnInit {
       message.messageId = messageId;
       this.messages.push(message);
     }
+    var element = document.getElementsByClassName("ql-editor");
+    element[0].innerHTML = "";
   }
 
   /**
