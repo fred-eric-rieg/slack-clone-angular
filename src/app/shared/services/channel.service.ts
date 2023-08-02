@@ -58,8 +58,7 @@ export class ChannelService {
   getChannelViaThread(threadId: string) {
     let channel: Channel = new Channel();
 
-    this.allChannels$.subscribe(
-      (channels) => {
+    this.allChannels$.subscribe(channels => {
         channel = channels.filter(channel => channel.threads.includes(threadId))[0];
       }
     );
