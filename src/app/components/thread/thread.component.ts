@@ -139,6 +139,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
       let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
       let messageId = await this.messageService.createMessage(message); // Create message
       await this.threadService.addMessageToThread(this.thread, messageId); // Create thread and add message
+      var element = document.getElementsByClassName("ql-editor");
+      element[0].innerHTML = "";
       await this.loadThread(this.threadId); // Reload thread
       this.scrollDown(); // Scroll down to lates message
     }
