@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, collectionData, doc, onSnapshot, query, setDoc } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Channel } from 'src/models/channel.class';
 
 @Injectable({
@@ -10,6 +10,10 @@ export class ChannelService {
 
   channelCollection = collection(this.firestore, 'channels');
   allChannels$ = collectionData(this.channelCollection) as Observable<Channel[]>;
+
+  // Subscriptions
+  channelSub!: Subscription;
+  channelSub2!: Subscription;
   
 
   // Listens to all channels in the database for changes.
@@ -18,7 +22,7 @@ export class ChannelService {
     snapshot.docChanges().forEach((change) => {
       if (change.type === "added") {
         console.log("New channel: ", change.doc.data());
-        this.allChannels$.subscribe((channels) => {
+        this.channelSub = this.allChannels$.subscribe((channels) => {
           let newChannels = channels;
           newChannels.push(new Channel(change.doc.data()));
           this.allChannels$ = new Observable<Channel[]>((observer) => {
@@ -28,7 +32,7 @@ export class ChannelService {
       }
       if (change.type === "modified") {
         console.log("Modified channel: ", change.doc.data());
-        this.allChannels$.subscribe((channels) => {
+        this.channelSub2 = this.allChannels$.subscribe((channels) => {
           let newChannels = channels;
           newChannels.forEach((channel) => {
             if (channel.channelId === change.doc.data().channelId) {

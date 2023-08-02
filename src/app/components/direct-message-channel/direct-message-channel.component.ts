@@ -43,6 +43,10 @@ export class DirectMessageChannelComponent implements OnInit {
 
   chat = new Chat(this.chatObj);
   searchResults!: string[];
+
+  // Subscriptions
+  paramsSub!: Subscription;
+  chatSub!: Subscription;
   searchSub!: Subscription;
 
   config = {
@@ -84,12 +88,12 @@ export class DirectMessageChannelComponent implements OnInit {
 
   async ngOnInit(): Promise<any> {
     this.allUsers = await this.getAllUsers();
-    this.route.params.subscribe((params) => {
+    this.paramsSub = this.route.params.subscribe((params) => {
       this.isLoading = true;
       this.resetAllVariables();
       this.chatId = params['id'];
       this.chat.chatId = this.chatId;
-      this.chatService.returnChatData(this.chatId).subscribe(data => {
+      this.chatSub = this.chatService.returnChatData(this.chatId).subscribe(data => {
         this.memberIds.push(...data['members']);
         this.messageIds.push(...data['messages']);
         this.chat.members.push(...data['members']);
@@ -116,6 +120,8 @@ export class DirectMessageChannelComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.searchSub.unsubscribe();
+    this.paramsSub.unsubscribe();
+    this.chatSub.unsubscribe();
   }
 
   /**

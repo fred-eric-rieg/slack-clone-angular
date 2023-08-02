@@ -28,6 +28,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
   // Subscriptions
   channelSub!: Subscription;
+  visibilitySub!: Subscription;
 
 
   constructor(
@@ -50,6 +51,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
     console.log('SidenavComponent destroyed');
     this.sidenavService.openSidenav.unsubscribe();
     this.channelSub.unsubscribe();
+    this.visibilitySub.unsubscribe();
   }
 
 
@@ -67,7 +69,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
 
   handleSidenavVisibility() {
-    this.sidenavService.openSidenav.subscribe((response) => {
+    this.visibilitySub = this.sidenavService.openSidenav.subscribe((response) => {
       this.sidenavOpened = response;
     });
   }
