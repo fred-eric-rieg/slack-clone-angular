@@ -7,7 +7,8 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Timestamp } from '@angular/fire/firestore';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { set } from '@angular/fire/database';
 
 
 @Component({
@@ -24,6 +25,9 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
   channel: Channel = new Channel();
   allChannels$!: Observable<Channel[]>;
+
+  // Subscriptions
+  channelSub!: Subscription;
 
 
   constructor(
@@ -45,6 +49,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log('SidenavComponent destroyed');
     this.sidenavService.openSidenav.unsubscribe();
+    this.channelSub.unsubscribe();
   }
 
 
@@ -53,13 +58,10 @@ export class sidenavComponent implements OnInit, OnDestroy {
    * of the promised observable in order to get the channel with the name 'Main' and
    * navigates to the dashboard/channel/:channelId route.
    */
-  async loadChannels() {
-    await this.channelService.getAllChannels();
-    this.channelService.getAllChannels().then((response) => {
-      this.allChannels$ = response;
-      response.pipe().subscribe((channels) => {
-        this.router.navigate(['dashboard/channel/' + channels.filter(channel => channel.name === 'Main')[0].channelId]);
-      }).unsubscribe(); // Unsubscribe to prevent memory leaks.
+  loadChannels() {
+    this.allChannels$ = this.channelService.allChannels$;
+    this.channelSub = this.allChannels$.subscribe(channels => {
+      this.router.navigate(['dashboard/channel/' + channels.filter(channel => channel.name === 'Main')[0].channelId]);
     });
   }
 
@@ -97,8 +99,8 @@ export class sidenavComponent implements OnInit, OnDestroy {
       user ? (
         this.channel.creatorId = user.uid,
         this.channel.members.push(user.uid)
-        ) : null;
-      });
+      ) : null;
+    });
     sub.unsubscribe();
   }
 
