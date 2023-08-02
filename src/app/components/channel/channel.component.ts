@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill/public-api';
 import 'quill-emoji/dist/quill-emoji.js';
 import { SearchService } from 'src/app/shared/services/search.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, combineLatest } from 'rxjs';
 
 // Models
 import { Message } from 'src/models/message.class';
@@ -62,6 +62,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
     },
   };
 
+  // Variables
+  allUsers$!: Observable<User[]>;
   users!: User[];
   threads!: Thread[];
   messages!: Message[];
@@ -70,6 +72,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
   activeChannelId!: string;
   placeholder = 'Type your message here...';
   searchResults!: string[];
+
+  data$ = combineLatest([this.channelService.allChannels$, this.userService.users$]);
 
   // Subscriptions
   searchSub!: Subscription;
@@ -228,7 +232,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   loadUsers() {
-    this.usersSub = this.userService.users.subscribe((users: User[]) => {
+    this.usersSub = this.userService.users$.subscribe((users: User[]) => {
       this.users = users;
     });
   }
