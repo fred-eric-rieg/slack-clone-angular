@@ -108,7 +108,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.searchSub.unsubscribe();
     this.paramsSub.unsubscribe();
     this.usersSub.unsubscribe();
-    this.channelSub.unsubscribe();
+    if (this.channelSub != undefined) {
+      this.channelSub.unsubscribe();
+    }
   }
 
   /**
@@ -269,6 +271,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
       let messageId = await this.messageService.createMessage(message); // Create message
       let threadId = await this.threadService.createThread(messageId); // Create thread and add message
       await this.channelService.updateChannel(this.attachThreadToChannel(threadId)); // Update Channel
+      var element = document.getElementsByClassName("ql-editor");
+      element[0].innerHTML = "";
       this.loadThreads(); // Reload threads
       this.scrollDown(); // Scroll down to the latest message
     }
