@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DocumentData, Firestore, QuerySnapshot, collection, doc, getDocs, onSnapshot, query, setDoc, where } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, onSnapshot, query, setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Channel } from 'src/models/channel.class';
 
@@ -8,8 +8,8 @@ import { Channel } from 'src/models/channel.class';
 })
 export class ChannelService {
 
-  searchValue: string = '';
-  channelCollection = collection(this.firestore, 'channels')
+  channelCollection = collection(this.firestore, 'channels');
+  allChannels$: Observable<Channel[]>;
 
   // Listens to all channels in the database for changes.
   q = query(this.channelCollection);
@@ -17,9 +17,27 @@ export class ChannelService {
     snapshot.docChanges().forEach((change) => {
       if (change.type === "added") {
         console.log("New channel: ", change.doc.data());
+        this.allChannels$.subscribe((channels) => {
+          let newChannels = channels;
+          newChannels.push(new Channel(change.doc.data()));
+          this.allChannels$ = new Observable<Channel[]>((observer) => {
+            observer.next(newChannels);
+          });
+        });
       }
       if (change.type === "modified") {
         console.log("Modified channel: ", change.doc.data());
+        this.allChannels$.subscribe((channels) => {
+          let newChannels = channels;
+          newChannels.forEach((channel) => {
+            if (channel.channelId === change.doc.data().channelId) {
+              channel = new Channel(change.doc.data());
+            }
+          });
+          this.allChannels$ = new Observable<Channel[]>((observer) => {
+            observer.next(newChannels);
+          });
+        });
       }
       if (change.type === "removed") {
         console.log("Removed channel: ", change.doc.data());
@@ -29,62 +47,24 @@ export class ChannelService {
 
 
   constructor(private firestore: Firestore) {
+    this.allChannels$ = collectionData(this.channelCollection) as Observable<Channel[]>;
   }
 
   /**
-   * Gets a single channel from the database.
-   * @param channelId as string.
-   */
-  async getSingleChannel(channelId: string): Promise<Observable<Channel>> {
-      const q = query(this.channelCollection, where('channelId', '==', channelId));
-      const channelDocument = await getDocs(q);
-      return this.createObservableChannel(channelDocument);
-  }
-
-  /**
-   * Create a single observable channel.
-   * @param channelDocument as DocumentReference.
-   * @returns an observable.
-   */
-  createObservableChannel(channelDocument: DocumentData): Observable<Channel> {
-    return new Observable<Channel>((observer) => {
-      observer.next(new Channel(channelDocument['docs'][0].data()));
-    });
-  }
-
-  /**
-   * Gets all channels from the database.
-   */
-  async getAllChannels(): Promise<Observable<Channel[]>> {
-    const channelDocuments = await getDocs(this.channelCollection);
-    return this.createObservableChannels(channelDocuments);
-  }
-
-
-  /**
-   * Create an observable with all channels.
-   * @param channelDocuments as QuerySnapshot<DocumentData>.
-   * @returns an observable.
-   */
-  createObservableChannels(channelDocuments: QuerySnapshot<DocumentData>): Observable<Channel[]> {
-    let channels: Channel[] = [];
-    channelDocuments.forEach((doc) => {
-      const channel = new Channel(doc.data());
-      channels.push(channel);
-    });
-    return new Observable<Channel[]>((observer) => {
-      observer.next(channels);
-    });
-  }
-
-  /**
-   * Returns a promise with all channels that contain the threadId (usualy only one).
+   * Subscribes to all channels and returns the channel that includes the threadId.
    * @param threadId as string.
-   * @returns a promise.
+   * @returns a channel that includes the threadId.
    */
   getChannelViaThread(threadId: string) {
-    const q = query(this.channelCollection, where('threads', 'array-contains', threadId));
-    return getDocs(q);
+    let channel: Channel = new Channel();
+
+    this.allChannels$.subscribe(
+      (channels) => {
+        channel = channels.filter(channel => channel.threads.includes(threadId))[0];
+      }
+    );
+
+    return channel;
   }
 
   /**
