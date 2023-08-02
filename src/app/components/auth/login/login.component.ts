@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { ChannelService } from 'src/app/shared/services/channel.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +21,6 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
-    private channelService: ChannelService
   ) {
 
   }
@@ -34,7 +32,6 @@ export class LoginComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     })
-    this.channelService.unsubscribe(); // Unsubscribe form Change-Listener to prevent memory leaks.
   }
 
 

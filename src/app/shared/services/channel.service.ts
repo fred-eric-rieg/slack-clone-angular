@@ -9,7 +9,8 @@ import { Channel } from 'src/models/channel.class';
 export class ChannelService {
 
   channelCollection = collection(this.firestore, 'channels');
-  allChannels$: Observable<Channel[]>;
+  allChannels$ = collectionData(this.channelCollection) as Observable<Channel[]>;
+  
 
   // Listens to all channels in the database for changes.
   q = query(this.channelCollection);
@@ -46,9 +47,7 @@ export class ChannelService {
   });
 
 
-  constructor(private firestore: Firestore) {
-    this.allChannels$ = collectionData(this.channelCollection) as Observable<Channel[]>;
-  }
+  constructor(private firestore: Firestore) {}
 
   /**
    * Subscribes to all channels and returns the channel that includes the threadId.

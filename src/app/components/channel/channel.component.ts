@@ -79,6 +79,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   searchSub!: Subscription;
   paramsSub!: Subscription;
   usersSub!: Subscription;
+  channelSub!: Subscription;
 
 
   constructor(
@@ -107,6 +108,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.searchSub.unsubscribe();
     this.paramsSub.unsubscribe();
     this.usersSub.unsubscribe();
+    this.channelSub.unsubscribe();
   }
 
   /**
@@ -134,7 +136,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
     this.allChannels$ = this.channelService.allChannels$;
 
-    this.allChannels$.subscribe(channels => {
+    this.channelSub = this.allChannels$.subscribe(channels => {
       let channel = channels.filter(channel => channel.channelId === channelId)[0];
       if (channel) {
         this.activeChannel = channel;
