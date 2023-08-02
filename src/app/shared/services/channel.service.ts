@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, getDoc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
-import { Observable, Subject } from 'rxjs';
+import { Firestore, collection, collectionData, doc, onSnapshot, query, setDoc } from '@angular/fire/firestore';
+import { Observable, Subscription } from 'rxjs';
 import { Channel } from 'src/models/channel.class';
 
 @Injectable({
@@ -8,42 +8,73 @@ import { Channel } from 'src/models/channel.class';
 })
 export class ChannelService {
 
-  searchValue: string = '';
-  channels = new Subject();
+  channelCollection = collection(this.firestore, 'channels');
+  allChannels$ = collectionData(this.channelCollection) as Observable<Channel[]>;
 
-  constructor(private firestore: Firestore) {
-    this.channels.next(this.onetimeLoadChannels().then((querySnapshot) => {
-      const channels: Channel[] = [];
-      querySnapshot.forEach((doc) => {
-        const channel = new Channel(doc.data());
-        channels.push(channel);
-      });
-      return channels;
-   }));
-  }
+  // Subscriptions
+  channelSub!: Subscription;
+  channelSub2!: Subscription;
+  
 
+  // Listens to all channels in the database for changes.
+  q = query(this.channelCollection);
+  unsubscribe = onSnapshot(this.q, (snapshot: { docChanges: () => any[]; }) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === "added") {
+        console.log("New channel: ", change.doc.data());
+        this.channelSub = this.allChannels$.subscribe((channels) => {
+          let newChannels = channels;
+          newChannels.push(new Channel(change.doc.data()));
+          this.allChannels$ = new Observable<Channel[]>((observer) => {
+            observer.next(newChannels);
+          });
+        });
+      }
+      if (change.type === "modified") {
+        console.log("Modified channel: ", change.doc.data());
+        this.channelSub2 = this.allChannels$.subscribe((channels) => {
+          let newChannels = channels;
+          newChannels.forEach((channel) => {
+            if (channel.channelId === change.doc.data().channelId) {
+              channel = new Channel(change.doc.data());
+            }
+          });
+          this.allChannels$ = new Observable<Channel[]>((observer) => {
+            observer.next(newChannels);
+          });
+        });
+      }
+      if (change.type === "removed") {
+        console.log("Removed channel: ", change.doc.data());
+      }
+    });
+  });
+
+
+  constructor(private firestore: Firestore) {}
 
   /**
-   * Loads all channels from the database once.
-   * @returns a promise with all channels from the database.
-   */
-  onetimeLoadChannels() {
-    const channelCollection = collection(this.firestore, 'channels');
-    return getDocs(channelCollection);
-  }
-
-  /**
-   * Overwrites an existing channel with a new channel object.
-   * The new channel objects keeps the old channelId and the threadId
-   * is added to the threads array.
+   * Subscribes to all channels and returns the channel that includes the threadId.
    * @param threadId as string.
-   * @param channelId as string.
+   * @returns a channel that includes the threadId.
    */
-  async addThreadToChannel(channel: Channel, threadId: string,) {
-    const channelCollection = collection(this.firestore, 'channels');
-    const channelDocument = doc(channelCollection, channel.channelId);
+  getChannelViaThread(threadId: string) {
+    let channel: Channel = new Channel();
 
-    channel.threads.push(threadId);
+    this.allChannels$.subscribe(channels => {
+        channel = channels.filter(channel => channel.threads.includes(threadId))[0];
+      }
+    );
+
+    return channel;
+  }
+
+  /**
+   * Updates the channel in the database.
+   * @param channel as Channel.
+   */
+  async updateChannel(channel: Channel) {
+    const channelDocument = doc(this.channelCollection, channel.channelId);
 
     setDoc(channelDocument, channel).then(() => {
       console.log('Channel updated successfully!');
@@ -53,23 +84,12 @@ export class ChannelService {
     );
   }
 
-
-  updateChannel(channel: Channel) {
-    const channelCollection = collection(this.firestore, 'channels');
-    const channelDocument = doc(channelCollection, channel.channelId);
-
-    setDoc(channelDocument, channel).then(() => {
-      console.log('Channel updated successfully!');
-    }).catch((error: any) => {
-      console.log(error);
-    }
-    );
-  }
-
-
+  /**
+   * Creates a new channel in the database.
+   * @param channel as Channel.
+   */
   createNewChannel(channel: Channel) {
-    const channelCollection = collection(this.firestore, 'channels');
-    const channelDocument = doc(channelCollection);
+    const channelDocument = doc(this.channelCollection);
 
     channel.channelId = channelDocument.id;
 
@@ -79,24 +99,5 @@ export class ChannelService {
       console.log(error);
     }
     );
-  }
-
-  /**
-   * Retrieves a single channel from the database with a single read.
-   * @param channelId as string.
-   * @returns a single document from the database.
-   */
-  getChannel(channelId: string) {
-    const channelCollection = collection(this.firestore, 'channels');
-    const channelDocument = doc(channelCollection, channelId);
-
-    return getDoc(channelDocument);
-  }
-
-
-  getChannelViaThread(threadId: string) {
-    const channelCollection = collection(this.firestore, 'channels');
-    const q = query(channelCollection, where('threads', 'array-contains', threadId));
-    return getDocs(q);
   }
 }

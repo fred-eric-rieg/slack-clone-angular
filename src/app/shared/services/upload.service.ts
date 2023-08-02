@@ -52,7 +52,7 @@ export class UploadService {
 
           this.userService.getCurrentUser().then((userId: any) => {
 
-            this.userService.users.subscribe((users: any) => {
+            let userSub = this.userService.users$.subscribe((users: any) => {
 
               users.forEach((user: any) => {
                 if (user.userId === userId) {
@@ -61,6 +61,9 @@ export class UploadService {
                 }
               });
             });
+            setTimeout(() => {
+              userSub.unsubscribe();
+            }, 1000);
           });
         });
       }

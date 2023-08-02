@@ -8,6 +8,7 @@ import { ChannelService } from 'src/app/shared/services/channel.service';
 import { SearchService } from './../../shared/services/search.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { Subscription } from 'rxjs';
+import { set } from '@angular/fire/database';
 
 
 @Component({
@@ -86,6 +87,13 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
 
   logoutUser() {
+    this.channelService.unsubscribe(); // Unsubscribe form Change-Listener to prevent memory leaks.
+    if (this.channelService.channelSub != undefined) {
+      this.channelService.channelSub.unsubscribe(); // Part of Change-Listener
+    }
+    if (this.channelService.channelSub2 != undefined) {
+      this.channelService.channelSub2.unsubscribe(); // Part of Change-Listener
+    }
     this.authService.logout();
   }
 

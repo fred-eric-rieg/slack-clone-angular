@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { UserService } from 'src/app/shared/services/user.service';
 
@@ -9,9 +9,13 @@ import { UserService } from 'src/app/shared/services/user.service';
   templateUrl: './new-chat.component.html',
   styleUrls: ['./new-chat.component.scss']
 })
-export class NewChatComponent {
+export class NewChatComponent implements OnDestroy {
   allUsers: Array<any> = [];
   addedUsers: Array<any> = [];
+
+  // Subscriptions
+  userSub!: Subscription;
+  userSub2!: Subscription;
 
   constructor(
     private userService: UserService,
@@ -21,12 +25,18 @@ export class NewChatComponent {
     this.getAllUsers();
   }
 
+
+  ngOnDestroy(): void {
+    this.userSub.unsubscribe();
+    this.userSub2.unsubscribe();
+  }
+
   /**
    * Get all users of 'users' document in firestore and
    * push whole Object to 'allUsers'
    */
   getAllUsers() {
-    this.userService.users.subscribe(data => {
+    this.userSub = this.userService.users$.subscribe(data => {
       this.allUsers = this.removeCurrentUser(data);
     });
   }
@@ -50,7 +60,7 @@ export class NewChatComponent {
    * @param userId input id of user as string
    */
   addUser(userId: string) {
-    this.userService.get(userId).pipe(take(1)).subscribe(data => {
+    this.userSub2 = this.userService.get(userId).pipe(take(1)).subscribe(data => {
       if (this.addedUsers.length < 5) {
         this.filterDuplicates(data);
       } else this.snackBar.open("Limit of chat members reached. (max 5)", "OK", {

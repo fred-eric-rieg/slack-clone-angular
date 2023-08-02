@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CollectionReference, DocumentData } from '@angular/fire/firestore';
-import { Observable, take } from 'rxjs';
+import { Observable, Subscription, take } from 'rxjs';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { User } from 'src/models/user.class';
@@ -23,6 +23,9 @@ export class DirectMessagesSectionComponent implements OnInit {
   memberImages: any = [];
   threads: any = [];
 
+  // Subscriptions
+  chatSub!: Subscription;
+  userSub!: Subscription;
 
   constructor(
     private userService: UserService,
@@ -36,6 +39,14 @@ export class DirectMessagesSectionComponent implements OnInit {
     await this.getCurrentUserId();
     await this.getCurrentUserChats();
   }
+
+
+  ngOnDestroy(): void {
+    this.chatSub.unsubscribe();
+    if (this.userSub != undefined) {
+      this.userSub.unsubscribe();
+    }
+  }
   
   /**
    * Get current logged in user id from UserServie
@@ -48,7 +59,7 @@ export class DirectMessagesSectionComponent implements OnInit {
   }
   
   async getCurrentUserChats() {
-    this.chatService.returnCurrentUserChats(this.currentUserId)
+    this.chatSub = this.chatService.returnCurrentUserChats(this.currentUserId)
     .subscribe(snap => {
       this.chatIds = snap.get('chatIds');
       this.getChatDataById(this.chatIds);

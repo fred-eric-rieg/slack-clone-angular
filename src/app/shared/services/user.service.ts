@@ -1,8 +1,7 @@
 import { User } from './../../../models/user.class';
 import { Injectable } from '@angular/core';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { CollectionReference,
-  DocumentData, Firestore, addDoc, collection,
+import { Firestore, addDoc, collection,
   collectionData, deleteDoc, doc, docData, getDoc,
   getDocs, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
@@ -11,17 +10,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
+
   currentUser: any;
   activeUser!: any;
-  user: User = new User();
-  users!: Observable<any>;
-  private userCollection: CollectionReference<DocumentData>;
+  user: User = new User(); // For creating new users.
+  users$: Observable<User[]>;  // For getting all users.
+
+  private userCollection = collection(this.firestore, 'users');
 
 
-  constructor(
-    private firestore: Firestore) {
-    this.userCollection = collection(this.firestore, 'users');
-    this.getAllUsers();
+  constructor(private firestore: Firestore) {
+      this.users$ = collectionData(this.userCollection) as Observable<User[]>;
   }
 
   /**
@@ -151,11 +150,6 @@ export class UserService {
     } else {
       return firstPart.substring(0, dotIndex);
     }
-  }
-
-
-  getAllUsers(): Observable<any> {
-    return this.users = collectionData(this.userCollection);
   }
 
   /**

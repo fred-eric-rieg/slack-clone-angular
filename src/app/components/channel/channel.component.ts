@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill/public-api';
 import 'quill-emoji/dist/quill-emoji.js';
 import { SearchService } from 'src/app/shared/services/search.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, combineLatest } from 'rxjs';
 
 // Models
 import { Message } from 'src/models/message.class';
@@ -33,8 +33,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
+  // Quill editor content
   collectedContent!: any;
 
+  // Quill editor config
   config = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
@@ -60,20 +62,24 @@ export class ChannelComponent implements OnInit, OnDestroy {
     },
   };
 
-  channels!: Channel[];
+  // Variables
+  allUsers$!: Observable<User[]>;
   users!: User[];
   threads!: Thread[];
   messages!: Message[];
-
-  activeChannelId!: string;
+  allChannels$!: Observable<Channel[]>;
   activeChannel!: Channel;
+  activeChannelId!: string;
   placeholder = 'Type your message here...';
   searchResults!: string[];
+
+  data$ = combineLatest([this.channelService.allChannels$, this.userService.users$]);
 
   // Subscriptions
   searchSub!: Subscription;
   paramsSub!: Subscription;
   usersSub!: Subscription;
+  channelSub!: Subscription;
 
 
   constructor(
@@ -88,8 +94,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.loadActiveChannel();
+    console.log('ChannelComponent initialized');
     this.loadUsers();
+    this.loadActiveChannel();
     this.handleSearchbar();
   }
 
@@ -99,48 +106,71 @@ export class ChannelComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log('ChannelComponent destroyed');
     this.searchSub.unsubscribe();
-    this.usersSub.unsubscribe();
     this.paramsSub.unsubscribe();
-  }
-
-
-  scrollDown() {
-    setTimeout(() => {
-      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
-    }, 500);
-  }
-
-
-  handleSearchbar() {
-    // Search filter (import from searchService)
-    this.searchResults = this.searchService.getSearchResults();
-    this.searchSub = this.searchService.searchResultsChanged.subscribe((results: string[]) => {
-      this.searchResults = results;
-    });
+    this.usersSub.unsubscribe();
+    this.channelSub.unsubscribe();
   }
 
   /**
    * Calls the channelService to load the active channel via the route params.
    * Is destroyed on component destruction.
    */
-  loadActiveChannel() {
+  async loadActiveChannel() {
     this.paramsSub = this.route.params.subscribe(params => {
       this.activeChannelId = params['id'];
-      this.channelService.getChannel(this.activeChannelId).then((response) => {
-        this.activeChannel = response.data() as Channel;
-        this.loadThreads(); // After the active channel is loaded, load the threads.
-      });
+
+      if (this.isActiveChannelInCache(params['id'])) {
+        this.loadChannelFromCache();
+        return;
+      } else {
+        this.loadChannelFromFirestore(params['id']);
+      }
     });
   }
 
+
+  loadChannelFromFirestore(channelId: string) {
+    console.log('loadChannelFromFirestore');
+    this.clearCache(); // Clear the cache.
+    localStorage.setItem('activeChannelId', channelId); // Cache the active channelId.
+
+    this.allChannels$ = this.channelService.allChannels$;
+
+    this.channelSub = this.allChannels$.subscribe(channels => {
+      let channel = channels.filter(channel => channel.channelId === channelId)[0];
+      if (channel) {
+        this.activeChannel = channel;
+        localStorage.setItem('activeChannel', JSON.stringify(channel)); // Cache the active channel object.
+        this.activeChannel.threads.length > 0 ? this.loadThreads() : this.setEmptyCache();
+      }
+    });
+  }
+
+
+  setEmptyCache() {
+    this.threads = [];
+    this.messages = [];
+    localStorage.setItem('activeChannelThreads', JSON.stringify(this.threads));
+    localStorage.setItem('activeChannelMessages', JSON.stringify(this.messages))
+  }
+
+
+  clearCache() {
+    localStorage.removeItem('activeChannel');
+    localStorage.removeItem('activeChannelId');
+    localStorage.removeItem('activeChannelThreads');
+    localStorage.removeItem('activeChannelMessages');
+  }
+
   /**
-  * Load all threads of the active channel once.
+  * Load all threads of the active channel.
   */
-  async loadThreads() {
+  loadThreads() {
     this.threadService.loadChannelThreads(this.activeChannel.threads).then((querySnapshot) => {
       this.threads = querySnapshot.docs.map((doc) => {
         return doc.data() as Thread;
       });
+      localStorage.setItem('activeChannelThreads', JSON.stringify(this.threads)); // Cache the active channel threads.
       this.loadMessages(); // After the threads are loaded, load the messages.
     });
   }
@@ -155,26 +185,56 @@ export class ChannelComponent implements OnInit, OnDestroy {
         return doc.data() as Message;
       });
       this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+      localStorage.setItem('activeChannelMessages', JSON.stringify(this.messages)); // Cache the active channel messages.
     });
+  }
+
+
+  isActiveChannelInCache(channelId: string) {
+    return localStorage.getItem('activeChannelId') === channelId;
+  }
+
+  /**
+   * Gets activeChannel, its threads and messages from localStorage.
+   * Dates are converted to Timestamps, because they are not stored as Timestamps in localStorage
+   * which causes errors with the date pipe in the HTML component.
+   */
+  loadChannelFromCache() {
+    console.log('loadChannelFromCache');
+    let channel = JSON.parse(localStorage.getItem('activeChannel') || '{}') as Channel;
+    channel.creationDate = new Timestamp(channel.creationDate.seconds, channel.creationDate.nanoseconds);
+    this.activeChannel = channel;
+    this.allChannels$ = new Observable<Channel[]>((observer) => {
+      observer.next([channel]);
+    });
+    if (this.activeChannel.threads.length > 0) {
+      this.threads = JSON.parse(localStorage.getItem('activeChannelThreads') || '{}') as Thread[];
+      let messages = JSON.parse(localStorage.getItem('activeChannelMessages') || '{}') as Message[];
+      this.messages = messages.map((message) => {
+        message.creationDate = new Timestamp(message.creationDate.seconds, message.creationDate.nanoseconds);
+        return message;
+      });
+    } else {
+      this.threads = [];
+      this.messages = [];
+    }
   }
 
   /**
    * @returns the displayName of the creator of the active channel.
    */
-  getCreator() {
-    if (!this.users) return;
-    return this.users.find(user => user.userId === this.activeChannel.creatorId)?.displayName;
+  getCreator(channel: Channel) {
+    return this.users.find(user => user.userId === channel.creatorId)?.displayName;
   }
 
 
-  getMembers() {
-    if (!this.users) return "";
-    return this.users.filter(user => this.activeChannel.members.includes(user.userId));
+  getMembers(channel: Channel) {
+    return this.users.filter(user => channel.members.includes(user.userId));
   }
 
 
   loadUsers() {
-    this.usersSub = this.userService.users.subscribe((users: User[]) => {
+    this.usersSub = this.userService.users$.subscribe((users: User[]) => {
       this.users = users;
     });
   }
@@ -206,12 +266,32 @@ export class ChannelComponent implements OnInit, OnDestroy {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
       let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
-      let messageId =  await this.messageService.createMessage(message); // Create message
+      let messageId = await this.messageService.createMessage(message); // Create message
       let threadId = await this.threadService.createThread(messageId); // Create thread and add message
-      await this.channelService.addThreadToChannel(this.activeChannel, threadId); // Add thread to channel
-      await this.loadThreads(); // Reload threads
+      await this.channelService.updateChannel(this.attachThreadToChannel(threadId)); // Update Channel
+      this.loadThreads(); // Reload threads
       this.scrollDown(); // Scroll down to the latest message
     }
+  }
+
+
+  scrollDown() {
+    setTimeout(() => {
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    }, 500);
+  }
+
+  /**
+   * Attaches a thread to a copy of the active channel.
+   * @param threadId as string.
+   * @returns channel with the attached thread.
+   */
+  attachThreadToChannel(threadId: string) {
+    console.log('attachThreadToChannel');
+    console.log("threadID: ", threadId)
+    this.activeChannel.threads.push(threadId);
+    console.log("threadId added to CHannel: ", this.activeChannel)
+    return this.activeChannel;
   }
 
   /**
@@ -256,8 +336,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
 
-  getUserProfileAlt(index: number) {
-    let user = this.users.find(user => user.userId === this.activeChannel.members[index]);
+  getUserProfileAlt(index: number, channel: Channel) {
+    let user = this.users.find(user => user.userId === channel.members[index]);
     return user?.profilePicture != '' ? user?.profilePicture : '/../../assets/img/profile.png';
   }
 
@@ -329,5 +409,14 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   openThread(message: Message) {
     return `/dashboard/thread/${this.threads.find(thread => thread.messages[0].includes(message.messageId))?.threadId}`;
+  }
+
+
+  handleSearchbar() {
+    // Search filter (import from searchService)
+    this.searchResults = this.searchService.getSearchResults();
+    this.searchSub = this.searchService.searchResultsChanged.subscribe((results: string[]) => {
+      this.searchResults = results;
+    });
   }
 }

@@ -7,6 +7,8 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Timestamp } from '@angular/fire/firestore';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
 import { Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { set } from '@angular/fire/database';
 
 
 @Component({
@@ -22,7 +24,11 @@ export class sidenavComponent implements OnInit, OnDestroy {
   sidenavOpened = true;
 
   channel: Channel = new Channel();
-  allChannels!: Array<Channel>;
+  allChannels$!: Observable<Channel[]>;
+
+  // Subscriptions
+  channelSub!: Subscription;
+  visibilitySub!: Subscription;
 
 
   constructor(
@@ -35,6 +41,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    console.log('SidenavComponent initialized');
     this.loadChannels();
     this.handleSidenavVisibility();
   }
@@ -43,25 +50,26 @@ export class sidenavComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log('SidenavComponent destroyed');
     this.sidenavService.openSidenav.unsubscribe();
+    this.channelSub.unsubscribe();
+    this.visibilitySub.unsubscribe();
   }
 
 
   /**
-   * Loads all channels from the database once on initialization and
-   * navigates to the main channel.
+   * Loads all channels from the database as an observable. Then it pipes the response
+   * of the promised observable in order to get the channel with the name 'Main' and
+   * navigates to the dashboard/channel/:channelId route.
    */
   loadChannels() {
-    this.channelService.onetimeLoadChannels().then((querySnapshot) => {
-      this.allChannels = querySnapshot.docs.map(doc => {
-        return doc.data() as Channel;
-      });
-      this.router.navigate(['dashboard/channel/' + this.allChannels.filter(channel => channel.name === 'Main')[0].channelId]);
+    this.allChannels$ = this.channelService.allChannels$;
+    this.channelSub = this.allChannels$.subscribe(channels => {
+      this.router.navigate(['dashboard/channel/' + channels.filter(channel => channel.name === 'Main')[0].channelId]);
     });
   }
 
 
   handleSidenavVisibility() {
-    this.sidenavService.openSidenav.subscribe((response) => {
+    this.visibilitySub = this.sidenavService.openSidenav.subscribe((response) => {
       this.sidenavOpened = response;
     });
   }
@@ -70,12 +78,11 @@ export class sidenavComponent implements OnInit, OnDestroy {
   openDialog() {
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
 
-    let sub = dialogRef.afterClosed().subscribe(async (dialogData) => {
+    dialogRef.afterClosed().subscribe(async (dialogData) => {
       if (dialogData && dialogData.name) {
         this.createChannel(dialogData.name);
       }
     });
-    sub.unsubscribe();
   }
 
 
@@ -93,8 +100,8 @@ export class sidenavComponent implements OnInit, OnDestroy {
       user ? (
         this.channel.creatorId = user.uid,
         this.channel.members.push(user.uid)
-        ) : null;
-      });
+      ) : null;
+    });
     sub.unsubscribe();
   }
 
