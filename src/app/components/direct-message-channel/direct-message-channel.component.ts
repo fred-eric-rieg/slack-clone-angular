@@ -105,11 +105,11 @@ export class DirectMessageChannelComponent implements OnInit {
             });
             this.sortMessagesByDate();
           });
-        });
-        // Cheat
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 600);
+      });
+      // Cheat
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 600);
     });
   }
 
@@ -226,6 +226,8 @@ export class DirectMessageChannelComponent implements OnInit {
       let messageId = await this.messageService.createMessage(message)
       await this.chatService.addMessageToChat(this.chat, messageId);
     }
+    var element = document.getElementsByClassName("ql-editor");
+    element[0].innerHTML = "";
   }
 
   /**
