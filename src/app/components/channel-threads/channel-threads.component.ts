@@ -148,9 +148,10 @@ export class ChannelThreadsComponent implements OnInit {
    */
   async getAllUsers() {
     const allUsers: any = [];
-    const qSnap = await this.userService.getAllUsersNotObservable();
-    qSnap.forEach((doc) => {
-      allUsers.push(doc.data());
+    const qSnap = await this.userService.users$.subscribe(data => {
+      data.forEach((user: any) => {
+        allUsers.push(user);
+      });
     });
     return allUsers;
   }
@@ -247,8 +248,8 @@ export class ChannelThreadsComponent implements OnInit {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
       let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
-      let messageId = this.messageService.createMessage(message)
-      this.chatService.addMessageToChat(this.chat, messageId);
+      //let messageId = this.messageService.createMessage(message);
+      //this.chatService.addMessageToChat(this.chat, messageId);
     }
   }
 
