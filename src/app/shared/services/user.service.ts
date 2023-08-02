@@ -11,16 +11,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
+
   currentUser: any;
   activeUser!: any;
-  user: User = new User();
-  users!: Observable<any>;
-  private userCollection: CollectionReference<DocumentData>;
+  user: User = new User(); // For creating new users.
+  users!: Observable<any>;  // For getting all users.
+
+  private userCollection = collection(this.firestore, 'users');
 
 
   constructor(
     private firestore: Firestore) {
-    this.userCollection = collection(this.firestore, 'users');
     this.getAllUsers();
   }
 
