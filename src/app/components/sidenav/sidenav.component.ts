@@ -78,12 +78,11 @@ export class sidenavComponent implements OnInit, OnDestroy {
   openDialog() {
     const dialogRef = this.dialog.open(DialogAddChannelComponent);
 
-    let sub = dialogRef.afterClosed().subscribe(async (dialogData) => {
+    dialogRef.afterClosed().subscribe(async (dialogData) => {
       if (dialogData && dialogData.name) {
         this.createChannel(dialogData.name);
       }
     });
-    sub.unsubscribe();
   }
 
 
