@@ -65,8 +65,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
   users!: User[];
   threads!: Thread[];
   messages!: Message[];
-  activeChannel$!: Observable<Channel>;
+  allChannels$!: Observable<Channel[]>;
   activeChannel!: Channel;
+  activeChannelId!: string;
   placeholder = 'Type your message here...';
   searchResults!: string[];
 
@@ -110,6 +111,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
    */
   async loadActiveChannel() {
     this.paramsSub = this.route.params.subscribe(params => {
+      this.activeChannelId = params['id'];
 
       if (this.isActiveChannelInCache(params['id'])) {
         this.loadChannelFromCache();
@@ -122,16 +124,19 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   loadChannelFromFirestore(channelId: string) {
+    console.log('loadChannelFromFirestore');
     this.clearCache(); // Clear the cache.
     localStorage.setItem('activeChannelId', channelId); // Cache the active channelId.
-    this.channelService.getSingleChannel(channelId).then((response) => {
-      this.activeChannel$ = response;
 
-      response.pipe().subscribe((channel) => {
+    this.allChannels$ = this.channelService.allChannels$;
+
+    this.allChannels$.subscribe(channels => {
+      let channel = channels.filter(channel => channel.channelId === channelId)[0];
+      if (channel) {
         this.activeChannel = channel;
         localStorage.setItem('activeChannel', JSON.stringify(channel)); // Cache the active channel object.
         this.activeChannel.threads.length > 0 ? this.loadThreads() : this.setEmptyCache();
-      }).unsubscribe(); // Unsubscribe to prevent memory leaks.
+      }
     });
   }
 
@@ -154,7 +159,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   /**
   * Load all threads of the active channel.
   */
-  async loadThreads() {
+  loadThreads() {
     this.threadService.loadChannelThreads(this.activeChannel.threads).then((querySnapshot) => {
       this.threads = querySnapshot.docs.map((doc) => {
         return doc.data() as Thread;
@@ -189,9 +194,13 @@ export class ChannelComponent implements OnInit, OnDestroy {
    * which causes errors with the date pipe in the HTML component.
    */
   loadChannelFromCache() {
+    console.log('loadChannelFromCache');
     let channel = JSON.parse(localStorage.getItem('activeChannel') || '{}') as Channel;
     channel.creationDate = new Timestamp(channel.creationDate.seconds, channel.creationDate.nanoseconds);
     this.activeChannel = channel;
+    this.allChannels$ = new Observable<Channel[]>((observer) => {
+      observer.next([channel]);
+    });
     if (this.activeChannel.threads.length > 0) {
       this.threads = JSON.parse(localStorage.getItem('activeChannelThreads') || '{}') as Thread[];
       let messages = JSON.parse(localStorage.getItem('activeChannelMessages') || '{}') as Message[];
@@ -208,13 +217,13 @@ export class ChannelComponent implements OnInit, OnDestroy {
   /**
    * @returns the displayName of the creator of the active channel.
    */
-  getCreator() {
-    return this.users.find(user => user.userId === this.activeChannel.creatorId)?.displayName;
+  getCreator(channel: Channel) {
+    return this.users.find(user => user.userId === channel.creatorId)?.displayName;
   }
 
 
-  getMembers() {
-    return this.users.filter(user => this.activeChannel.members.includes(user.userId));
+  getMembers(channel: Channel) {
+    return this.users.filter(user => channel.members.includes(user.userId));
   }
 
 
@@ -254,7 +263,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       let messageId = await this.messageService.createMessage(message); // Create message
       let threadId = await this.threadService.createThread(messageId); // Create thread and add message
       await this.channelService.updateChannel(this.attachThreadToChannel(threadId)); // Update Channel
-      await this.loadThreads(); // Reload threads
+      this.loadThreads(); // Reload threads
       this.scrollDown(); // Scroll down to the latest message
     }
   }
@@ -273,10 +282,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
    */
   attachThreadToChannel(threadId: string) {
     console.log('attachThreadToChannel');
-    let channel = this.activeChannel;
-    channel.threads.push(threadId);
-    console.log(channel);
-    return channel;
+    console.log("threadID: ", threadId)
+    this.activeChannel.threads.push(threadId);
+    console.log("threadId added to CHannel: ", this.activeChannel)
+    return this.activeChannel;
   }
 
   /**
@@ -321,8 +330,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
 
-  getUserProfileAlt(index: number) {
-    let user = this.users.find(user => user.userId === this.activeChannel.members[index]);
+  getUserProfileAlt(index: number, channel: Channel) {
+    let user = this.users.find(user => user.userId === channel.members[index]);
     return user?.profilePicture != '' ? user?.profilePicture : '/../../assets/img/profile.png';
   }
 
