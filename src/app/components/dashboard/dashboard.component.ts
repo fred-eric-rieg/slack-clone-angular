@@ -42,7 +42,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-    this.sidenavService.openSidenav.unsubscribe();
   }
 
 

@@ -8,7 +8,6 @@ import { Timestamp } from '@angular/fire/firestore';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { set } from '@angular/fire/database';
 
 
 @Component({
@@ -28,7 +27,6 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
   // Subscriptions
   channelSub!: Subscription;
-  visibilitySub!: Subscription;
 
 
   constructor(
@@ -49,9 +47,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('SidenavComponent destroyed');
-    this.sidenavService.openSidenav.unsubscribe();
     this.channelSub.unsubscribe();
-    this.visibilitySub.unsubscribe();
   }
 
 
@@ -69,7 +65,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
 
   handleSidenavVisibility() {
-    this.visibilitySub = this.sidenavService.openSidenav.subscribe((response) => {
+    this.sidenavService.openSidenav.subscribe((response) => {
       this.sidenavOpened = response;
     });
   }

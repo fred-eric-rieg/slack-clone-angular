@@ -7,8 +7,6 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { SearchService } from './../../shared/services/search.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { Subscription } from 'rxjs';
-import { set } from '@angular/fire/database';
 
 
 @Component({
@@ -20,9 +18,6 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
   sidenavOpen: boolean = true;
   userProfileOpen: boolean = false;
-
-  // Subscriptions
-  sidenavSub!: Subscription;
 
 
   constructor(
@@ -36,7 +31,7 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
 
   ngOnInit(): void {
-    this.sidenavSub = this.sidenavService.openSidenav.subscribe((response) => {
+    this.sidenavService.openSidenav.subscribe((response) => {
       this.sidenavOpen = response;
     });
   }
@@ -44,7 +39,6 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     console.log('ToolbarComponent destroyed');
-    this.sidenavSub.unsubscribe();
   }
 
 
