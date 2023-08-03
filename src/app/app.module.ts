@@ -46,7 +46,7 @@ import { DialogUserComponent } from './components/dialog-user/dialog-user.compon
 import { DialogUserEditComponent } from './components/dialog-user-edit/dialog-user-edit.component';
 import { sidenavComponent } from './components/sidenav/sidenav.component';
 import { DialogAddChannelComponent } from './components/dialog-add-channel/dialog-add-channel.component';
-import { ChannelComponent } from './components/channel/channel.component';
+import { ChannelComponent } from './components/channels/channel/channel.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
@@ -62,13 +62,16 @@ import { NewChatComponent } from './components/new-chat/new-chat.component';
 /** Services */
 import { AuthService } from './shared/services/auth.service';
 import { CdkDrag } from '@angular/cdk/drag-drop';
-import { DialogAddDescriptionComponent } from './components/dialog-add-description/dialog-add-description.component';
-import { DialogAddPeopleComponent } from './components/dialog-add-people/dialog-add-people.component';
-import { DialogViewPeopleComponent } from './components/dialog-view-people/dialog-view-people.component';
+import { DialogAddDescriptionComponent } from './components/channels/dialog-add-description/dialog-add-description.component';
+import { DialogAddPeopleComponent } from './components/channels/dialog-add-people/dialog-add-people.component';
+import { DialogViewPeopleComponent } from './components/channels/dialog-view-people/dialog-view-people.component';
 import { ThreadComponent } from './components/thread/thread.component';
 import { SearchComponent } from './components/search/search.component';
 import { ChannelThreadsComponent } from './components/channel-threads/channel-threads.component';
 import { ChannelUsersComponent } from './components/channel-users/channel-users.component';
+import { DescriptionComponent } from './components/channels/description/description.component';
+import { HeaderComponent } from './components/channels/header/header.component';
+import { MessagesComponent } from './components/channels/messages/messages.component';
 
 
 @NgModule({
@@ -100,6 +103,9 @@ import { ChannelUsersComponent } from './components/channel-users/channel-users.
     SearchComponent,
     ChannelThreadsComponent,
     ChannelUsersComponent,
+    DescriptionComponent,
+    HeaderComponent,
+    MessagesComponent,
   ],
   imports: [
     BrowserModule,

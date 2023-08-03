@@ -1,0 +1,37 @@
+/**
+* Title styles
+**/
+.title-container {
+    box-sizing: border-box;
+    position: relative;
+    height: fit-content;
+    border-bottom: 1px solid rgb(87, 87, 87);
+    overflow: hidden;
+    padding: 8px 10px;
+
+    h2 {
+        font-size: 1rem;
+    }
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.blue {
+    color: #2196F3;
+}
+
+
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}

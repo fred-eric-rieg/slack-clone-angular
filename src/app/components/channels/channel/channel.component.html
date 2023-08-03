@@ -1,0 +1,31 @@
+<div *ngFor="let channel of allChannels$ | async">
+    <div *ngIf="channel.channelId == activeChannelId" class="content-box">
+
+        <app-header [channel]="channel" [users]="users"></app-header>
+
+
+        <div class="scroll-wrapper" #chatContainer *ngIf="this.users != undefined">
+
+            <app-description [channel]="channel" [users]="users"></app-description>
+
+            <app-messages [messages]="messages" [threads]="threads" [users]="users"></app-messages>
+
+        </div>
+
+
+        <div class="message-container">
+            <quill-editor theme="snow" (onEditorChanged)="collectContent($event)" style="height: 150px;"
+                [modules]="config" [placeholder]="placeholder">
+
+            </quill-editor>
+            <div class="message-bottom">
+                <p class="hint">Send with command/ctrl & enter.</p>
+                <button class="button-send" (click)="sendMessage()">
+                    <mat-icon matTooltip="send">send</mat-icon>
+                </button>
+            </div>
+        </div>
+        <app-dialog-user></app-dialog-user>
+
+    </div>
+</div>

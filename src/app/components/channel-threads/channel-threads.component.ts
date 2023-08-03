@@ -4,7 +4,7 @@ import { SearchService } from 'src/app/shared/services/search.service';
 
 
 import { CollectionReference, DocumentData, Firestore, Timestamp, collection, getDocs } from '@angular/fire/firestore';
-import { DialogAddDescriptionComponent } from '../dialog-add-description/dialog-add-description.component';
+import { DialogAddDescriptionComponent } from '../channels/dialog-add-description/dialog-add-description.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill/public-api';
 import 'quill-emoji/dist/quill-emoji.js';
@@ -23,8 +23,8 @@ import { Thread } from 'src/models/thread.class';
 import { getAuth } from '@angular/fire/auth';
 import { Subject, take, takeUntil } from 'rxjs';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DialogAddPeopleComponent } from '../dialog-add-people/dialog-add-people.component';
-import { DialogViewPeopleComponent } from '../dialog-view-people/dialog-view-people.component';
+import { DialogAddPeopleComponent } from '../channels/dialog-add-people/dialog-add-people.component';
+import { DialogViewPeopleComponent } from '../channels/dialog-view-people/dialog-view-people.component';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { Chat } from 'src/models/chat.class';
 

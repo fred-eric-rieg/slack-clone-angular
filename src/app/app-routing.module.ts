@@ -4,7 +4,7 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { sidenavComponent } from './components/sidenav/sidenav.component';
 import { AuthGuard } from './shared/guards/auth.guard';
-import { ChannelComponent } from './components/channel/channel.component';
+import { ChannelComponent } from './components/channels/channel/channel.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
