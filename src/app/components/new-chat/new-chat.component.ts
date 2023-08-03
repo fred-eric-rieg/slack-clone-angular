@@ -27,8 +27,8 @@ export class NewChatComponent implements OnDestroy {
 
 
   ngOnDestroy(): void {
-    this.userSub.unsubscribe();
-    this.userSub2.unsubscribe();
+    // this.userSub.unsubscribe();
+    // this.userSub2.unsubscribe();
   }
 
   /**

@@ -63,7 +63,6 @@ export class DirectMessagesSectionComponent implements OnInit {
     .subscribe(snap => {
       this.chatIds = snap.get('chatIds');
       this.getChatDataById(this.chatIds);
-      console.log(this.chatIds);
     })
   }
   
@@ -82,27 +81,26 @@ export class DirectMessagesSectionComponent implements OnInit {
     }
   }
 
-  // setNameFirstUser() {
-  //   setTimeout(() => {
-  //     this.memberIds.forEach((user: any) => {
-  //       this.userService.getUserData(user[0])
-  //         .pipe(take(1))
-  //         .subscribe((user) => {
-  //           this.memberNames.push(user['displayName']);
-  //           this.memberImages.push(user['profilePicture']);
-  //         })
-  //     })
-  //   }, 200)
-  // }
-
-  async setNameFirstUser() {
-    console.log("memberIds: ", this.memberIds);
-    for (const user of this.memberIds) {
-      const userData = await this.userService.getUserData(user[0]).pipe(take(1)).toPromise();
-      this.memberNames.push(userData!['displayName']);
-      this.memberImages.push(userData!['profilePicture']);
-    }
+  setNameFirstUser() {
+    setTimeout(() => {
+      this.memberIds.forEach((user: any) => {
+        this.userService.getUserData(user[0])
+          .pipe(take(1))
+          .subscribe((user) => {
+            this.memberNames.push(user['displayName']);
+            this.memberImages.push(user['profilePicture']);
+          })
+      })
+    }, 200)
   }
+
+  // async setNameFirstUser() {
+  //   for (const user of this.memberIds) {
+  //     const userData = await this.userService.getUserData(user[0]).pipe(take(1)).toPromise();
+  //     this.memberNames.push(userData!['displayName']);
+  //     this.memberImages.push(userData!['profilePicture']);
+  //   }
+  // }
 
   //TODO: es wird nicht/nie immer der richtige Name angezeigt
   // Member names werden überschrieben und nur ein bestimmter Name wird angezeigt? Weil als erstes geaddet?
