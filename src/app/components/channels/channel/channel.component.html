@@ -8,7 +8,7 @@
 
             <app-description [channel]="getChannel(data.channels)" [users]="data.users"></app-description>
 
-            <app-messages [messages]="messages" [threads]="threads" [users]="data.users"></app-messages>
+            <app-messages [channel]="getChannel(data.channels)" [users]="data.users"></app-messages>
 
         </div>
 

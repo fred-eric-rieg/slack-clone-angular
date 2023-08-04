@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Timestamp } from '@angular/fire/firestore';
+import { Component, ElementRef, OnDestroy, OnInit, Query, ViewChild } from '@angular/core';
+import { DocumentData, Timestamp } from '@angular/fire/firestore';
 import { getAuth } from '@angular/fire/auth';
 import { ActivatedRoute } from '@angular/router';
 
@@ -61,13 +61,13 @@ export class ChannelComponent implements OnInit, OnDestroy {
   };
 
   // Variables
-  threads!: Thread[];
-  messages!: Message[];
-  data$: Observable<{ channels: Channel[]; users: User[] }> = combineLatest(
+  data$: Observable<{ channels: Channel[]; users: User[]}> = combineLatest(
     [this.channelService.allChannels$, this.userService.allUsers$])
     .pipe(map(([channels, users]) => ({ channels, users })));
   activeChannel!: Channel;
   activeChannelId!: string;
+  threads!: Thread[];
+  messages!: Message[];
   placeholder = 'Type your message here...';
 
   // Subscriptions
@@ -88,6 +88,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     console.log('ChannelComponent initialized');
     this.paramsSub = this.route.params.subscribe(params => {
       this.activeChannelId = params['id'];
+      this.loadThreads();
     });
   }
 
@@ -100,39 +101,23 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.dataSub ? this.dataSub.unsubscribe() : null;
   }
 
+
+  async loadThreads() {
+    await this.channelService.getChannel(this.activeChannelId).then(data => {
+      this.activeChannel = new Channel(data.docs[0].data());
+    });
+    console.log('Active channel: ', this.activeChannel);
+    this.threadService.updateQuery(this.activeChannel.threads);
+    this.messageService.loadThreadMessages(this.activeChannel.threads);
+  }
+
   /**
-   * Calls the channelService to load the active channel via the route params.
-   * Is destroyed on component destruction.
+   * Calls the channelService to update the query to the specified channel.
+   * @param channel as Channel.
+   * @returns the specified channel.
    */
   getChannel(channels: Channel[]) {
     return channels.filter(channel => channel.channelId === this.activeChannelId)[0];
-  }
-
-  /**
-  * Load all threads of the active channel.
-  */
-  loadThreads() {
-    this.threadService.loadChannelThreads(this.activeChannel.threads).then((querySnapshot) => {
-      this.threads = querySnapshot.docs.map((doc) => {
-        return doc.data() as Thread;
-      });
-      localStorage.setItem('activeChannelThreads', JSON.stringify(this.threads)); // Cache the active channel threads.
-      this.loadMessages(); // After the threads are loaded, load the messages.
-    });
-  }
-
-  /**
-   * Load all messages of the active channel once.
-   */
-  loadMessages() {
-    let messageIds = this.threads.map(thread => thread.messages[0]).flat();
-    this.messageService.loadThreadMessages(messageIds).then((querySnapshot) => {
-      this.messages = querySnapshot.docs.map((doc) => {
-        return doc.data() as Message;
-      });
-      this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
-      localStorage.setItem('activeChannelMessages', JSON.stringify(this.messages)); // Cache the active channel messages.
-    });
   }
 
   /**
@@ -147,13 +132,12 @@ export class ChannelComponent implements OnInit, OnDestroy {
   async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
-      let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
+      let message = new Message({messageId: '', creatorId: this.loggedUser(), crationDate: new Timestamp(now, 0), text: this.collectedContent});
       let messageId = await this.messageService.createMessage(message); // Create message
       let threadId = await this.threadService.createThread(messageId); // Create thread and add message
       await this.channelService.updateChannel(this.attachThreadToChannel(threadId)); // Update Channel
       var element = document.getElementsByClassName("ql-editor");
       element[0].innerHTML = "";
-      this.loadThreads(); // Reload threads
       this.scrollDown(); // Scroll down to the latest message
     }
   }

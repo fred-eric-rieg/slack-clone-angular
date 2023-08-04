@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, onSnapshot, query, setDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, getDocs, onSnapshot, query, setDoc, where } from '@angular/fire/firestore';
 import { Observable, map } from 'rxjs';
 import { Channel } from 'src/models/channel.class';
 
@@ -62,6 +62,12 @@ export class ChannelService {
   private removeChannel(change: any) {
     console.log("Removed channel: ", change);
     // Wriite code to remove channel from allChannels$ Observable.
+  }
+
+
+  async getChannel(channelId: string) {
+    let q = query(this.channelCollection, where('channelId', '==', channelId));
+    return getDocs(q);
   }
 
   /**
