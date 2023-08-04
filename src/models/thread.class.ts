@@ -1,12 +1,10 @@
-import { Timestamp } from "@angular/fire/firestore";
-
 export class Thread {
     threadId: string = '';
     messages: string[] = [];
 
-    constructor(threadId: string, messages: string[]) {
-        this.threadId = threadId;
-        this.messages = messages;
+    constructor(obj?: any) {
+        this.threadId = obj && obj.threadId;
+        this.messages = obj && obj.messages;
     }
 
     public toJSON() {

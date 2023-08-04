@@ -6,11 +6,11 @@ export class Message {
     creationDate: Timestamp = Timestamp.now();
     text: string = '';
 
-    constructor(messageId: string, creatorId: string, creationDate: Timestamp, text: string) {
-        this.messageId = messageId;
-        this.creatorId = creatorId;
-        this.creationDate = creationDate;
-        this.text = text;
+    constructor(obj?: any) {
+        this.messageId = obj && obj.messageId;
+        this.creatorId = obj && obj.creatorId;
+        this.creationDate = obj && obj.creationDate;
+        this.text = obj && obj.text;
     }
 
 
