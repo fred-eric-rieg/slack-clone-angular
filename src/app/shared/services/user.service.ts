@@ -1,26 +1,76 @@
 import { User } from './../../../models/user.class';
 import { Injectable } from '@angular/core';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { Firestore, addDoc, collection,
+import {
+  Firestore, addDoc, collection,
   collectionData, deleteDoc, doc, docData, getDoc,
-  getDocs, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+  getDocs, onSnapshot, query, setDoc, updateDoc, where
+} from '@angular/fire/firestore';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  currentUser: any;
-  activeUser!: any;
-  user: User = new User(); // For creating new users.
-  users$: Observable<User[]>;  // For getting all users.
-
   private userCollection = collection(this.firestore, 'users');
+  allUsers$ = collectionData(this.userCollection) as Observable<User[]>;
+
+  currentUser!: string;
+  activeUser!: User;
+
+  /**
+   * Subscribes to the user collection and listens for changes.
+   * If a change occurs, the change is processed.
+   */
+  private q = query(this.userCollection);
+  unsubscribe = onSnapshot(this.q, (snapshot: { docChanges: () => any[]; }) => {
+    snapshot.docChanges().forEach((change) => {
+      change.type === "added" ? this.addNewUser(change.doc.data()) : null;
+      change.type === "modified" ? this.modifyUser(change.doc.data()) : null;
+      change.type === "removed" ? this.removeUser(change.doc.data()) : null;
+    });
+  });
 
 
-  constructor(private firestore: Firestore) {
-      this.users$ = collectionData(this.userCollection) as Observable<User[]>;
+  constructor(private firestore: Firestore) { }
+
+  /**
+   * Adds a new user to the allUsers$ Observable.
+   * @param change as any.
+   */
+  private addNewUser(change: any) {
+    console.log("New user: ", change);
+    this.allUsers$.pipe(map(users => {
+      return [...users, new User(change)];
+    }));
+  }
+
+  /**
+   * Modifies a user in the allUsers$ Observable.
+   * @param change as any.
+   */
+  private modifyUser(change: any) {
+    console.log("Modified user: ", change);
+    this.allUsers$.pipe(map(users => {
+      return users.map(user => {
+        if (user.userId === change.userId) {
+          return change;
+        }
+        return user;
+      });
+    }));
+  }
+
+  /**
+   * Removes a user from the allUsers$ Observable.
+   * @param change as any.
+   */
+  private removeUser(change: any) {
+    console.log("Removed user: ", change);
+    this.allUsers$.pipe(map(users => {
+      return users.filter(user => user.userId !== change.userId);
+    }));
   }
 
   /**
@@ -82,10 +132,11 @@ export class UserService {
 
 
   createUser(uID: string, email: string) {
-    this.user.userId = uID;
-    this.user.displayName = this.splitMail(email);
-    this.user.email = email;
-    setDoc(doc(this.userCollection, uID), this.user.toJson());
+    let user = new User();
+    user.userId = uID;
+    user.displayName = this.splitMail(email);
+    user.email = email;
+    setDoc(doc(this.userCollection, uID), user.toJson());
   }
 
   /**
@@ -111,7 +162,7 @@ export class UserService {
     return new Promise((resolve, reject) => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          this.activeUser = user;
+          this.activeUser = new User(user);
           resolve(this.activeUser);
         } else {
           reject(new Error("User is not logged in."))

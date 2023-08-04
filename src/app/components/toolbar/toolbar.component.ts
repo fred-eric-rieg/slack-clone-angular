@@ -7,6 +7,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { SearchService } from './../../shared/services/search.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { UserService } from 'src/app/shared/services/user.service';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class ToolbarComponent implements OnDestroy, OnInit {
     private sidenavService: SidenavService,
     public channelService: ChannelService,
     public searchService: SearchService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) { }
 
 
@@ -82,6 +84,7 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
   logoutUser() {
     this.channelService.unsubscribe(); // Unsubscribe form Change-Listener to prevent memory leaks.
+    this.userService.unsubscribe(); // Unsubscribe form Change-Listener to prevent memory leaks.
     this.authService.logout();
   }
 

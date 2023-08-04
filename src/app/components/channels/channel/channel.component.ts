@@ -61,7 +61,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   };
 
   // Variables
-  allUsers$!: Observable<User[]>;
   users!: User[];
   threads!: Thread[];
   messages!: Message[];
@@ -71,7 +70,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   placeholder = 'Type your message here...';
   
 
-  data$ = combineLatest([this.channelService.allChannels$, this.userService.users$]);
+  data$ = combineLatest([this.channelService.allChannels$, this.userService.allUsers$]);
 
   
   paramsSub!: Subscription;
@@ -218,7 +217,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   loadUsers() {
-    this.usersSub = this.userService.users$.subscribe((users: User[]) => {
+    this.usersSub = this.userService.allUsers$.subscribe((users: User[]) => {
       this.users = users;
     });
   }

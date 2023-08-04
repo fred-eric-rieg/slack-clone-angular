@@ -148,7 +148,7 @@ export class ChannelThreadsComponent implements OnInit {
    */
   async getAllUsers() {
     const allUsers: any = [];
-    const qSnap = await this.userService.users$.subscribe(data => {
+    const qSnap = await this.userService.allUsers$.subscribe(data => {
       data.forEach((user: any) => {
         allUsers.push(user);
       });
