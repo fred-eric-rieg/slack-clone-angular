@@ -8,7 +8,7 @@ import { Channel } from 'src/models/channel.class';
 })
 export class ChannelService {
 
-  channelCollection = collection(this.firestore, 'channels');
+  private channelCollection = collection(this.firestore, 'channels');
   allChannels$ = collectionData(this.channelCollection) as Observable<Channel[]>;
 
 
@@ -16,7 +16,7 @@ export class ChannelService {
    * Subscribes to the channel collection and listens for changes.
    * If a change occurs, the change is processed.
    */
-  q = query(this.channelCollection);
+  private q = query(this.channelCollection);
   unsubscribe = onSnapshot(this.q, (snapshot: { docChanges: () => any[]; }) => {
     snapshot.docChanges().forEach((change) => {
       change.type === "added" ? this.addNewChannel(change.doc.data()) : null;
@@ -32,7 +32,7 @@ export class ChannelService {
    * Adds a new channel to the allChannels$ Observable.
    * @param change as any.
    */
-  addNewChannel(change: any) {
+  private addNewChannel(change: any) {
     console.log("New channel: ", change);
     this.allChannels$.pipe(map(channels => {
       return [...channels, new Channel(change)]
@@ -43,7 +43,7 @@ export class ChannelService {
    * Updates a channel in the allChannels$ Observable.
    * @param change as any.
    */
-  modifyChannel(change: any) {
+  private modifyChannel(change: any) {
     console.log("Modified channel: ", change);
     this.allChannels$.pipe(map(channels => {
       return channels.map(channel => {
@@ -59,7 +59,7 @@ export class ChannelService {
    * Removes a channel from the allChannels$ Observable.
    * @param change as any.
    */
-  removeChannel(change: any) {
+  private removeChannel(change: any) {
     console.log("Removed channel: ", change);
     // Wriite code to remove channel from allChannels$ Observable.
   }
