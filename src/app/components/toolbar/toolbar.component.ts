@@ -82,12 +82,6 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
   logoutUser() {
     this.channelService.unsubscribe(); // Unsubscribe form Change-Listener to prevent memory leaks.
-    if (this.channelService.channelSub != undefined) {
-      this.channelService.channelSub.unsubscribe(); // Part of Change-Listener
-    }
-    if (this.channelService.channelSub2 != undefined) {
-      this.channelService.channelSub2.unsubscribe(); // Part of Change-Listener
-    }
     this.authService.logout();
   }
 
