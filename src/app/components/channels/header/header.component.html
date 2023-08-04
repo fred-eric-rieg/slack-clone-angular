@@ -1,4 +1,4 @@
-<div class="sticky-header" *ngIf="this.users != undefined">
+<div class="sticky-header" *ngIf="channel && users">
     # {{ channel.name }}
 
     <div *ngIf="getMembers(channel).length == 1" class="hover" (click)="openViewPeopleDialog()">

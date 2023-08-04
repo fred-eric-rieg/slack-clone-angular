@@ -1,4 +1,4 @@
-<div class="title-container">
+<div class="title-container" *ngIf="channel && users">
     <h1>{{ channel.name }}</h1>
     <!-- REFERENZEN ZU USER MUESSEN NOCH ANGEPASST WERDEN-->
     <h2>{{ getCreator(channel) }} has created this Channel

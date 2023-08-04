@@ -1,14 +1,14 @@
-<div *ngFor="let channel of allChannels$ | async">
-    <div *ngIf="channel.channelId == activeChannelId" class="content-box">
+<div *ngIf="data$ | async as data">
+    <div class="content-box">
 
-        <app-header [channel]="channel" [users]="users"></app-header>
+        <app-header [channel]="getChannel(data.channels)" [users]="data.users"></app-header>
 
 
-        <div class="scroll-wrapper" #chatContainer *ngIf="this.users != undefined">
+        <div class="scroll-wrapper" #chatContainer>
 
-            <app-description [channel]="channel" [users]="users"></app-description>
+            <app-description [channel]="getChannel(data.channels)" [users]="data.users"></app-description>
 
-            <app-messages [messages]="messages" [threads]="threads" [users]="users"></app-messages>
+            <app-messages [messages]="messages" [threads]="threads" [users]="data.users"></app-messages>
 
         </div>
 

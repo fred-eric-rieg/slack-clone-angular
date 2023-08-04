@@ -18,7 +18,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 // Rxjs & Quill
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill/public-api';
 import 'quill-emoji/dist/quill-emoji.js';
-import { Observable, Subscription, combineLatest } from 'rxjs';
+import { Observable, Subscription, combineLatest, map } from 'rxjs';
 
 
 
@@ -61,21 +61,18 @@ export class ChannelComponent implements OnInit, OnDestroy {
   };
 
   // Variables
-  users!: User[];
   threads!: Thread[];
   messages!: Message[];
-  allChannels$!: Observable<Channel[]>;
+  data$: Observable<{ channels: Channel[]; users: User[] }> = combineLatest(
+    [this.channelService.allChannels$, this.userService.allUsers$])
+    .pipe(map(([channels, users]) => ({ channels, users })));
   activeChannel!: Channel;
   activeChannelId!: string;
   placeholder = 'Type your message here...';
-  
 
-  data$ = combineLatest([this.channelService.allChannels$, this.userService.allUsers$]);
-
-  
+  // Subscriptions
   paramsSub!: Subscription;
-  usersSub!: Subscription;
-  channelSub!: Subscription;
+  dataSub!: Subscription;
 
 
   constructor(
@@ -89,9 +86,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('ChannelComponent initialized');
-    this.loadUsers();
-    this.loadActiveChannel();
-    
+    this.paramsSub = this.route.params.subscribe(params => {
+      this.activeChannelId = params['id'];
+    });
   }
 
   /**
@@ -100,61 +97,15 @@ export class ChannelComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log('ChannelComponent destroyed');
     this.paramsSub.unsubscribe();
-    this.usersSub.unsubscribe();
-    if (this.channelSub != undefined) {
-      this.channelSub.unsubscribe();
-    }
+    this.dataSub ? this.dataSub.unsubscribe() : null;
   }
 
   /**
    * Calls the channelService to load the active channel via the route params.
    * Is destroyed on component destruction.
    */
-  async loadActiveChannel() {
-    this.paramsSub = this.route.params.subscribe(params => {
-      this.activeChannelId = params['id'];
-
-      if (this.isActiveChannelInCache(params['id'])) {
-        this.loadChannelFromCache();
-        return;
-      } else {
-        this.loadChannelFromFirestore(params['id']);
-      }
-    });
-  }
-
-
-  loadChannelFromFirestore(channelId: string) {
-    console.log('loadChannelFromFirestore');
-    this.clearCache(); // Clear the cache.
-    localStorage.setItem('activeChannelId', channelId); // Cache the active channelId.
-
-    this.allChannels$ = this.channelService.allChannels$;
-
-    this.channelSub = this.allChannels$.subscribe(channels => {
-      let channel = channels.filter(channel => channel.channelId === channelId)[0];
-      if (channel) {
-        this.activeChannel = channel;
-        localStorage.setItem('activeChannel', JSON.stringify(channel)); // Cache the active channel object.
-        this.activeChannel.threads.length > 0 ? this.loadThreads() : this.setEmptyCache();
-      }
-    });
-  }
-
-
-  setEmptyCache() {
-    this.threads = [];
-    this.messages = [];
-    localStorage.setItem('activeChannelThreads', JSON.stringify(this.threads));
-    localStorage.setItem('activeChannelMessages', JSON.stringify(this.messages))
-  }
-
-
-  clearCache() {
-    localStorage.removeItem('activeChannel');
-    localStorage.removeItem('activeChannelId');
-    localStorage.removeItem('activeChannelThreads');
-    localStorage.removeItem('activeChannelMessages');
+  getChannel(channels: Channel[]) {
+    return channels.filter(channel => channel.channelId === this.activeChannelId)[0];
   }
 
   /**
@@ -181,44 +132,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
       });
       this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
       localStorage.setItem('activeChannelMessages', JSON.stringify(this.messages)); // Cache the active channel messages.
-    });
-  }
-
-
-  isActiveChannelInCache(channelId: string) {
-    return localStorage.getItem('activeChannelId') === channelId;
-  }
-
-  /**
-   * Gets activeChannel, its threads and messages from localStorage.
-   * Dates are converted to Timestamps, because they are not stored as Timestamps in localStorage
-   * which causes errors with the date pipe in the HTML component.
-   */
-  loadChannelFromCache() {
-    console.log('loadChannelFromCache');
-    let channel = JSON.parse(localStorage.getItem('activeChannel') || '{}') as Channel;
-    channel.creationDate = new Timestamp(channel.creationDate.seconds, channel.creationDate.nanoseconds);
-    this.activeChannel = channel;
-    this.allChannels$ = new Observable<Channel[]>((observer) => {
-      observer.next([channel]);
-    });
-    if (this.activeChannel.threads.length > 0) {
-      this.threads = JSON.parse(localStorage.getItem('activeChannelThreads') || '{}') as Thread[];
-      let messages = JSON.parse(localStorage.getItem('activeChannelMessages') || '{}') as Message[];
-      this.messages = messages.map((message) => {
-        message.creationDate = new Timestamp(message.creationDate.seconds, message.creationDate.nanoseconds);
-        return message;
-      });
-    } else {
-      this.threads = [];
-      this.messages = [];
-    }
-  }
-
-
-  loadUsers() {
-    this.usersSub = this.userService.allUsers$.subscribe((users: User[]) => {
-      this.users = users;
     });
   }
 
