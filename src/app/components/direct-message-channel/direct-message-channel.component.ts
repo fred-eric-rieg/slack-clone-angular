@@ -228,7 +228,7 @@ export class DirectMessageChannelComponent implements OnInit {
   async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
-      let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
+      let message = new Message({messageId: '', creatorId: this.loggedUser(), crationDate: new Timestamp(now, 0), text: this.collectedContent});
       let messageId = await this.messageService.createMessage(message)
       await this.chatService.addMessageToChat(this.chat, messageId);
       message.messageId = messageId;

@@ -247,7 +247,7 @@ export class ChannelThreadsComponent implements OnInit {
   sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
-      let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
+      let message = new Message({messageId: '', creatorId: this.loggedUser(), crationDate: new Timestamp(now, 0), text: this.collectedContent});
       //let messageId = this.messageService.createMessage(message);
       //this.chatService.addMessageToChat(this.chat, messageId);
     }
