@@ -1,6 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, combineLatest, map } from 'rxjs';
+import { MessageService } from 'src/app/shared/services/message.service';
 import { SearchService } from 'src/app/shared/services/search.service';
+import { ThreadService } from 'src/app/shared/services/thread.service';
+import { Channel } from 'src/models/channel.class';
 import { Message } from 'src/models/message.class';
 import { Thread } from 'src/models/thread.class';
 import { User } from 'src/models/user.class';
@@ -12,16 +15,23 @@ import { User } from 'src/models/user.class';
 })
 export class MessagesComponent implements OnInit, OnDestroy {
 
-  @Input() messages!: Message[];
-  @Input() threads!: Thread[];
+  @Input() channel!: Channel;
   @Input() users!: User[];
 
   searchResults!: string[];
 
+  data$: Observable<{ threads: Thread[]; messages: Message[]}> = combineLatest([this.threadService.channelThreads$, this.messageService.messages$])
+  .pipe(map(([threads, messages]) => ({ threads, messages })));
+
+
   // Subscriptions
   searchSub!: Subscription;
 
-  constructor(private searchService: SearchService) { }
+  constructor(
+    private searchService: SearchService,
+    private threadService: ThreadService,
+    private messageService: MessageService,
+  ) { }
 
 
   ngOnInit(): void {
@@ -34,8 +44,13 @@ export class MessagesComponent implements OnInit, OnDestroy {
   }
 
 
-  openThread(message: Message) {
-    return `/dashboard/thread/${this.threads.find(thread => thread.messages[0].includes(message.messageId))?.threadId}`;
+  loadMessages(threads: Thread[]) {
+    console.log('Loading messages in message component: ', threads);
+  }
+
+
+  openThread(thread: string) {
+    return `/dashboard/thread/${thread}`;
   }
 
 
@@ -49,23 +64,9 @@ export class MessagesComponent implements OnInit, OnDestroy {
    * @param messageId as string.
    * @returns number of messages in a thread.
    */
-  countThreadMessages(messageId: string) {
-    let thread = this.threads.find(thread => thread.messages[0].includes(messageId));
-    if (thread) return thread.messages.length - 1;
-    else return 0;
+  countThreadMessages(thread: Thread) {
+    return thread.messages.length - 1;
   }
-
-  /**
-   * Used in HTML component to sort messages by date.
-   */
-  sortMessagesByDate() {
-    if (this.messages) {
-      this.messages.forEach((message) => {
-        message.creationDate.toDate();
-      });
-    }
-  }
-
 
   /**
    * Finds the user displayName by the user id.
@@ -89,5 +90,4 @@ export class MessagesComponent implements OnInit, OnDestroy {
       this.searchResults = results;
     });
   }
-
 }

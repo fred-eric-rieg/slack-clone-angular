@@ -1,38 +1,11 @@
-<div>{{ sortMessagesByDate() }}</div>
 <!-- Every message is rendered here -->
 <div class="chat-container">
 
-    <div *ngIf="messages != undefined">
-        <ng-container *ngFor="let message of messages">
+    <div *ngIf="data$ | async as data">
 
-            <!-- Search filter: specify below which elements to search for. -->
-            <main *ngIf="searchResults.length === 0
-                        || message.text.toLowerCase().includes(searchResults[0].toLowerCase())
-                        || getUserName(message.creatorId)?.toLowerCase()!.includes(searchResults[0].toLowerCase())">
-
-                <mat-card class="thread">
-
-                    <mat-card class="overlay">
-                        <div class="btn" [routerLink]="openThread(message)">
-                            <mat-icon>reply</mat-icon>
-                        </div>
-                    </mat-card>
-
-                    <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                        <img src="{{ getUserProfile(message) }}" alt="profile picture">
-                        <mat-card-title>
-                            {{ getUserName(message.creatorId) }}
-                        </mat-card-title>
-                        {{ message.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
-                        {{ message.creationDate.toDate() | date : "h:mm a" }}
-                    </div>
-                    <mat-card-content [innerHTML]="message.text"></mat-card-content>
-                    <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-                        <p *ngIf="countThreadMessages(message.messageId) >= 1">{{
-                            countThreadMessages(message.messageId) }} replies</p>
-                    </div>
-                </mat-card>
-            </main>
-        </ng-container>
+        <div>
+            {{ data.messages | json }}
+        </div>
+        
     </div>
 </div>

@@ -9,8 +9,8 @@
 
         <!-- Every message is rendered here -->
         <div class="chat-container">
-            <div *ngIf="messages != undefined && users != undefined">
-                <div *ngFor="let message of messages">
+            <div *ngIf="messages$ && users">
+                <div *ngFor="let message of messages$ | async">
                     <mat-card class="thread">
                         <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
                             <img src="{{ getUserProfile(message) }}" alt="profile picture">
