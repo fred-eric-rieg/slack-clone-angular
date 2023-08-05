@@ -13,11 +13,10 @@ import { User } from 'src/models/user.class';
 })
 export class DirectMessagesSectionComponent implements OnInit {
   allUsers: User[] = [];
+  allChats: any[] = [];
   collapsed: boolean = false;
   chatIds: Array<string> = [];
   currentUserId: any;
-  allChats: any[] = [];
-  threads: any = [];
 
   // Subscriptions
   chatSub!: Subscription;
@@ -82,6 +81,7 @@ export class DirectMessagesSectionComponent implements OnInit {
         const chatData: any = await this.chatService.returnQueryChatData(chatId);
         this.allChats.push(chatData);
       })
+      console.log(this.allChats);
       //await this.setNameFirstUser();
     }
   }

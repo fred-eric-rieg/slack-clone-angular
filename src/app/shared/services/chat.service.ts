@@ -25,15 +25,15 @@ export class ChatService implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
-  returnCurrentUserChats(userId: string){
-    	const docRef = doc(this.userChatCollection, userId);
-      return docSnapshots(docRef);
+  returnCurrentUserChats(userId: string) {
+    const docRef = doc(this.userChatCollection, userId);
+    return docSnapshots(docRef);
   }
 
-  async returnUserChatIds(){
+  async returnUserChatIds() {
     let chatIds: Array<any> = [];
     const querySnapshot = await getDocs(this.userChatCollection);
     querySnapshot.forEach((doc) => {
@@ -45,16 +45,16 @@ export class ChatService implements OnInit {
 
 
   /** returns fs document data for a specific chat id */
-  returnChatData(chatId: string){
+  returnChatData(chatId: string) {
     const docRef = doc(this.chatCollection, chatId);
     return docData(docRef);
   }
 
-  async returnQueryChatData(chatId: string){
+  async returnQueryChatData(chatId: string) {
     let userChats: Array<any> = [];
     const snap = await getDocs(this.chatCollection);
     snap.forEach((doc) => {
-      if (doc.id === chatId){
+      if (doc.id === chatId) {
         userChats.push(doc.data())
       }
     })
@@ -87,12 +87,21 @@ export class ChatService implements OnInit {
     });
   }
 
+  setOtherUserChatData(chatId: string, users: any) {
+    const addedUsers = this.extractMembers(users);
+    addedUsers.forEach((userId: any) => {
+      setDoc(doc(this.userChatCollection, userId), {
+        chatIds: arrayUnion(chatId)
+      });
+    });
+  }
+
   /** Set new Doc in 'chats' Collection with all
    * added members and current server time
    * @param chatId generated chatId as string
    * @param users selected users as Object
    */
-  setChatData(chatId: string, users: any){
+  setChatData(chatId: string, users: any) {
     const docRef = doc(this.chatCollection, chatId);
     setDoc(docRef, {
       chatId: chatId,
@@ -102,7 +111,7 @@ export class ChatService implements OnInit {
     })
   }
 
-  async addMessageToChat(chat: Chat, messageId: string, ) {
+  async addMessageToChat(chat: Chat, messageId: string,) {
     const chatDocument = doc(this.chatCollection, chat.chatId);
     updateDoc(chatDocument, {
       messages: arrayUnion(messageId)
@@ -113,7 +122,7 @@ export class ChatService implements OnInit {
     // });
   }
 
-  extractMembers(users: any){
+  extractMembers(users: any) {
     let members: any = [];
     users.forEach((user: any) => {
       members.push(user.userId)
