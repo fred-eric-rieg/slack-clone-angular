@@ -28,15 +28,15 @@
     </div> -->
     <div >
       <div
-        *ngFor="let chat of chatIds; let i = index"
+        *ngFor="let chat of allChats; let i = index"
         class="user-direct-msg flex-ac"
-        [routerLink]="['chat/' + chat]"
+        [routerLink]="['chat/' + chat[0].chatId]"
         routerLinkActive="activeLink"
       >
-        <img src="{{ memberImages[i] || '/../../assets/img/profile.png' }}" />
-        <p>{{ memberNames[i] }}</p>
-        <div class="extra-members" *ngIf="memberLength[i] > 1">
-          +{{ memberLength[i] - 1 }}
+        <img src="{{ getChatUserImage(chat[0].members) || '/../../assets/img/profile.png' }}" />
+        <span>{{ setNameFirstUser(chat[0].members) }}</span>
+        <div class="extra-members" *ngIf="chat[0].members.length > 1">
+          +{{ chat[0].members.length  - 1 }}
         </div>
       </div>
       <div class="channelitem channel flex-ac" [routerLink]="'create-chat'">
