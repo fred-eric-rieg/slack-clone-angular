@@ -2,7 +2,7 @@ import { User } from './../../../models/user.class';
 import { Injectable } from '@angular/core';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import {
-  Firestore, addDoc, collection,
+  Firestore, Unsubscribe, addDoc, collection,
   collectionData, deleteDoc, doc, docData, getDoc,
   getDocs, onSnapshot, query, setDoc, updateDoc, where
 } from '@angular/fire/firestore';
@@ -19,21 +19,26 @@ export class UserService {
   currentUser!: string;
   activeUser!: User;
 
-  /**
-   * Subscribes to the user collection and listens for changes.
-   * If a change occurs, the change is processed.
-   */
+  // Setting up the query to listen for changes in the user collection.
   private q = query(this.userCollection);
-  unsubscribe = onSnapshot(this.q, (snapshot: { docChanges: () => any[]; }) => {
-    snapshot.docChanges().forEach((change) => {
-      change.type === "added" ? this.addNewUser(change.doc.data()) : null;
-      change.type === "modified" ? this.modifyUser(change.doc.data()) : null;
-      change.type === "removed" ? this.removeUser(change.doc.data()) : null;
-    });
-  });
+  unsubscribe!: Unsubscribe;
 
 
   constructor(private firestore: Firestore) { }
+
+  /**
+  * Subscribes to the user collection and listens for changes.
+  * If a change occurs, the change is processed.
+  */
+  startListening() {
+    this.unsubscribe = onSnapshot(this.q, (snapshot: { docChanges: () => any[]; }) => {
+      snapshot.docChanges().forEach((change) => {
+        change.type === "added" ? this.addNewUser(change.doc.data()) : null;
+        change.type === "modified" ? this.modifyUser(change.doc.data()) : null;
+        change.type === "removed" ? this.removeUser(change.doc.data()) : null;
+      });
+    });
+  }
 
   /**
    * Adds a new user to the allUsers$ Observable.

@@ -61,7 +61,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   };
 
   // Variables
-  data$: Observable<{ channels: Channel[]; users: User[]}> = combineLatest(
+  data$: Observable<{ channels: Channel[]; users: User[] }> = combineLatest(
     [this.channelService.allChannels$, this.userService.allUsers$])
     .pipe(map(([channels, users]) => ({ channels, users })));
   activeChannel!: Channel;
@@ -137,7 +137,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
-      let message = new Message({messageId: '', creatorId: this.loggedUser(), crationDate: new Timestamp(now, 0), text: this.collectedContent});
+      let message = new Message({ messageId: '', creatorId: this.loggedUser(), crationDate: new Timestamp(now, 0), text: this.collectedContent });
       let messageId = await this.messageService.createMessage(message); // Create message
       let threadId = await this.threadService.createThread(messageId); // Create thread and add message
       await this.channelService.updateChannel(this.attachThreadToChannel(threadId)); // Update Channel
