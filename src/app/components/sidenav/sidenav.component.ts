@@ -47,7 +47,6 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('SidenavComponent destroyed');
-    this.channelSub.unsubscribe();
   }
 
 
@@ -58,9 +57,6 @@ export class sidenavComponent implements OnInit, OnDestroy {
    */
   loadChannels() {
     this.allChannels$ = this.channelService.allChannels$;
-    this.channelSub = this.allChannels$.subscribe(channels => {
-      this.router.navigate(['dashboard/channel/' + channels.filter(channel => channel.name === 'Main')[0].channelId]);
-    });
   }
 
 
