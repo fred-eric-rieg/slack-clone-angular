@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, Query, Unsubscribe, collection, collectionData, doc, getDocs, onSnapshot, query, setDoc, where } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
 import { Observable, map } from 'rxjs';
 import { Thread } from 'src/models/thread.class';
 
@@ -10,82 +10,26 @@ export class ThreadService {
 
   private threadCollection = collection(this.firestore, 'threads');
 
-  channelThreads$!: Observable<Thread[]>;
-  threadMessages$!: Observable<Thread[]>;
-
-  /**
-   * Subscribes to the thread collection and listens for changes.
-   * If a change occurs, the change is processed.
-   */
-  public q: Query<unknown> | undefined;
-  unsubscribe: Unsubscribe | undefined;
+  channelThreads$ = new Observable<Thread[]>();
 
 
   constructor(
     private firestore: Firestore,
   ) { }
 
-  /**
-   * Adds a new thread to the channelThreads$ Observable.
-   * @param change as any.
-   */
-  private addNewThread(change: any) {
-    console.log("New thread: ", change);
-    this.channelThreads$.pipe(map(threads => {
-      return [...threads, new Thread(change)]
-    }));
-  }
-
-  /**
-   * Modifies a thread in the channelThreads$ Observable.
-   * @param change as any.
-   */
-  private modifyThread(change: any) {
-    console.log("Modified thread: ", change);
-    this.channelThreads$.pipe(map(threads => {
-      return threads.map(thread => {
-        if (thread.threadId === change.threadId) {
-          return change;
-        }
-        return thread;
-      });
-    }));
-  }
-
-  /**
-   * Removes a thread from the channelThreads$ Observable.
-   * @param change as any.
-   */
-  private removeThread(change: any) {
-    console.log("Removed thread: ", change);
-    this.channelThreads$.pipe(map(threads => {
-      return threads.filter(thread => thread.threadId !== change.threadId);
-    }));
-  }
-
-  /**
-   * Updates the query to listen for changes in the specified channel collection.
-   * @param channelName as string.
-   */
-  async updateQuery(threads: string[]) {
-    console.log('Thread Service received threads: ', threads);
-    this.loadThreads(threads);
-    this.unsubscribe ? this.unsubscribe() : null; // Unsubscribe from the old query
-    this.q = query(this.threadCollection, where('threadId', 'in', threads)); // Create a new query
-    this.unsubscribe = onSnapshot(this.q, (snapshot: { docChanges: () => any[]; }) => { // Subscribe to the new query
-      snapshot.docChanges().forEach((change) => {
-        change.type === "added" ? this.addNewThread(change.doc.data()) : null;
-        change.type === "modified" ? this.modifyThread(change.doc.data()) : null;
-        change.type === "removed" ? this.removeThread(change.doc.data()) : null;
-      });
-    });
-  }
-
 
   loadThreads(threads: string[]) {
-    console.log('Loading threads in thread service...');
+    console.log('Thread Service received threads: ', threads);
     const q = query(this.threadCollection, where('threadId', 'in', threads));
-    this.channelThreads$ = collectionData(q) as Observable<Thread[]>;
+    return getDocs(q);
+  }
+
+
+  addThread(thread: Thread) {
+    console.log('Thread Service will add thread: ', thread);
+    this.channelThreads$.pipe(map(threads => {
+      return [...threads, thread];
+    }));
   }
 
 

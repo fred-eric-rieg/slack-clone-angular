@@ -10,14 +10,12 @@ export class MessageService {
 
   private messageCollection = collection(this.firestore, 'messages');
 
-  messages$!: Observable<Message[]>;
-
-
+  messages$ = new Observable<Message[]>;
 
   constructor(
     private firestore: Firestore,
   ) {
-    
+
   }
 
 
@@ -29,7 +27,11 @@ export class MessageService {
   async loadThreadMessages(messageIds: string[]) {
     console.log("Message Service received messageIds: ", messageIds);
     let q = query(this.messageCollection, where('messageId', 'in', messageIds));
-    this.messages$ = collectionData(q) as Observable<Message[]>;
+    this.messages$ = collectionData(q).pipe(map(messages => {
+      return messages.map(message => {
+        return new Message(message);
+      })
+    }));
   }
 
   /**

@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnDestroy, OnInit, Query, ViewChild } from '@angular/core';
-import { DocumentData, Timestamp } from '@angular/fire/firestore';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Timestamp } from '@angular/fire/firestore';
 import { getAuth } from '@angular/fire/auth';
 import { ActivatedRoute } from '@angular/router';
 
@@ -72,7 +72,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   // Subscriptions
   paramsSub!: Subscription;
-  dataSub!: Subscription;
 
 
   constructor(
@@ -98,7 +97,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log('ChannelComponent destroyed');
     this.paramsSub.unsubscribe();
-    this.dataSub ? this.dataSub.unsubscribe() : null;
   }
 
 
@@ -106,9 +104,16 @@ export class ChannelComponent implements OnInit, OnDestroy {
     await this.channelService.getChannel(this.activeChannelId).then(data => {
       this.activeChannel = new Channel(data.docs[0].data());
     });
-    console.log('Active channel: ', this.activeChannel);
-    this.threadService.updateQuery(this.activeChannel.threads);
-    this.messageService.loadThreadMessages(this.activeChannel.threads);
+    console.log('Active channel set: ', this.activeChannel);
+    await this.threadService.loadThreads(this.activeChannel.threads).then(data => {
+      data.docs.map(doc => {
+        let thread = new Thread(doc.data());
+        this.messageService.loadThreadMessages(thread.messages);
+        this.threadService.channelThreads$.pipe(map(threads => {
+          return [...threads, thread];
+        }));
+      });
+    });
   }
 
   /**
