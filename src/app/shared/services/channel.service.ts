@@ -3,7 +3,6 @@ import { Firestore, collection, collectionData, doc, getDocs, onSnapshot, query,
 import { Observable, map } from 'rxjs';
 import { Channel } from 'src/models/channel.class';
 import { ThreadService } from './thread.service';
-import { Thread } from 'src/models/thread.class';
 import { MessageService } from './message.service';
 import { Unsubscribe } from '@angular/fire/auth';
 
@@ -48,7 +47,6 @@ export class ChannelService {
   private addNewChannel(change: any) {
     console.log("New channel: ", change);
     this.allChannels$.pipe(map(channels => {
-      this.triggerChannelUpdate(change);
       return [...channels, new Channel(change)]
     }));
   };
@@ -62,7 +60,6 @@ export class ChannelService {
     this.allChannels$.pipe(map(channels => {
       return channels.map(channel => {
         if (channel.channelId === change.channelId) {
-          this.triggerChannelModification(change);
           return change;
         }
         return channel;
@@ -77,39 +74,6 @@ export class ChannelService {
   private removeChannel(change: any) {
     console.log("Removed channel: ", change);
     // Wriite code to remove channel from allChannels$ Observable.
-  }
-
-
-  async triggerChannelUpdate(channel: Channel) {
-    console.log('Triggering channel update: ', channel);
-    await this.threadService.loadThreads(channel.threads).then(data => {
-      data.docs.map(doc => {
-        let thread = new Thread(doc.data());
-        this.messageService.loadThreadMessages(thread.messages);
-        this.threadService.channelThreads$.pipe(map(threads => {
-          return [...threads, thread];
-        }));
-      });
-    });
-  }
-
-
-  async triggerChannelModification(channel: Channel) {
-    console.log('Triggering channel modification: ', channel);
-    await this.threadService.loadThreads(channel.threads).then(data => {
-      data.docs.map(doc => {
-        let thread = new Thread(doc.data());
-        this.messageService.loadThreadMessages(thread.messages);
-        this.threadService.channelThreads$.pipe(map(threads => {
-          return threads.map(thread => {
-            if (thread.threadId === channel.channelId) {
-              return thread;
-            }
-            return thread;
-          })
-        }));
-      });
-    });
   }
 
 
