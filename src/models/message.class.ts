@@ -3,13 +3,13 @@ import { Timestamp } from "@angular/fire/firestore";
 export class Message {
     messageId: string = '';
     creatorId: string = '';
-    creationDate: Timestamp = Timestamp.now();
+    creationDate: Timestamp;
     text: string = '';
 
     constructor(obj?: any) {
         this.messageId = obj && obj.messageId || '';
         this.creatorId = obj && obj.creatorId || '';
-        this.creationDate = obj && obj.creationDate || Timestamp.now();
+        this.creationDate = obj && new Timestamp(obj.creationDate.seconds, obj.creationDate.nanoseconds) || Timestamp.now();
         this.text = obj && obj.text || '';
     }
 

@@ -1,14 +1,20 @@
 <!-- Every message is rendered here -->
 <div class="chat-container">
+    <div *ngIf="channel">
 
-    <div *ngFor="let thread of threads$| async">
 
-        <mat-card class="thread" [routerLink]="openThread(thread)">
-            {{ thread.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at 
-            {{ thread.creationDate.toDate() | date : "h:mm a" }}
-            {{ thread.messages[0]}}
-            <!--<app-messages [users]="users" [message]="thread.messages[0]" [thread]="thread"></app-messages>-->
-        </mat-card>
+        <div *ngFor="let thread of channelService.threads">
+            <div *ngFor="let message of channelService.messages">
+                <div *ngIf="thread.messages[0] === message.messageId">
 
+
+                    <mat-card class="thread" [routerLink]="openThread(thread)">
+                        <app-messages [message]="message" [users]="users"></app-messages>
+                    </mat-card>
+
+                </div>
+            </div>
+        </div>
     </div>
+
 </div>

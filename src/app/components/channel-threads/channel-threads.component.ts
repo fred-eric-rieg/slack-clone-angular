@@ -69,7 +69,7 @@ export class ChannelThreadsComponent implements OnInit, OnDestroy {
         this.threadId = params['id'];
 
         // Loading the channel
-        this.channel = this.channelService.getChannelViaThread(params['id']);
+        this.channel = (await this.channelService.getChannel(params['id'])).data() as Channel;
 
         this.loadThread(params['id']);
       }

@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { MessageService } from 'src/app/shared/services/message.service';
+import { Subscription } from 'rxjs';
 import { SearchService } from 'src/app/shared/services/search.service';
 import { Message } from 'src/models/message.class';
 import { Thread } from 'src/models/thread.class';
@@ -14,10 +13,9 @@ import { User } from 'src/models/user.class';
 export class MessagesComponent implements OnInit, OnDestroy {
 
   @Input() users!: User[];
-  @Input() message!: string;
+  @Input() message!: Message;
   @Input() thread!: Thread;
 
-  loadedMessage!: Message;
 
   // Subscriptions
   searchSub!: Subscription;
@@ -26,7 +24,6 @@ export class MessagesComponent implements OnInit, OnDestroy {
 
   constructor(
     private searchService: SearchService,
-    private messageService: MessageService,
   ) { }
 
 

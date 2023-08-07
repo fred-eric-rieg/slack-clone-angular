@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, getDoc, getDocs, onSnapshot, query, setDoc, where } from '@angular/fire/firestore';
+import { Firestore, Timestamp, collection, collectionData, doc, getDoc, getDocs, onSnapshot, query, setDoc, where } from '@angular/fire/firestore';
 import { Observable, map } from 'rxjs';
 import { Unsubscribe } from '@angular/fire/auth';
 
@@ -30,9 +30,7 @@ export class ChannelService {
 
   constructor(
     private firestore: Firestore,
-  ) {
-    this.startListening();
-  }
+  ) { }
 
   /**
   * Subscribes to the channel collection and listens for changes.
@@ -54,6 +52,7 @@ export class ChannelService {
    */
   private addNewChannel(change: any) {
     console.log("New channel: ", change);
+    this.channelId === change.channelId ? this.refreshChannelData(change.channelId, 'channelServiceIsAksing') : null;
     this.allChannels$.pipe(map(channels => {
       return [...channels, new Channel(change)]
     }));
@@ -65,6 +64,7 @@ export class ChannelService {
    */
   private modifyChannel(change: any) {
     console.log("Modified channel: ", change);
+    this.channelId === change.channelId ? this.refreshChannelData(change.channelId, 'channelServiceIsAksing') : null;
     this.allChannels$.pipe(map(channels => {
       return channels.map(channel => {
         if (channel.channelId === change.channelId) {
@@ -112,14 +112,21 @@ export class ChannelService {
 
 
   async refreshChannelData(channelId: string, whoIsAsking: string) {
-    // 1) Check if channelId is already in localStorage
-    if (localStorage.getItem('channelId') != channelId && whoIsAsking == 'channelIsAskingForRefresh') {
+    console.log("Who is asking: ", whoIsAsking);
+    if (localStorage.getItem(channelId) != channelId && whoIsAsking == 'channelIsAsking') {
+      console.log("Channel is asking for first time refresh")
       localStorage.setItem(channelId, channelId);
       console.log("Refreshing data for channel: ", channelId);
       let channel = (await this.getChannel(channelId)).data() as Channel;
-      this.threads = (await this.getThreads(channel.threads)).docs.map(doc => doc.data() as Thread).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
-      localStorage.setItem('threads/' + channelId, JSON.stringify(this.threads));
-    } else if (localStorage.getItem('channelId') == channelId && whoIsAsking == 'channelIsAskingForRefresh') {
+      if (channel.threads.length > 0) {
+        this.threads = (await this.getThreads(channel.threads)).docs.map(doc => doc.data() as Thread).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+        localStorage.setItem('threads/' + channelId, JSON.stringify(this.threads));
+      } else {
+        localStorage.setItem('threads/' + channelId, JSON.stringify([]));
+        localStorage.setItem('messages/' + channelId, JSON.stringify([]));
+      }
+    } else if (localStorage.getItem(channelId) == channelId && whoIsAsking == 'channelIsAsking') {
+      console.log("Channel is asking for refresh")
       this.threads = JSON.parse(localStorage.getItem('threads/' + channelId) || '[]').map((thread: Thread) => new Thread(thread).toJSON());
       this.messages = JSON.parse(localStorage.getItem('messages/' + channelId) || '[]').map((message: Message) => new Message(message).toJSON());
     } else if (whoIsAsking == 'channelServiceIsAksing') {
@@ -133,20 +140,22 @@ export class ChannelService {
 
 
   async getChannel(channelId: string) {
-    const docRef = doc(this.channelRef, 'channels/' + channelId);
+    const docRef = doc(this.channelRef, channelId);
     return getDoc(docRef);
   }
 
 
   async getThreads(threadIds: string[]) {
-    const q = query(this.threadRef, where('id', 'in', threadIds));
+    console.log("Getting threadIds: ", threadIds)
+    const q = query(this.threadRef, where('threadId', 'in', threadIds));
     await this.getMessages((await getDocs(q)).docs.map(doc => doc.data() as Thread).map(thread => thread.messages).flat());
     return getDocs(q);
   }
 
 
   async getMessages(messageIds: string[]) {
-    const q = query(this.messageRef, where('id', 'in', messageIds));
+    console.log("Getting messageIds: ", messageIds)
+    const q = query(this.messageRef, where('messageId', 'in', messageIds));
     this.messages = (await getDocs(q)).docs.map(doc => doc.data() as Message).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
     localStorage.setItem('messages/' + this.channelId, JSON.stringify(this.messages));
     return getDocs(q);
@@ -160,7 +169,7 @@ export class ChannelService {
 
     setDoc(docRef, message.toJSON()).then(() => {
       console.log('Message written with ID: ', docRef.id);
-      channel ? this.setThread(new Thread({ messages: [message.messageId] }), channel) : null; // If the message is created inside a channel, create a thread for it
+      channel ? this.setThread(new Thread({ messages: [message.messageId], creationDate: Timestamp.now() }), channel) : null; // If the message is created inside a channel, create a thread for it
       //thread ? this.addMessageToThread(message.id, thread) : null; // If the message is created inside a thread, add it to the thread
     }).catch((error) => {
       console.error('Error adding document: ', error);
@@ -186,6 +195,17 @@ export class ChannelService {
     const docRef = doc(this.firestore, 'channels/' + channel.channelId);
     setDoc(docRef, { threads: [...channel.threads, threadId] }, { merge: true }).then(() => {
       console.log('Thread added to Channel: ', channel.name);
+    }).catch((error) => {
+      console.error('Error adding document: ', error);
+    });
+  }
+
+
+  async updateChannel(channel: Channel) {
+    const docRef = doc(this.firestore, 'channels/' + channel.channelId);
+    
+    setDoc(docRef, channel.toJSON(), { merge: true }).then(() => {
+      console.log('Channel updated: ', channel.name);
     }).catch((error) => {
       console.error('Error adding document: ', error);
     });

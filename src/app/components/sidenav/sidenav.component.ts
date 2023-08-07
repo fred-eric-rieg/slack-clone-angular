@@ -79,22 +79,9 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
 
   createChannel(dialogData: string) {
-    this.putLoggedUserInNewChannel();
+    // ggf noch den aktuellen User als Member hinzufügen
     this.channel.name = dialogData;
-    let now = new Date().getTime() / 1000;
-    this.channel.creationDate = new Timestamp(now, 0);
-    this.channelService.createNewChannel(this.channel);
-  }
-
-
-  putLoggedUserInNewChannel() {
-    let sub = this.auth.authState.subscribe((user) => {
-      user ? (
-        this.channel.creatorId = user.uid,
-        this.channel.members.push(user.uid)
-      ) : null;
-    });
-    sub.unsubscribe();
+    this.channelService.setChannel(this.channel.name);
   }
 
 

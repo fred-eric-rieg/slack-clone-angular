@@ -1,14 +1,14 @@
-<div *ngIf="loadedMessage">
+<div *ngIf="message">
 
     <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
-        <img src="{{ getUserProfile(loadedMessage) }}" alt="profile picture">
+        <img src="{{ getUserProfile(message) }}" alt="profile picture">
         <mat-card-title>
-            {{ getUserName(loadedMessage.creatorId) }}
+            {{ getUserName(message.creatorId) }}
         </mat-card-title>
-        {{ loadedMessage.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
-        {{ loadedMessage.creationDate.toDate() | date : "h:mm a" }}
+        {{ message.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at
+        {{ message.creationDate.toDate() | date : "h:mm a" }}
     </div>
-    <mat-card-content [innerHTML]="loadedMessage.text">
+    <mat-card-content [innerHTML]="message.text">
     
     </mat-card-content>
 

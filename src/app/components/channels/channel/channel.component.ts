@@ -67,8 +67,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   );
 
   activeChannelId!: string;
-  threads!: Thread[];
-  messages!: Message[];
   placeholder = 'Type your message here...';
 
 
@@ -123,6 +121,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
       let channel = (await this.channelService.getChannel(this.activeChannelId)).data() as Channel;
+      console.log("Channel ist:" , channel);
       let message = new Message({ messageId: '', creatorId: this.loggedUser(), creationDate: new Timestamp(now, 0), text: this.collectedContent });
       await this.channelService.setMessage(message, channel);
       var element = document.getElementsByClassName("ql-editor");
