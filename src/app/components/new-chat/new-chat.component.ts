@@ -11,6 +11,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 })
 export class NewChatComponent implements OnDestroy {
   allUsers: Array<any> = [];
+  filtredUsers: Array<any> = []; 
   addedUsers: Array<any> = [];
 
   // Subscriptions
@@ -27,8 +28,8 @@ export class NewChatComponent implements OnDestroy {
 
 
   ngOnDestroy(): void {
-    this.userSub.unsubscribe();
-    this.userSub2.unsubscribe();
+    // this.userSub.unsubscribe();
+    // this.userSub2.unsubscribe();
   }
 
   /**
@@ -38,6 +39,7 @@ export class NewChatComponent implements OnDestroy {
   getAllUsers() {
     this.userSub = this.userService.users$.subscribe(data => {
       this.allUsers = this.removeCurrentUser(data);
+      this.filtredUsers = this.removeCurrentUser(data);
     });
   }
 
@@ -82,11 +84,12 @@ export class NewChatComponent implements OnDestroy {
   }
 
   onInput(event: any) {
+    this.filtredUsers = [];
     this.allUsers.forEach((e: any) => {
       const name = e.displayName.toLowerCase();
       const input = event.target.value.toLowerCase();
       if (name.includes(input)) {
-        this.allUsers.push(e);
+        this.filtredUsers.push(e);
       }
     });
   }
@@ -103,6 +106,7 @@ export class NewChatComponent implements OnDestroy {
         this.chatService.updateUserChatData(chatId);
       } else this.chatService.setUserChatData(chatId);
       this.chatService.setChatData(chatId, users);
+      this.chatService.setOtherUserChatData(chatId, users);
       this.addedUsers = [];
     } else this.snackBar.open("Add atleast one member to chat", "OK", {
       duration: 5000,
