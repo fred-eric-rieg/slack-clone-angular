@@ -110,8 +110,13 @@ export class ChannelService {
     );
   }
 
-
+  /**
+   * Main function for refreshing data from Local Storage or Firestore.
+   * @param channelId as string.
+   * @param whoIsAsking as string.
+   */
   async refreshChannelData(channelId: string, whoIsAsking: string) {
+    // 1) Wenn im LocalStorage bereits ein Channel exisistiert und der Channel danach fragt, dann wird der LS geladen
     console.log("Who is asking: ", whoIsAsking);
     if (localStorage.getItem(channelId) != channelId && whoIsAsking == 'channelIsAsking') {
       console.log("Channel is asking for first time refresh")
@@ -125,10 +130,12 @@ export class ChannelService {
         localStorage.setItem('threads/' + channelId, JSON.stringify([]));
         localStorage.setItem('messages/' + channelId, JSON.stringify([]));
       }
+    // 2) Wenn im LocalStorage noch kein Channel exisistiert und der Channel danach fragt, dann wird die Datenbank abgefragt
     } else if (localStorage.getItem(channelId) == channelId && whoIsAsking == 'channelIsAsking') {
       console.log("Channel is asking for refresh")
       this.threads = JSON.parse(localStorage.getItem('threads/' + channelId) || '[]').map((thread: Thread) => new Thread(thread).toJSON());
       this.messages = JSON.parse(localStorage.getItem('messages/' + channelId) || '[]').map((message: Message) => new Message(message).toJSON());
+    // 3) Wenn der ChannelService selbst nachfragt, dann wird immer die Datenbank abgefragt (wegen new Channel bzw. modified Channel)
     } else if (whoIsAsking == 'channelServiceIsAksing') {
       console.log("Refreshing because of new or modified channel in: ", channelId);
       localStorage.setItem(channelId, channelId);
