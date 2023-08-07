@@ -1,30 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, getDocs, onSnapshot, query, setDoc, where } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, getDoc, getDocs, onSnapshot, query, setDoc, where } from '@angular/fire/firestore';
 import { Observable, map } from 'rxjs';
-import { Channel } from 'src/models/channel.class';
-import { ThreadService } from './thread.service';
-import { MessageService } from './message.service';
 import { Unsubscribe } from '@angular/fire/auth';
+
+import { Channel } from 'src/models/channel.class';
+import { Message } from 'src/models/message.class';
+import { Thread } from 'src/models/thread.class';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChannelService {
 
-  private channelCollection = collection(this.firestore, 'channels');
-  allChannels$ = collectionData(this.channelCollection) as Observable<Channel[]>;
+  private threadRef = collection(this.firestore, 'threads');
+  private messageRef = collection(this.firestore, 'messages');
+  private channelRef = collection(this.firestore, 'channels');
+  allChannels$ = collectionData(this.channelRef) as Observable<Channel[]>;
+
+  threads: Thread[] = [];
+  messages: Message[] = [];
+
+  channelId!: string;
 
 
   // Setting up the query to listen for changes in the user collection.
-  private q = query(this.channelCollection);
+  private q = query(this.channelRef);
   unsubscribe!: Unsubscribe;
 
 
   constructor(
     private firestore: Firestore,
-    private threadService: ThreadService,
-    private messageService: MessageService
-  ) { }
+  ) {
+    this.startListening();
+  }
 
   /**
   * Subscribes to the channel collection and listens for changes.
@@ -76,57 +84,110 @@ export class ChannelService {
     // Wriite code to remove channel from allChannels$ Observable.
   }
 
-
-  async getChannel(channelId: string) {
-    let q = query(this.channelCollection, where('channelId', '==', channelId));
-    return getDocs(q);
-  }
-
   /**
-   * Subscribes to all channels and returns the channel that includes the threadId.
-   * @param threadId as string.
-   * @returns a channel that includes the threadId.
+   * Sets the active channelId.
+   * @param channelId as string.
    */
-  getChannelViaThread(threadId: string) {
-    let channel: Channel = new Channel();
-
-    this.allChannels$.subscribe(channels => {
-      channel = channels.filter(channel => channel.threads.includes(threadId))[0];
-    }
-    );
-
-    return channel;
-  }
-
-  /**
-   * Updates the channel in the database.
-   * @param channel as Channel.
-   */
-  async updateChannel(channel: Channel) {
-    const channelDocument = doc(this.channelCollection, channel.channelId);
-
-    setDoc(channelDocument, channel.toJSON()).then(() => {
-      console.log('Channel updated successfully!');
-    }).catch((error: any) => {
-      console.log(error);
-    }
-    );
+  setChannelId(channelId: string) {
+    this.channelId = channelId;
   }
 
   /**
    * Creates a new channel in the database.
-   * @param channel as Channel.
+   * @param channelName as string.
    */
-  async createNewChannel(channel: Channel) {
-    const channelDocument = doc(this.channelCollection);
+  async setChannel(channelName: string) {
+    let channel = new Channel({ name: channelName });
+    const docRef = doc(this.channelRef);
 
-    channel.channelId = channelDocument.id;
+    channel.channelId = docRef.id;
 
-    setDoc(channelDocument, channel.toJSON()).then(() => {
-      console.log('Channel created successfully!');
-    }).catch((error: any) => {
-      console.log(error);
+    setDoc(docRef, channel.toJSON()).then(() => {
+      console.log('Document written with ID: ', docRef.id);
+    }).catch((error) => {
+      console.error('Error adding document: ', error);
     }
     );
+  }
+
+
+  async refreshChannelData(channelId: string, whoIsAsking: string) {
+    // 1) Check if channelId is already in localStorage
+    if (localStorage.getItem('channelId') != channelId && whoIsAsking == 'channelIsAskingForRefresh') {
+      localStorage.setItem(channelId, channelId);
+      console.log("Refreshing data for channel: ", channelId);
+      let channel = (await this.getChannel(channelId)).data() as Channel;
+      this.threads = (await this.getThreads(channel.threads)).docs.map(doc => doc.data() as Thread).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+      localStorage.setItem('threads/' + channelId, JSON.stringify(this.threads));
+    } else if (localStorage.getItem('channelId') == channelId && whoIsAsking == 'channelIsAskingForRefresh') {
+      this.threads = JSON.parse(localStorage.getItem('threads/' + channelId) || '[]').map((thread: Thread) => new Thread(thread).toJSON());
+      this.messages = JSON.parse(localStorage.getItem('messages/' + channelId) || '[]').map((message: Message) => new Message(message).toJSON());
+    } else if (whoIsAsking == 'channelServiceIsAksing') {
+      console.log("Refreshing because of new or modified channel in: ", channelId);
+      localStorage.setItem(channelId, channelId);
+      let channel = (await this.getChannel(channelId)).data() as Channel;
+      this.threads = (await this.getThreads(channel.threads)).docs.map(doc => doc.data() as Thread).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+      localStorage.setItem('threads/' + channelId, JSON.stringify(this.threads));
+    }
+  }
+
+
+  async getChannel(channelId: string) {
+    const docRef = doc(this.channelRef, 'channels/' + channelId);
+    return getDoc(docRef);
+  }
+
+
+  async getThreads(threadIds: string[]) {
+    const q = query(this.threadRef, where('id', 'in', threadIds));
+    await this.getMessages((await getDocs(q)).docs.map(doc => doc.data() as Thread).map(thread => thread.messages).flat());
+    return getDocs(q);
+  }
+
+
+  async getMessages(messageIds: string[]) {
+    const q = query(this.messageRef, where('id', 'in', messageIds));
+    this.messages = (await getDocs(q)).docs.map(doc => doc.data() as Message).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+    localStorage.setItem('messages/' + this.channelId, JSON.stringify(this.messages));
+    return getDocs(q);
+  }
+
+
+  async setMessage(message: Message, channel?: Channel, thread?: Thread) {
+    console.log("Writing message: ", message);
+    const docRef = doc(this.messageRef);
+    message.messageId = docRef.id;
+
+    setDoc(docRef, message.toJSON()).then(() => {
+      console.log('Message written with ID: ', docRef.id);
+      channel ? this.setThread(new Thread({ messages: [message.messageId] }), channel) : null; // If the message is created inside a channel, create a thread for it
+      //thread ? this.addMessageToThread(message.id, thread) : null; // If the message is created inside a thread, add it to the thread
+    }).catch((error) => {
+      console.error('Error adding document: ', error);
+    });
+  }
+
+
+  async setThread(thread: Thread, channel?: Channel) {
+    console.log("Writing thread: ", new Thread(thread));
+    const docRef = doc(this.threadRef);
+    thread.threadId = docRef.id;
+
+    setDoc(docRef, thread.toJSON()).then(() => {
+      console.log('Thread written with ID: ', docRef.id);
+      channel ? this.addThreadToChannel(thread.threadId, channel) : null; // If the thread is created inside a channel, add it to the channel
+    }).catch((error) => {
+      console.error('Error adding document: ', error);
+    });
+  }
+
+
+  async addThreadToChannel(threadId: string, channel: Channel) {
+    const docRef = doc(this.firestore, 'channels/' + channel.channelId);
+    setDoc(docRef, { threads: [...channel.threads, threadId] }, { merge: true }).then(() => {
+      console.log('Thread added to Channel: ', channel.name);
+    }).catch((error) => {
+      console.error('Error adding document: ', error);
+    });
   }
 }

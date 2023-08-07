@@ -162,21 +162,6 @@ export class UserService {
   }
 
 
-  async getCompleteCurrentUser() {
-    const auth = getAuth();
-    return new Promise((resolve, reject) => {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          this.activeUser = new User(user);
-          resolve(this.activeUser);
-        } else {
-          reject(new Error("User is not logged in."))
-        }
-      })
-    })
-  }
-
-
   getUserData(userId: string) {
     const docRef = doc(this.userCollection, userId);
     return docData(docRef);

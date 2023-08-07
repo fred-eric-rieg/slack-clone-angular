@@ -63,20 +63,20 @@ export class ChannelComponent implements OnInit, OnDestroy {
   // Variables
   data$: Observable<{ channels: Channel[]; users: User[] }> = combineLatest(
     [this.channelService.allChannels$, this.userService.allUsers$])
-    .pipe(map(([channels, users]) => ({ channels, users })));
-  activeChannel!: Channel;
+    .pipe(map(([channels, users]) => ({ channels, users }))
+  );
+
   activeChannelId!: string;
   threads!: Thread[];
   messages!: Message[];
   placeholder = 'Type your message here...';
+
 
   // Subscriptions
   paramsSub!: Subscription;
 
 
   constructor(
-    private messageService: MessageService,
-    private threadService: ThreadService,
     private channelService: ChannelService,
     private userService: UserService,
     private route: ActivatedRoute,
@@ -87,7 +87,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
     console.log('ChannelComponent initialized');
     this.paramsSub = this.route.params.subscribe(params => {
       this.activeChannelId = params['id'];
-      this.loadThreads();
+      this.channelService.refreshChannelData(this.activeChannelId, 'channelIsAsking');
+      this.channelService.setChannelId(this.activeChannelId);
     });
   }
 
@@ -99,15 +100,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.paramsSub.unsubscribe();
   }
 
-
-  async loadThreads() {
-    console.log('loadThreads');
-    await this.channelService.getChannel(this.activeChannelId).then(data => {
-      this.activeChannel = new Channel(data.docs[0].data());
-    });
-    console.log('Active channel set: ', this.activeChannel);
-    this.threadService.loadThreads(this.activeChannel.threads);
-  }
 
   /**
    * Calls the channelService to update the query to the specified channel.
@@ -130,10 +122,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
   async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
+      let channel = (await this.channelService.getChannel(this.activeChannelId)).data() as Channel;
       let message = new Message({ messageId: '', creatorId: this.loggedUser(), creationDate: new Timestamp(now, 0), text: this.collectedContent });
-      let messageId = await this.messageService.createMessage(message); // Create message
-      let threadId = await this.threadService.createThread(messageId); // Create thread and add message
-      await this.channelService.updateChannel(this.attachThreadToChannel(threadId)); // Update Channel
+      await this.channelService.setMessage(message, channel);
       var element = document.getElementsByClassName("ql-editor");
       element[0].innerHTML = "";
       this.scrollDown(); // Scroll down to the latest message
@@ -145,19 +136,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
     }, 500);
-  }
-
-  /**
-   * Attaches a thread to a copy of the active channel.
-   * @param threadId as string.
-   * @returns channel with the attached thread.
-   */
-  attachThreadToChannel(threadId: string) {
-    console.log('attachThreadToChannel');
-    console.log("threadID: ", threadId)
-    this.activeChannel.threads.push(threadId);
-    console.log("threadId added to CHannel: ", this.activeChannel)
-    return this.activeChannel;
   }
 
   /**

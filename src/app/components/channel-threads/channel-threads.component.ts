@@ -52,7 +52,7 @@ export class ChannelThreadsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
   ) {
     // Get snapshot of all users.
-    this.usersSub = this.userService.users$.subscribe((users: User[]) => {
+    this.usersSub = this.userService.allUsers$.subscribe((users: User[]) => {
       this.allUsers = users;
     });
   }
@@ -105,9 +105,9 @@ export class ChannelThreadsComponent implements OnInit, OnDestroy {
     console.log('Loading messages:', this.messageIds);
 
     this.messageService.loadThreadMessages(this.messageIds).then((querySnapshot) => {
-      this.messages = querySnapshot.docs.map((doc) => {
+      /**this.messages = querySnapshot.docs.map((doc) => {
         return doc.data() as Message;
-      });
+      });*/
       this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
 
       // Loading all users in the thread
