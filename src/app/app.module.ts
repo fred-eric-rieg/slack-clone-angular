@@ -72,6 +72,7 @@ import { ChannelUsersComponent } from './components/channel-users/channel-users.
 import { DescriptionComponent } from './components/channels/description/description.component';
 import { HeaderComponent } from './components/channels/header/header.component';
 import { MessagesComponent } from './components/channels/messages/messages.component';
+import { ThreadsComponent } from './components/channels/threads/threads.component';
 
 
 @NgModule({
@@ -106,6 +107,7 @@ import { MessagesComponent } from './components/channels/messages/messages.compo
     DescriptionComponent,
     HeaderComponent,
     MessagesComponent,
+    ThreadsComponent,
   ],
   imports: [
     BrowserModule,

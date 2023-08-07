@@ -36,6 +36,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   // Subscriptions
   paramsSub!: Subscription;
+  channelSub!: Subscription;
 
   config = {
     toolbar: [
@@ -85,9 +86,10 @@ export class ThreadComponent implements OnInit, OnDestroy {
       if (params['id']) {
         this.threadId = params['id'];
 
-        // Loading the channel
-        this.channel = this.channelService.getChannelViaThread(params['id']);
-
+        this.channelSub = this.channelService.allChannels$.subscribe(channels => {
+          this.channel = channels.filter(channel => channel.threads.includes(this.threadId))[0];
+        }
+        );
       }
     });
   }
@@ -95,6 +97,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('ThreadComponent destroyed');
+    this.channelSub.unsubscribe();
     this.paramsSub.unsubscribe();
   }
 

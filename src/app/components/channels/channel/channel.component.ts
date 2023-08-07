@@ -101,19 +101,12 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
 
   async loadThreads() {
+    console.log('loadThreads');
     await this.channelService.getChannel(this.activeChannelId).then(data => {
       this.activeChannel = new Channel(data.docs[0].data());
     });
     console.log('Active channel set: ', this.activeChannel);
-    await this.threadService.loadThreads(this.activeChannel.threads).then(data => {
-      data.docs.map(doc => {
-        let thread = new Thread(doc.data());
-        this.messageService.loadThreadMessages(thread.messages);
-        this.threadService.channelThreads$.pipe(map(threads => {
-          return [...threads, thread];
-        }));
-      });
-    });
+    this.threadService.loadThreads(this.activeChannel.threads);
   }
 
   /**
@@ -137,7 +130,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
-      let message = new Message({ messageId: '', creatorId: this.loggedUser(), crationDate: new Timestamp(now, 0), text: this.collectedContent });
+      let message = new Message({ messageId: '', creatorId: this.loggedUser(), creationDate: new Timestamp(now, 0), text: this.collectedContent });
       let messageId = await this.messageService.createMessage(message); // Create message
       let threadId = await this.threadService.createThread(messageId); // Create thread and add message
       await this.channelService.updateChannel(this.attachThreadToChannel(threadId)); // Update Channel

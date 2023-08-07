@@ -1,60 +1,14 @@
-/**
-* Chat styles
-**/
-.chat-container {
-    box-sizing: border-box;
-    position: relative;
+img {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+}
 
-    img {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-    }
+mat-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+}
 
-    .overlay {
-        display: flex;
-        flex-direction: row;
-        position: absolute;
-        align-items: center;
-        right: 10%;
-        top: 2px;
-        border: 1px solid rgb(87, 87, 87);
-        width: fit-content;
-        height: fit-content;
-        z-index: 2;
-        opacity: 0;
-        background-color: #303030;
-
-        .btn {
-            cursor: pointer;
-
-            &:hover {
-                background-color: #424242;
-            }
-        }
-    }
-
-    .thread {
-        position: relative;
-        background-color: unset;
-        box-shadow: unset;
-        padding: 8px 10px;
-
-        &:hover {
-            background-color: #424242;
-        }
-
-        &:hover .overlay {
-            opacity: 1;
-        }
-
-        mat-card-title {
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        mat-card-content {
-            margin-left: 40px;
-        }
-    }
+mat-card-content {
+    margin-left: 40px;
 }

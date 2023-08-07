@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
 import { Observable, map } from 'rxjs';
 import { Thread } from 'src/models/thread.class';
 
@@ -20,8 +20,16 @@ export class ThreadService {
 
   loadThreads(threads: string[]) {
     console.log('Thread Service received threads: ', threads);
-    const q = query(this.threadCollection, where('threadId', 'in', threads));
-    return getDocs(q);
+    if (threads.length > 0) {
+      const q = query(this.threadCollection, where('threadId', 'in', threads));
+      this.channelThreads$ = collectionData(q).pipe(map(threads => {
+        return threads.map(thread => {
+          return new Thread(thread);
+        })
+      }));
+    } else {
+      this.channelThreads$ = new Observable<Thread[]>();
+    }
   }
 
 

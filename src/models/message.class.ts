@@ -7,10 +7,10 @@ export class Message {
     text: string = '';
 
     constructor(obj?: any) {
-        this.messageId = obj && obj.messageId;
-        this.creatorId = obj && obj.creatorId;
-        this.creationDate = obj && obj.creationDate;
-        this.text = obj && obj.text;
+        this.messageId = obj && obj.messageId || '';
+        this.creatorId = obj && obj.creatorId || '';
+        this.creationDate = obj && obj.creationDate || Timestamp.now();
+        this.text = obj && obj.text || '';
     }
 
 

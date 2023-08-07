@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, setDoc, query, where, collectionData, getDocs } from '@angular/fire/firestore';
+import { Firestore, collection, doc, setDoc, query, where, collectionData, getDocs, docData } from '@angular/fire/firestore';
 import { Observable, map } from 'rxjs';
 import { Message } from 'src/models/message.class';
 
@@ -32,6 +32,15 @@ export class MessageService {
         return new Message(message);
       })
     }));
+  }
+
+
+  async loadSingleMessage(messageId: string) {
+    const q = query(this.messageCollection, where('messageId', 'in', [messageId]));
+
+    return getDocs(q).then((data) => {
+      return data.docs[0].data();
+    });
   }
 
   /**
