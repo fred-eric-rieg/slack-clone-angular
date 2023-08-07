@@ -1,32 +1,20 @@
-import { OnInit } from '@angular/core';
-import { Component } from '@angular/core';
-import { SearchService } from 'src/app/shared/services/search.service';
-
-
-import { CollectionReference, DocumentData, Firestore, Timestamp, collection, getDocs } from '@angular/fire/firestore';
-import { DialogAddDescriptionComponent } from '../dialog-add-description/dialog-add-description.component';
-import { MatDialog } from '@angular/material/dialog';
-import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill/public-api';
-import 'quill-emoji/dist/quill-emoji.js';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { getAuth } from '@angular/fire/auth';
+import { ActivatedRoute } from '@angular/router';
 
 // Models
 import { Message } from 'src/models/message.class';
 import { User } from 'src/models/user.class';
-
-// Services
-import { MessageService } from 'src/app/shared/services/message.service';
-import { ChannelService } from 'src/app/shared/services/channel.service';
-import { ThreadService } from 'src/app/shared/services/thread.service';
-import { UserService } from 'src/app/shared/services/user.service';
 import { Channel } from 'src/models/channel.class';
 import { Thread } from 'src/models/thread.class';
-import { getAuth } from '@angular/fire/auth';
-import { Subject, take, takeUntil } from 'rxjs';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DialogAddPeopleComponent } from '../dialog-add-people/dialog-add-people.component';
-import { DialogViewPeopleComponent } from '../dialog-view-people/dialog-view-people.component';
-import { ChatService } from 'src/app/shared/services/chat.service';
-import { Chat } from 'src/models/chat.class';
+
+// Services + Subscription
+import { UserService } from 'src/app/shared/services/user.service';
+import { SearchService } from 'src/app/shared/services/search.service';
+import { ChannelService } from 'src/app/shared/services/channel.service';
+import { ThreadService } from 'src/app/shared/services/thread.service';
+import { MessageService } from 'src/app/shared/services/message.service';
 
 
 @Component({
@@ -34,229 +22,108 @@ import { Chat } from 'src/models/chat.class';
   templateUrl: './channel-threads.component.html',
   styleUrls: ['./channel-threads.component.scss']
 })
-export class ChannelThreadsComponent implements OnInit {
-
+export class ChannelThreadsComponent implements OnInit, OnDestroy {
   user = new User();
-  allUsers: User[] = [];
+  users: User[] = [];
+  allUsers!: User[];
+
+  thread!: Thread;
+  threadId!: string;
+  allThreads!: Thread[];
+
+  messageIds!: string[];
+  messages!: Message[];
+  channel!: Channel;
+
   searchResults!: string[];
-  //messages!: Message[];
 
-  private msgCollection!: CollectionReference<DocumentData>;
-  chatId: string = '';
-  memberIds: Array<string> = [];
-  members: Array<string> = [];
-  messageIds: any = [];
-  messages: Array<any> = [];
-  isLoading: boolean = true;
-
-  collectedContent!: any;
-  placeholder = 'Type your message here...';
-
-  test = [1, 2];
-
-  chatObj = {
-    chatId: "",
-    creationDate: Timestamp.now(),
-    members: [],
-    messages: [],
-  };
-
-  chat = new Chat(this.chatObj);
-
-  config = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['code-block'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['emoji'],
-      ['link'],
-      ['image'],
-    ],
-    'emoji-toolbar': true,
-    'emoji-textarea': false,
-    'emoji-shortname': true,
-    keyboard: {
-      bindings: {
-        short_enter: {
-          key: 13,
-          shortKey: true,
-          handler: () => {
-            this.sendMessage();
-          },
-        },
-      },
-    },
-  };
-
-
+  // Subscriptions
+  paramsSub!: Subscription;
+  usersSub!: Subscription;
+  searchSub!: Subscription;
 
 
   constructor(
+    private userService: UserService,
     private searchService: SearchService,
-    private route: ActivatedRoute,
-    private chatService: ChatService,
-    public userService: UserService,
+    private threadService: ThreadService,
     private messageService: MessageService,
-    private fs: Firestore
+    private channelService: ChannelService,
+    private route: ActivatedRoute,
   ) {
-    this.msgCollection = collection(this.fs, 'messages');
+    // Get snapshot of all users.
+    this.usersSub = this.userService.users$.subscribe((users: User[]) => {
+      this.allUsers = users;
+    });
   }
 
 
-  async ngOnInit(): Promise<any> {
-    this.allUsers = await this.getAllUsers();
-    this.route.params.subscribe((params) => {
-      this.isLoading = true;
-      this.resetAllVariables();
-      this.chatId = params['id'];
-      this.chat.chatId = this.chatId;
-      this.chatService.returnChatData(this.chatId).subscribe(data => {
-        this.memberIds.push(...data['members']);
-        this.messageIds.push(...data['messages']);
-        this.chat.members.push(...data['members']);
-      })
-      this.getMemberNames();
-      this.getAllMessages().then((msgs) => {
-        this.chatService.returnQueryChatData(this.chatId)
-          .then((chatMsgs: any) => {
-            msgs.forEach((msg: any) => {
-              if (chatMsgs[0]['messages'].includes(msg.messageId)) {
-                this.messages.push(msg);
-              }
-            });
-            this.sortMessagesByDate();
-          });
+  ngOnInit(): void {
+    // Loading the logged user
+    this.userService.getSingleUserSnapshot(this.loggedUser()).then((onSnapshot) => {
+      this.users.push(onSnapshot.data() as User);
+    });
+
+    this.paramsSub = this.route.params.subscribe(async (params) => {
+      if (params['id']) {
+        this.threadId = params['id'];
+
+        // Loading the channel
+        this.channel = this.channelService.getChannelViaThread(params['id']);
+
+        this.loadThread(params['id']);
+      }
+    });
+
+      // Search filter (import from searchService)
+      this.searchResults = this.searchService.getSearchResults();
+      this.searchSub = this.searchService.searchResultsChanged.subscribe((results: string[]) => {
+        this.searchResults = results;
+      });
+  }
+
+
+  ngOnDestroy(): void {
+    console.log('ThreadComponent destroyed');
+    this.paramsSub.unsubscribe();
+  }
+
+
+  async loadThread(threadId: string) {
+    console.log('Loading thread:', threadId);
+
+    this.threadService.loadChannelThreads([threadId]).then(thread => {
+      this.thread = thread.docs[0].data() as Thread;
+      this.messageIds = thread.docs[0].data()['messages'];
+
+      this.loadMessages();
+    });
+  }
+
+
+  async loadMessages() {
+    console.log('Loading messages:', this.messageIds);
+
+    this.messageService.loadThreadMessages(this.messageIds).then((querySnapshot) => {
+      this.messages = querySnapshot.docs.map((doc) => {
+        return doc.data() as Message;
+      });
+      this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+
+      // Loading all users in the thread
+      this.userService.getAllUsersThreadSnapshot(this.messages.map(message => message.creatorId)).then((querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
+          this.users.push(doc.data() as User);
         });
-        // Cheat
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 600);
-    });
-
-    /*
-    this.searchResults = this.searchService.getSearchResults();
-    this.searchService.searchResultsChanged.subscribe((results: string[]) => {
-      this.searchResults = results;
-    });
-    */
-  }
-
-
-  /**
-   * Querysnapshot of all users in the database
-   * @returns all users from the database
-   */
-  async getAllUsers() {
-    const allUsers: any = [];
-    const qSnap = await this.userService.users$.subscribe(data => {
-      data.forEach((user: any) => {
-        allUsers.push(user);
       });
     });
-    return allUsers;
-  }
-
-  resetAllVariables() {
-    //this.allUsers = [];
-    this.chatId = '';
-    this.memberIds = [];
-    this.members = [];
-    this.messageIds = [];
-    this.messages = [];
   }
 
 
   /**
-   * get all members of the chat
-   * and push them into the members array
+   * Returns either the logged user or a default user id.
+   * @returns the logged user id.
    */
-  getMemberNames() {
-    setTimeout(() => {
-      this.memberIds.forEach((user: any) => {
-        this.userService.getUserData(user)
-          .pipe(take(1))
-          .subscribe((user) => {
-            this.members.push(user['displayName']);
-          })
-      })
-      this.members.shift();
-    }, 600)
-  }
-
-  async getAllMessages() {
-    const allMessages: any = [];
-    const querySnapshot = await getDocs(this.msgCollection);
-    querySnapshot.forEach((doc) => {
-      allMessages.push(doc.data());
-    })
-    return allMessages;
-
-  }
-
-  formatDateTime(timestamp: any) {
-    let date = new Date(timestamp.seconds * 1000);
-    let hours = date.getHours() % 12 || 12;
-    let minutes = date.getMinutes().toLocaleString();
-    if (minutes.length == 1) {
-      minutes = 0 + minutes;
-    }
-    return `${hours}:${minutes} ${date.getHours() >= 12 ? 'PM' : 'AM'}`;
-  }
-
-  /**
-   * Sorts the messages by date.
-   */
-  sortMessagesByDate() {
-    this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
-  }
-
-
-  /**
-   * get the username of the user
-   * @param userId as string
-   * @returns username of the user
-   */
-  getChatUserName(userId: string) {
-    let name = '';
-    this.allUsers.forEach((user: any) => {
-      if (user.userId === userId) {
-        name = user.displayName
-      }
-    });
-    return name;
-  }
-
-  /**
-   * get the profile picture of the user
-   * @param userId as string
-   * @returns the profile image url of the user
-   */
-  getChatUserImage(userId: string) {
-    let img = '';
-    this.allUsers.forEach((user: any) => {
-      if (user.userId === userId) {
-        img = user.profilePicture
-      }
-    });
-    return img;
-  }
-
-  /**
-   * Sends a message to the database.
-   */
-  sendMessage() {
-    if (this.collectedContent != null && this.collectedContent != '') {
-      let now = new Date().getTime() / 1000;
-      let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
-      //let messageId = this.messageService.createMessage(message);
-      //this.chatService.addMessageToChat(this.chat, messageId);
-    }
-  }
-
-  /**
-  * Returns either the logged user or a default user id.
-  * @returns the logged user id.
-  */
   loggedUser() {
     const auth = getAuth();
     if (auth.currentUser) {
@@ -266,13 +133,24 @@ export class ChannelThreadsComponent implements OnInit {
     }
   }
 
+
   /**
- * Filles collectedContent with the current content in the editor.
- * @param event
- */
-  async collectContent(event: EditorChangeContent | EditorChangeSelection) {
-    if (event.event === 'text-change') {
-      this.collectedContent = event.html;
+   * Finds the user displayName by the user id.
+   * @param userId as string.
+   * @returns a string with the user displayName.
+   */
+  getUserName(userId: string) {
+    for (let i = 0; i < this.users.length; i++) {
+      if (this.users[i].userId === userId) {
+        return this.users[i].displayName;
+      }
     }
+    return 'Unknown';
+  }
+
+
+  getUserProfile(message: Message) {
+    let user = this.users.find(user => user.userId === message.creatorId);
+    return user?.profilePicture != '' ? user?.profilePicture : '/../../assets/img/profile.png';
   }
 }

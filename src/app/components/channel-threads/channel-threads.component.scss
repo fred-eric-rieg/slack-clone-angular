@@ -3,3 +3,15 @@
   position: relative;
   height: calc(100vh - 64px);
 }
+
+
+.chat-container {
+  box-sizing: border-box;
+  position: relative;
+
+  img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+  }
+}

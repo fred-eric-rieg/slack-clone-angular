@@ -21,7 +21,7 @@ const routes: Routes = [
       { path: 'channel/:id', component: ChannelComponent, canActivate: [AuthGuard] },
       { path: 'channel-threads', component: ChannelThreadsComponent, canActivate: [AuthGuard] },
       { path: 'channel-users', component: ChannelUsersComponent, canActivate: [AuthGuard] },
-      { path: 'user/:id', component: DialogUserComponent, canActivate: [AuthGuard] }, // Brauchen wir das noch?
+      { path: 'user/:id', component: DialogUserComponent, canActivate: [AuthGuard] },
       { path: 'chat/:id', component: DirectMessageChannelComponent, canActivate: [AuthGuard] },
       { path: 'create-chat', component: NewChatComponent, canActivate: [AuthGuard] },
       { path: 'thread/:id', component: ThreadComponent, canActivate: [AuthGuard] }
@@ -31,7 +31,6 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'sign-up', component: SignUpComponent },
   { path: 'dashboard/channel', component: ChannelComponent, canActivate: [AuthGuard] }, // Brauchen wir das noch?
-  { path: 'user/:id', component: DialogUserComponent, canActivate: [AuthGuard]}, // Brauchen wir das noch?
 ];
 
 @NgModule({
