@@ -25,7 +25,7 @@ export class ChannelUsersComponent implements OnInit, OnDestroy {
     private searchService: SearchService
   ) {
     // Get snapshot of all users.
-    this.usersSub = this.userService.users$.subscribe((users: User[]) => {
+    this.usersSub = this.userService.allUsers$.subscribe((users: User[]) => {
       this.allUsers = users;
     });
   }

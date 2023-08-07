@@ -52,7 +52,7 @@ export class UploadService {
 
           this.userService.getCurrentUser().then((userId: any) => {
 
-            let userSub = this.userService.users$.subscribe((users: any) => {
+            let userSub = this.userService.allUsers$.subscribe((users: any) => {
 
               users.forEach((user: any) => {
                 if (user.userId === userId) {

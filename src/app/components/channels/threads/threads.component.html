@@ -1,0 +1,14 @@
+<!-- Every message is rendered here -->
+<div class="chat-container">
+
+    <div *ngFor="let thread of threads$| async">
+
+        <mat-card class="thread" [routerLink]="openThread(thread)">
+            {{ thread.creationDate.toDate() | date : "EEE, dd. MMMM yy" }} at 
+            {{ thread.creationDate.toDate() | date : "h:mm a" }}
+            {{ thread.messages[0]}}
+            <!--<app-messages [users]="users" [message]="thread.messages[0]" [thread]="thread"></app-messages>-->
+        </mat-card>
+
+    </div>
+</div>

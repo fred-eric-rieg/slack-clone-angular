@@ -1,0 +1,42 @@
+.sticky-header {
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 8px 10px;
+    height: 61px;
+    background: #303030;
+    border-bottom: 1px solid rgb(87, 87, 87);
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .align-profiles {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        gap: 0.1rem;
+    }
+
+    .counter {
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .mini-profile {
+        display: flex;
+        align-items: center;
+        width: 32px;
+        height: 32px;
+    }
+
+    .hover {
+        border-radius: 10px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #565555;
+        }
+    }
+}

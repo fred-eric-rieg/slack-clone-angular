@@ -3,7 +3,7 @@ import { getAuth } from '@angular/fire/auth';
 import { Timestamp } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { ThreadService } from 'src/app/shared/services/thread.service';
@@ -23,6 +23,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   @ViewChild('chatContainer') chatContainer!: ElementRef;
 
+  messages$!: Observable<Message[]>;
+
   collectedContent!: any;
 
   users: User[] = [];
@@ -34,6 +36,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   // Subscriptions
   paramsSub!: Subscription;
+  channelSub!: Subscription;
 
   config = {
     toolbar: [
@@ -83,10 +86,10 @@ export class ThreadComponent implements OnInit, OnDestroy {
       if (params['id']) {
         this.threadId = params['id'];
 
-        // Loading the channel
-        this.channel = this.channelService.getChannelViaThread(params['id']);
-
-        this.loadThread(params['id']);
+        this.channelSub = this.channelService.allChannels$.subscribe(channels => {
+          this.channel = channels.filter(channel => channel.threads.includes(this.threadId))[0];
+        }
+        );
       }
     });
   }
@@ -94,6 +97,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('ThreadComponent destroyed');
+    this.channelSub.unsubscribe();
     this.paramsSub.unsubscribe();
   }
 
@@ -109,19 +113,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
 
   async loadMessages() {
-    this.messageService.loadThreadMessages(this.messageIds).then((querySnapshot) => {
-      this.messages = querySnapshot.docs.map((doc) => {
-        return doc.data() as Message;
-      });
-      this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
-
-      // Loading all users in the thread
-      this.userService.getAllUsersThreadSnapshot(this.messages.map(message => message.creatorId)).then((querySnapshot) => {
-        querySnapshot.docs.forEach((doc) => {
-          this.users.push(doc.data() as User);
-        });
-      });
-    });
+    
   }
 
   /**
@@ -136,12 +128,11 @@ export class ThreadComponent implements OnInit, OnDestroy {
   async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
-      let message = new Message('', this.loggedUser(), new Timestamp(now, 0), this.collectedContent);
+      let message = new Message({messageId: '', creatorId: this.loggedUser(), crationDate: new Timestamp(now, 0), text: this.collectedContent});
       let messageId = await this.messageService.createMessage(message); // Create message
       await this.threadService.addMessageToThread(this.thread, messageId); // Create thread and add message
       var element = document.getElementsByClassName("ql-editor");
       element[0].innerHTML = "";
-      await this.loadThread(this.threadId); // Reload thread
       this.scrollDown(); // Scroll down to lates message
     }
   }

@@ -1,0 +1,19 @@
+<div class="sticky-header" *ngIf="channel && users">
+    # {{ channel.name }}
+
+    <div *ngIf="getMembers(channel).length == 1" class="hover" (click)="openViewPeopleDialog()">
+        <img class="mini-profile" src="{{ getUserProfileAlt(0, channel) }}" alt="small profile picture">
+    </div>
+    <div *ngIf="getMembers(channel).length > 1  && getMembers(channel)!.length < 4" class="align-profiles hover"
+        (click)="openViewPeopleDialog()">
+        <div *ngFor="let member of channel.members; let i = index">
+            <img class="mini-profile" src="{{ getUserProfileAlt(i, channel) }}" alt="small profile picture">
+        </div>
+    </div>
+    <div *ngIf="getMembers(channel).length >= 4" class="align-profiles hover" (click)="openViewPeopleDialog()">
+        <img class="mini-profile" src="{{ getUserProfileAlt(0, channel) }}" alt="small profile picture">
+        <img class="mini-profile" src="{{ getUserProfileAlt(1, channel) }}" alt="small profile picture">
+        <img class="mini-profile" src="{{ getUserProfileAlt(2, channel) }}" alt="small profile picture">
+        <p class="counter">+ {{ channel.members.length - 3}}</p>
+    </div>
+</div>

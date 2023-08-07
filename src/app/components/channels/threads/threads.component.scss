@@ -1,0 +1,24 @@
+/**
+* Chat styles
+**/
+.chat-container {
+    box-sizing: border-box;
+    position: relative;
+
+
+    .thread {
+        position: relative;
+        background-color: unset;
+        box-shadow: unset;
+        padding: 8px 10px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #424242;
+        }
+
+        &:hover .overlay {
+            opacity: 1;
+        }
+    }
+}

@@ -37,7 +37,7 @@ export class NewChatComponent implements OnDestroy {
    * push whole Object to 'allUsers'
    */
   getAllUsers() {
-    this.userSub = this.userService.users$.subscribe(data => {
+    this.userSub = this.userService.allUsers$.subscribe(data => {
       this.allUsers = this.removeCurrentUser(data);
       this.filtredUsers = this.removeCurrentUser(data);
     });

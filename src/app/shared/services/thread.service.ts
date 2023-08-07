@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, collection, collectionData, doc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
+import { Observable, map } from 'rxjs';
 import { Thread } from 'src/models/thread.class';
 
 @Injectable({
@@ -8,9 +8,38 @@ import { Thread } from 'src/models/thread.class';
 })
 export class ThreadService {
 
-  allThreads!: Observable<any>;
+  private threadCollection = collection(this.firestore, 'threads');
 
-  constructor(private firestore: Firestore) {}
+  channelThreads$ = new Observable<Thread[]>();
+
+
+  constructor(
+    private firestore: Firestore,
+  ) { }
+
+
+  loadThreads(threads: string[]) {
+    console.log('Thread Service received threads: ', threads);
+    if (threads.length > 0) {
+      const q = query(this.threadCollection, where('threadId', 'in', threads));
+      this.channelThreads$ = collectionData(q).pipe(map(threads => {
+        return threads.map(thread => {
+          return new Thread(thread);
+        })
+      }));
+    } else {
+      this.channelThreads$ = new Observable<Thread[]>();
+    }
+  }
+
+
+  addThread(thread: Thread) {
+    console.log('Thread Service will add thread: ', thread);
+    this.channelThreads$.pipe(map(threads => {
+      return [...threads, thread];
+    }));
+  }
+
 
   /**
    * Creating a new thread in the database, sets the threadId to the document id
@@ -21,7 +50,7 @@ export class ThreadService {
   async createThread(messageId: string) {
     const threadCollection = collection(this.firestore, 'threads');
     const threadDocument = doc(threadCollection);
-    let thread = new Thread(threadDocument.id, [messageId])
+    let thread = new Thread({ threadId: threadDocument.id, messages: [messageId] })
 
     setDoc(threadDocument, thread.toJSON()).then(() => {
       console.log('Thread created successfully!');
@@ -46,14 +75,12 @@ export class ThreadService {
 
 
   loadAllThreads() {
-    const threadCollection = collection(this.firestore, 'threads');
-    return getDocs(threadCollection);
+    return getDocs(this.threadCollection);
   }
 
 
   loadChannelThreads(threadIds: string[]) {
-    const threadCollection = collection(this.firestore, 'threads');
-    const q = query(threadCollection, where('threadId', 'in', threadIds));
+    const q = query(this.threadCollection, where('threadId', 'in', threadIds));
     return getDocs(q);
   }
 }

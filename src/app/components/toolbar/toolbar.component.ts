@@ -7,8 +7,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { SearchService } from './../../shared/services/search.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { Subscription } from 'rxjs';
-import { set } from '@angular/fire/database';
+import { UserService } from 'src/app/shared/services/user.service';
 
 
 @Component({
@@ -21,9 +20,6 @@ export class ToolbarComponent implements OnDestroy, OnInit {
   sidenavOpen: boolean = true;
   userProfileOpen: boolean = false;
 
-  // Subscriptions
-  sidenavSub!: Subscription;
-
 
   constructor(
     public dialog: MatDialog,
@@ -31,12 +27,13 @@ export class ToolbarComponent implements OnDestroy, OnInit {
     private sidenavService: SidenavService,
     public channelService: ChannelService,
     public searchService: SearchService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) { }
 
 
   ngOnInit(): void {
-    this.sidenavSub = this.sidenavService.openSidenav.subscribe((response) => {
+    this.sidenavService.openSidenav.subscribe((response) => {
       this.sidenavOpen = response;
     });
   }
@@ -44,7 +41,6 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     console.log('ToolbarComponent destroyed');
-    this.sidenavSub.unsubscribe();
   }
 
 
@@ -88,12 +84,7 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
   logoutUser() {
     this.channelService.unsubscribe(); // Unsubscribe form Change-Listener to prevent memory leaks.
-    if (this.channelService.channelSub != undefined) {
-      this.channelService.channelSub.unsubscribe(); // Part of Change-Listener
-    }
-    if (this.channelService.channelSub2 != undefined) {
-      this.channelService.channelSub2.unsubscribe(); // Part of Change-Listener
-    }
+    this.userService.unsubscribe(); // Unsubscribe form Change-Listener to prevent memory leaks.
     this.authService.logout();
   }
 

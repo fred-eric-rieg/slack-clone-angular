@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, setDoc, getDocs, query, where } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, collection, doc, setDoc, query, where, collectionData, getDocs, docData } from '@angular/fire/firestore';
+import { Observable, map } from 'rxjs';
 import { Message } from 'src/models/message.class';
 
 @Injectable({
@@ -8,21 +8,39 @@ import { Message } from 'src/models/message.class';
 })
 export class MessageService {
 
-  messages!: Observable<any>;
+  private messageCollection = collection(this.firestore, 'messages');
 
-  constructor(private firestore: Firestore) {}
+  messages$ = new Observable<Message[]>;
 
+  constructor(
+    private firestore: Firestore,
+  ) {
 
-  loadAllMessages() {
-    const messageCollection = collection(this.firestore, 'messages');
-    return getDocs(messageCollection);
   }
 
 
-  loadThreadMessages(messageIds: string[]) {
-    const messageCollection = collection(this.firestore, 'messages');
-    const q = query(messageCollection, where('messageId', 'in', messageIds));
-    return getDocs(q);
+  loadAllMessages() {
+    return getDocs(this.messageCollection);
+  }
+
+
+  async loadThreadMessages(messageIds: string[]) {
+    console.log("Message Service received messageIds: ", messageIds);
+    let q = query(this.messageCollection, where('messageId', 'in', messageIds));
+    this.messages$ = collectionData(q).pipe(map(messages => {
+      return messages.map(message => {
+        return new Message(message);
+      })
+    }));
+  }
+
+
+  async loadSingleMessage(messageId: string) {
+    const q = query(this.messageCollection, where('messageId', 'in', [messageId]));
+
+    return getDocs(q).then((data) => {
+      return data.docs[0].data();
+    });
   }
 
   /**

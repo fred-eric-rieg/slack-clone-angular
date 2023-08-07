@@ -1,0 +1,31 @@
+<div *ngIf="data$ | async as data">
+    <div class="content-box">
+
+        <app-header [channel]="getChannel(data.channels)" [users]="data.users"></app-header>
+
+
+        <div class="scroll-wrapper" #chatContainer>
+
+            <app-description [channel]="getChannel(data.channels)" [users]="data.users"></app-description>
+
+            <app-threads [channel]="getChannel(data.channels)" [users]="data.users"></app-threads>
+
+        </div>
+
+
+        <div class="message-container">
+            <quill-editor theme="snow" (onEditorChanged)="collectContent($event)" style="height: 150px;"
+                [modules]="config" [placeholder]="placeholder">
+
+            </quill-editor>
+            <div class="message-bottom">
+                <p class="hint">Send with command/ctrl & enter.</p>
+                <button class="button-send" (click)="sendMessage()">
+                    <mat-icon matTooltip="send">send</mat-icon>
+                </button>
+            </div>
+        </div>
+        <app-dialog-user></app-dialog-user>
+
+    </div>
+</div>

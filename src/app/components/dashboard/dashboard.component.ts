@@ -1,6 +1,8 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Channel } from 'src/models/channel.class';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
+import { UserService } from 'src/app/shared/services/user.service';
+import { ChannelService } from 'src/app/shared/services/channel.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,18 +33,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
   placeholder!: string;
 
 
-  constructor(public sidenavService: SidenavService) { }
+  constructor(
+    public sidenavService: SidenavService,
+    private channelService: ChannelService,
+    private userService: UserService
+    ) { }
 
 
   ngOnInit(): void {
     this.sidenavService.openSidenav.subscribe((response) => {
       this.leftSidenavOpen = response;
     });
+    // Change Listeners must be loaded after Login otherwise no permission to query the database.
+    this.channelService.startListening();
+    this.userService.startListening();
   }
 
 
   ngOnDestroy(): void {
-    this.sidenavService.openSidenav.unsubscribe();
   }
 
 
