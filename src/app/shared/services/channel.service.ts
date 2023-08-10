@@ -116,9 +116,11 @@ export class ChannelService {
    * @param whoIsAsking as string.
    */
   async refreshChannelData(channelId: string, whoIsAsking: string) {
-    // 1) Wenn im LocalStorage bereits ein Channel exisistiert und der Channel danach fragt, dann wird der LS geladen
+    // 1) Wenn im LocalStorage noch kein Channel exisistiert und der Channel danach fragt, dann wird die Datenbank abgefragt
     console.log("Who is asking: ", whoIsAsking);
     if (localStorage.getItem(channelId) != channelId && whoIsAsking == 'channelIsAsking') {
+      this.threads = []; // Falls der Channel noch keine Threads hat, muss das Array geleert werden, sonst werden die Threads des vorherigen Channels angezeigt
+      this.messages = []; // Falls der Channel noch keine Messages hat, muss das Array geleert werden, sonst werden die Messages des vorherigen Channels angezeigt
       console.log("Channel is asking for first time refresh")
       localStorage.setItem(channelId, channelId);
       console.log("Refreshing data for channel: ", channelId);
@@ -130,7 +132,7 @@ export class ChannelService {
         localStorage.setItem('threads/' + channelId, JSON.stringify([]));
         localStorage.setItem('messages/' + channelId, JSON.stringify([]));
       }
-    // 2) Wenn im LocalStorage noch kein Channel exisistiert und der Channel danach fragt, dann wird die Datenbank abgefragt
+    // 2) Wenn im LocalStorage bereits ein Channel exisistiert und der Channel danach fragt, dann wird der LS geladen
     } else if (localStorage.getItem(channelId) == channelId && whoIsAsking == 'channelIsAsking') {
       console.log("Channel is asking for refresh")
       this.threads = JSON.parse(localStorage.getItem('threads/' + channelId) || '[]').map((thread: Thread) => new Thread(thread).toJSON());
