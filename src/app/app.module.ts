@@ -67,8 +67,8 @@ import { DialogAddPeopleComponent } from './components/channels/dialog-add-peopl
 import { DialogViewPeopleComponent } from './components/channels/dialog-view-people/dialog-view-people.component';
 import { ThreadComponent } from './components/channels/thread/thread.component';
 import { SearchComponent } from './components/search/search.component';
-import { ChannelThreadsComponent } from './components/channel-threads/channel-threads.component';
-import { ChannelUsersComponent } from './components/channel-users/channel-users.component';
+import { SidenavThreadsComponent } from './components/sidenav-threads/sidenav-threads.component';
+import { SidenavUsersComponent } from './components/sidenav-users/sidenav-users.component';
 import { DescriptionComponent } from './components/channels/description/description.component';
 import { HeaderComponent } from './components/channels/header/header.component';
 import { MessagesComponent } from './components/channels/messages/messages.component';
@@ -102,8 +102,8 @@ import { ThreadsComponent } from './components/channels/threads/threads.componen
     DialogViewPeopleComponent,
     ThreadComponent,
     SearchComponent,
-    ChannelThreadsComponent,
-    ChannelUsersComponent,
+    SidenavThreadsComponent,
+    SidenavUsersComponent,
     DescriptionComponent,
     HeaderComponent,
     MessagesComponent,

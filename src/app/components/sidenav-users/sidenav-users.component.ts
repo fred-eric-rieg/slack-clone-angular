@@ -6,10 +6,10 @@ import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
   selector: 'app-channel-users',
-  templateUrl: './channel-users.component.html',
-  styleUrls: ['./channel-users.component.scss']
+  templateUrl: './sidenav-users.component.html',
+  styleUrls: ['./sidenav-users.component.scss']
 })
-export class ChannelUsersComponent implements OnInit, OnDestroy {
+export class SidenavUsersComponent implements OnInit, OnDestroy {
 
   user = new User();
   allUsers: User[] = [];

@@ -1,0 +1,62 @@
+<div class="content-box">
+
+  <!-- Display list of all threads here. -->
+  <div style="display:flex; flex-direction: column; gap: 8px">
+    <mat-card>
+      Ein Thread <br>
+      Message angezeigt
+
+      <div class="message-container">
+        <quill-editor theme="snow" (onEditorChanged)="collectContent($event)" style="height: 120px;"
+            [modules]="config" [placeholder]="placeholder">
+
+        </quill-editor>
+        <div class="message-bottom">
+            <p class="hint">Send with command/ctrl & enter.</p>
+            <button class="button-send" (click)="sendMessage()">
+                <mat-icon matTooltip="send">send</mat-icon>
+            </button>
+        </div>
+    </div>
+    </mat-card>
+  
+    <mat-card>
+      <span>Ein Thread</span>
+      <span>Eine Message</span>
+
+      <div class="message-container">
+        <quill-editor theme="snow" (onEditorChanged)="collectContent($event)" style="height: 120px;"
+            [modules]="config" [placeholder]="placeholder">
+
+        </quill-editor>
+        <div class="message-bottom">
+            <p class="hint">Send with command/ctrl & enter.</p>
+            <button class="button-send" (click)="sendMessage()">
+                <mat-icon matTooltip="send">send</mat-icon>
+            </button>
+        </div>
+    </div>
+    </mat-card>
+
+    <mat-card>
+      Ein Thread <br>
+      Message angezeigt
+
+      <div class="message-container">
+        <quill-editor theme="snow" (onEditorChanged)="collectContent($event)" style="height: 120px;"
+            [modules]="config" [placeholder]="placeholder">
+
+        </quill-editor>
+        <div class="message-bottom">
+            <p class="hint">Send with command/ctrl & enter.</p>
+            <button class="button-send" (click)="sendMessage()">
+                <mat-icon matTooltip="send">send</mat-icon>
+            </button>
+        </div>
+    </div>
+    </mat-card>
+  </div>
+
+</div>
+
+<app-dialog-user></app-dialog-user>
