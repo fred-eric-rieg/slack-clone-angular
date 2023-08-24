@@ -103,7 +103,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
 
   async loadThread(threadId: string) {
-    this.threadService.loadChannelThreads([threadId]).then(thread => {
+    this.channelService.getThreads([threadId]).then(thread => {
       this.thread = thread.docs[0].data() as Thread;
       this.messageIds = thread.docs[0].data()['messages'];
 
@@ -130,7 +130,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
       let now = new Date().getTime() / 1000;
       let message = new Message({messageId: '', creatorId: this.loggedUser(), crationDate: new Timestamp(now, 0), text: this.collectedContent});
       let messageId = await this.messageService.createMessage(message); // Create message
-      await this.threadService.addMessageToThread(this.thread, messageId); // Create thread and add message
+      await this.channelService.addMessageToThread(messageId, this.thread); // Create thread and add message
       var element = document.getElementsByClassName("ql-editor");
       element[0].innerHTML = "";
       this.scrollDown(); // Scroll down to lates message

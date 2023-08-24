@@ -65,7 +65,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 import { DialogAddDescriptionComponent } from './components/channels/dialog-add-description/dialog-add-description.component';
 import { DialogAddPeopleComponent } from './components/channels/dialog-add-people/dialog-add-people.component';
 import { DialogViewPeopleComponent } from './components/channels/dialog-view-people/dialog-view-people.component';
-import { ThreadComponent } from './components/thread/thread.component';
+import { ThreadComponent } from './components/channels/thread/thread.component';
 import { SearchComponent } from './components/search/search.component';
 import { ChannelThreadsComponent } from './components/channel-threads/channel-threads.component';
 import { ChannelUsersComponent } from './components/channel-users/channel-users.component';

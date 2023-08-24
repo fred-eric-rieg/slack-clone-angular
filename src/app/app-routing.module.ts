@@ -10,7 +10,7 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
 import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
 import { NewChatComponent } from './components/new-chat/new-chat.component';
-import { ThreadComponent } from './components/thread/thread.component';
+import { ThreadComponent } from './components/channels/thread/thread.component';
 import { ChannelThreadsComponent } from './components/channel-threads/channel-threads.component';
 import { ChannelUsersComponent } from './components/channel-users/channel-users.component';
 
