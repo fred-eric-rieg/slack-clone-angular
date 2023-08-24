@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation</title>
+
+    <style>
+        body {
+            position: absolute;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 20px;
+            width: 100%;
+            height: 100vh;
+            background: lightcyan;
+        }
+
+        h1 {
+            background: lightsalmon;
+            padding: 8px;
+        }
+
+        .row {
+            margin: 0 auto;
+            display: flex;
+            flex-direction: row;
+            width: fit-content;
+        }
+
+        .border {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            width: fit-content;
+            background: lightblue;
+            max-width: 300px;
+        }
+
+        .line {
+            position: relative;
+            top: 100px;
+            display: flex;
+            width: 200px;
+            justify-content: center;
+            align-items: center;
+            background: lightblue;
+            color: black;
+            height: fit-content;
+        }
+    </style>
+</head>
+<body>
+    <h1>Documentation of Channel Service</h1>
+    <p>This is a high-level description of how the live-updating of channel's messages works. Depending on how the user interacts, the Channel Service is called
+    and it will either get the data from Firestore or from Localstorage. The Channel Service will then update the Localstorage and the Channel Component will
+    update the UI with existing or new data.
+    </p>
+
+    <p>While all Channels are stored client-side as an Rxjs Observable to asynchoniously update the UI, Threads and Messages are stored as an Array and fetched as
+        promises from Firestore. This is because Threads and Messages are not updated as often as Channels to minimize the amount of Firestore calls.
+    </p>
+
+    <div class="row">
+        <div class="border">
+            <h2>Channel Component</h2>
+            <p>User opens an existing Channel or</p>
+            <p>User reopens and existing Channel</p>
+        </div>
+
+        <div class="line">
+            📣 calls Channel Service →
+        </div>
+
+        <div class="border">
+            <h2>Channel Service ⚙️</h2>
+            <p>1. <b>startListening( )</b> to Firestore DB on startup of application</p>
+            <p>2. <b>refreshChannelData(channelId, who?)</b> if called</p>
+            <p>3-A if user opens existing Channel then get data from Firestore and save in Localstorage</p>
+            <p>3-B if user reopens existing Channel then get data from Localstorage</p>
+            <p>3-C if Firestore-Listener detects change then get data from Firestore and save in Localstorage</p>
+
+        </div>
+
+        <div class="line">
+           ← 📣 calls Channel Service
+        </div>
+
+        <div class="border">
+            <h2>Firestore Database 🗄️</h2>
+            <p>Firestore creates a new channel or</p>
+            <p>Firestore creates a new message</p>
+            <p>(Firestore updates message/channel)</p>
+            <p>(Firestore deletes message/channel)</p>
+        </div>
+    </div>
+
+    
+
+</body>
+</html>
