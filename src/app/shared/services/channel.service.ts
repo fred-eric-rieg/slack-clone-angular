@@ -113,38 +113,64 @@ export class ChannelService {
   /**
    * Main function for refreshing data from Local Storage or Firestore.
    * @param channelId as string.
-   * @param whoIsAsking as string.
+   * @param whoIsAsking as string (either Channel or ChannelService.
    */
   async refreshChannelData(channelId: string, whoIsAsking: string) {
-    // 1) Wenn im LocalStorage noch kein Channel exisistiert und der Channel danach fragt, dann wird die Datenbank abgefragt
-    console.log("Who is asking: ", whoIsAsking);
-    if (localStorage.getItem(channelId) != channelId && whoIsAsking == 'channelIsAsking') {
-      this.threads = []; // Falls der Channel noch keine Threads hat, muss das Array geleert werden, sonst werden die Threads des vorherigen Channels angezeigt
-      this.messages = []; // Falls der Channel noch keine Messages hat, muss das Array geleert werden, sonst werden die Messages des vorherigen Channels angezeigt
-      console.log("Channel is asking for first time refresh")
-      localStorage.setItem(channelId, channelId);
-      console.log("Refreshing data for channel: ", channelId);
-      let channel = (await this.getChannel(channelId)).data() as Channel;
-      if (channel.threads.length > 0) {
-        this.threads = (await this.getThreads(channel.threads)).docs.map(doc => doc.data() as Thread).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
-        localStorage.setItem('threads/' + channelId, JSON.stringify(this.threads));
-      } else {
-        localStorage.setItem('threads/' + channelId, JSON.stringify([]));
-        localStorage.setItem('messages/' + channelId, JSON.stringify([]));
-      }
-    // 2) Wenn im LocalStorage bereits ein Channel exisistiert und der Channel danach fragt, dann wird der LS geladen
-    } else if (localStorage.getItem(channelId) == channelId && whoIsAsking == 'channelIsAsking') {
-      console.log("Channel is asking for refresh")
-      this.threads = JSON.parse(localStorage.getItem('threads/' + channelId) || '[]').map((thread: Thread) => new Thread(thread).toJSON());
-      this.messages = JSON.parse(localStorage.getItem('messages/' + channelId) || '[]').map((message: Message) => new Message(message).toJSON());
-    // 3) Wenn der ChannelService selbst nachfragt, dann wird immer die Datenbank abgefragt (wegen new Channel bzw. modified Channel)
+    if (this.isChannelAskingForNewChannel(channelId, whoIsAsking)) {
+      this.refreshNewChannel(channelId);
+    } else if (this.isChannelAskingForLocalStorage(channelId, whoIsAsking)) {
+      this.loadFromLocalStorage(channelId);
     } else if (whoIsAsking == 'channelServiceIsAksing') {
-      console.log("Refreshing because of new or modified channel in: ", channelId);
-      localStorage.setItem(channelId, channelId);
-      let channel = (await this.getChannel(channelId)).data() as Channel;
+      this.refreshOldChannel(channelId);
+    }
+  }
+
+
+  isChannelAskingForNewChannel(channelId: string, whoIsAsking: string) {
+    return localStorage.getItem(channelId) != channelId && whoIsAsking == 'channelIsAsking';
+  }
+
+
+  isChannelAskingForLocalStorage(channelId: string, whoIsAsking: string) {
+    return localStorage.getItem(channelId) == channelId && whoIsAsking == 'channelIsAsking';
+  }
+
+  /**
+   * If there is no corresponding Channel in LocalStorage, then data will be requested from Firestore and stored in LS.
+   * @param channelId as string.
+   */
+  async refreshNewChannel(channelId: string) {
+    this.threads = []; // If Channel has no messages yet, then arrays must be cleared to prevent displaying old channel's messages/threads.
+    this.messages = [];
+    localStorage.setItem(channelId, channelId);
+    let channel = (await this.getChannel(channelId)).data() as Channel;
+    if (channel.threads.length > 0) {
       this.threads = (await this.getThreads(channel.threads)).docs.map(doc => doc.data() as Thread).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
       localStorage.setItem('threads/' + channelId, JSON.stringify(this.threads));
+    } else {
+      localStorage.setItem('threads/' + channelId, JSON.stringify([]));
+      localStorage.setItem('messages/' + channelId, JSON.stringify([]));
     }
+  }
+
+  /**
+   * If the Channel already exists in LocalStorage, then the data therein will be loaded.
+   * @param channelId as string.
+   */
+  async loadFromLocalStorage(channelId: string) {
+    this.threads = JSON.parse(localStorage.getItem('threads/' + channelId) || '[]').map((thread: Thread) => new Thread(thread).toJSON());
+    this.messages = JSON.parse(localStorage.getItem('messages/' + channelId) || '[]').map((message: Message) => new Message(message).toJSON());
+  }
+
+  /**
+   * If the ChannelService is asking, then a refresh from Firestore will be requested and updated in LS.
+   * @param channelId as string.
+   */
+  async refreshOldChannel(channelId: string) {
+    localStorage.setItem(channelId, channelId);
+    let channel = (await this.getChannel(channelId)).data() as Channel;
+    this.threads = (await this.getThreads(channel.threads)).docs.map(doc => doc.data() as Thread).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+    localStorage.setItem('threads/' + channelId, JSON.stringify(this.threads));
   }
 
 
@@ -155,7 +181,6 @@ export class ChannelService {
 
 
   async getThreads(threadIds: string[]) {
-    console.log("Getting threadIds: ", threadIds)
     const q = query(this.threadRef, where('threadId', 'in', threadIds));
     await this.getMessages((await getDocs(q)).docs.map(doc => doc.data() as Thread).map(thread => thread.messages).flat());
     return getDocs(q);
@@ -163,7 +188,6 @@ export class ChannelService {
 
 
   async getMessages(messageIds: string[]) {
-    console.log("Getting messageIds: ", messageIds)
     const q = query(this.messageRef, where('messageId', 'in', messageIds));
     this.messages = (await getDocs(q)).docs.map(doc => doc.data() as Message).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
     localStorage.setItem('messages/' + this.channelId, JSON.stringify(this.messages));
@@ -172,7 +196,6 @@ export class ChannelService {
 
 
   async setMessage(message: Message, channel?: Channel, thread?: Thread) {
-    console.log("Writing message: ", message);
     const docRef = doc(this.messageRef);
     message.messageId = docRef.id;
 
@@ -187,7 +210,6 @@ export class ChannelService {
 
 
   async setThread(thread: Thread, channel?: Channel) {
-    console.log("Writing thread: ", new Thread(thread));
     const docRef = doc(this.threadRef);
     thread.threadId = docRef.id;
 
@@ -212,7 +234,7 @@ export class ChannelService {
 
   async updateChannel(channel: Channel) {
     const docRef = doc(this.firestore, 'channels/' + channel.channelId);
-    
+
     setDoc(docRef, channel.toJSON(), { merge: true }).then(() => {
       console.log('Channel updated: ', channel.name);
     }).catch((error) => {
