@@ -52,13 +52,15 @@
 </head>
 <body>
     <h1>Documentation of Channel Service</h1>
-    <p>This is a high-level description of how the live-updating of channel's messages works. Depending on how the user interacts, the Channel Service is called
-    and it will either get the data from Firestore or from Localstorage. The Channel Service will then update the Localstorage and the Channel Component will
-    update the UI with existing or new data.
+    <p>This is a high-level description of how the live-updating of channel's messages works. There are three use-cases: <br>
+        1. The user opens an existing channel.<br>
+        2. The user reopens an existing channel.<br>
+        3. The user creates a new channel or message.<br>
+        In case 1. and 3. the channel's data is fetched from Firestore and saved in Localstorage. In case 2. the channel's data is fetched from Localstorage.
     </p>
 
-    <p>While all Channels are stored client-side as an Rxjs Observable to asynchoniously update the UI, Threads and Messages are stored as an Array and fetched as
-        promises from Firestore. This is because Threads and Messages are not updated as often as Channels to minimize the amount of Firestore calls.
+    <p>While all channels are stored client-side as an Rxjs Observable to asynchoniously update the UI, Threads and Messages are stored as an Array and fetched as
+        promises from Firestore. This is because Threads and Messages should only update when a change occurs in Firestore in order to minimize traffic.
     </p>
 
     <div class="row">
