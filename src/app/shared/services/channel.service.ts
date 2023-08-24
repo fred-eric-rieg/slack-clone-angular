@@ -195,6 +195,13 @@ export class ChannelService {
   }
 
 
+  /**
+   * For creating a new message a message text is required. Either a channel or a thread can be provided, depending on where the message is created.
+   * If a channel is provided, a new thread will be created for the message. If a thread is provided, the message will be added to the thread.
+   * @param message as string.
+   * @param channel as Channel (optional).
+   * @param thread as Thread (optional).
+   */
   async setMessage(message: Message, channel?: Channel, thread?: Thread) {
     const docRef = doc(this.messageRef);
     message.messageId = docRef.id;
@@ -202,7 +209,7 @@ export class ChannelService {
     setDoc(docRef, message.toJSON()).then(() => {
       console.log('Message written with ID: ', docRef.id);
       channel ? this.setThread(new Thread({ messages: [message.messageId], creationDate: Timestamp.now() }), channel) : null; // If the message is created inside a channel, create a thread for it
-      //thread ? this.addMessageToThread(message.id, thread) : null; // If the message is created inside a thread, add it to the thread
+      thread ? this.addMessageToThread(message.messageId, thread) : null; // If the message is created inside a thread, add it to the thread
     }).catch((error) => {
       console.error('Error adding document: ', error);
     });
@@ -216,6 +223,16 @@ export class ChannelService {
     setDoc(docRef, thread.toJSON()).then(() => {
       console.log('Thread written with ID: ', docRef.id);
       channel ? this.addThreadToChannel(thread.threadId, channel) : null; // If the thread is created inside a channel, add it to the channel
+    }).catch((error) => {
+      console.error('Error adding document: ', error);
+    });
+  }
+
+
+  async addMessageToThread(messageId: string, thread: Thread) {
+    const docRef = doc(this.firestore, 'threads/' + thread.threadId);
+    setDoc(docRef, { messages: [...thread.messages, messageId] }, { merge: true }).then(() => {
+      console.log('Message added to Thread: ', thread.threadId);
     }).catch((error) => {
       console.error('Error adding document: ', error);
     });
