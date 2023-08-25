@@ -7,12 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Message } from 'src/models/message.class';
 import { User } from 'src/models/user.class';
 import { Channel } from 'src/models/channel.class';
-import { Thread } from 'src/models/thread.class';
 
 // Services
-import { MessageService } from 'src/app/shared/services/message.service';
 import { ChannelService } from 'src/app/shared/services/channel.service';
-import { ThreadService } from 'src/app/shared/services/thread.service';
 import { UserService } from 'src/app/shared/services/user.service';
 
 // Rxjs & Quill
@@ -64,7 +61,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   data$: Observable<{ channels: Channel[]; users: User[] }> = combineLatest(
     [this.channelService.allChannels$, this.userService.allUsers$])
     .pipe(map(([channels, users]) => ({ channels, users }))
-  );
+    );
 
   activeChannelId!: string;
   placeholder = 'Type your message here...';
@@ -121,7 +118,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
       let channel = (await this.channelService.getChannel(this.activeChannelId)).data() as Channel;
-      console.log("Channel ist:" , channel);
+      console.log("Channel ist:", channel);
       let message = new Message({ messageId: '', creatorId: this.loggedUser(), creationDate: new Timestamp(now, 0), text: this.collectedContent });
       await this.channelService.setMessage(message, channel);
       var element = document.getElementsByClassName("ql-editor");

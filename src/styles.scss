@@ -38,6 +38,12 @@ body {
   src: url(../src/assets/fonts/OpenSans-SemiBold.ttf);
 }
 
+.ql-snow .ql-editor img {
+  width: 90px !important;
+  margin: 2px 2px;
+  border: 1px solid #303030;
+}
+
 #emoji-palette {
   top: -300px !important;
 }
