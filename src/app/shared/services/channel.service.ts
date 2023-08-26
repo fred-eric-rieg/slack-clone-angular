@@ -30,7 +30,8 @@ export class ChannelService {
 
   constructor(
     private firestore: Firestore,
-  ) { }
+  ) {
+   }
 
   /**
   * Subscribes to the channel collection and listens for changes.
@@ -50,9 +51,9 @@ export class ChannelService {
    * Adds a new channel to the allChannels$ Observable.
    * @param change as any.
    */
-  private addNewChannel(change: any) {
+  private async addNewChannel(change: any) {
     console.log("New channel: ", change);
-    this.channelId === change.channelId ? this.refreshChannelData(change.channelId, 'channelServiceIsAksing') : null;
+    this.channelId === change.channelId ? await this.refreshChannelData(change.channelId, 'channelServiceIsAksing') : null;
     this.allChannels$.pipe(map(channels => {
       return [...channels, new Channel(change)]
     }));
@@ -116,6 +117,7 @@ export class ChannelService {
    * @param whoIsAsking as string (either Channel or ChannelService.
    */
   async refreshChannelData(channelId: string, whoIsAsking: string) {
+    console.log('refreshChannelData: ', channelId, whoIsAsking);
     if (this.isChannelAskingForNewChannel(channelId, whoIsAsking)) {
       this.refreshNewChannel(channelId);
     } else if (this.isChannelAskingForLocalStorage(channelId, whoIsAsking)) {
@@ -179,7 +181,11 @@ export class ChannelService {
     return getDoc(docRef);
   }
 
-
+  /**
+   * Returns all threads for a given array of threadIds and loads the messages for each thread.
+   * @param threadIds as string[].
+   * @returns threads as QuerySnapshot.
+   */
   async getThreads(threadIds: string[]) {
     const q = query(this.threadRef, where('threadId', 'in', threadIds));
     await this.getMessages((await getDocs(q)).docs.map(doc => doc.data() as Thread).map(thread => thread.messages).flat());
@@ -194,6 +200,17 @@ export class ChannelService {
     return getDocs(q);
   }
 
+
+  getThread(threadId: string) {
+    const docRef = doc(this.threadRef, threadId);
+    return getDoc(docRef);
+  }
+
+
+  getMessagesForThread(messageIds: string[]) {
+    const q = query(this.messageRef, where('messageId', 'in', messageIds));
+    return getDocs(q);
+  }
 
   /**
    * For creating a new message a message text is required. Either a channel or a thread can be provided, depending on where the message is created.
