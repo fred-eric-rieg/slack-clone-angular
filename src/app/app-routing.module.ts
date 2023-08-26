@@ -30,7 +30,6 @@ const routes: Routes = [
   { path: 'sidenav', component: sidenavComponent, canActivate: [AuthGuard] },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'sign-up', component: SignUpComponent },
-  { path: 'dashboard/channel', component: ChannelComponent, canActivate: [AuthGuard] }, // Brauchen wir das noch?
 ];
 
 @NgModule({

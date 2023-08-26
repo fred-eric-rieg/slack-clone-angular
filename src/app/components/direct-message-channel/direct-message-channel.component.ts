@@ -78,9 +78,9 @@ export class DirectMessageChannelComponent implements OnInit {
     private route: ActivatedRoute,
     private chatService: ChatService,
     public userService: UserService,
-    private messageService: MessageService,
     private fs: Firestore,
     private searchService: SearchService,
+    private messageService: MessageService,
   ) {
     this.msgCollection = collection(this.fs, 'messages');
     this.handleSearchbar();
