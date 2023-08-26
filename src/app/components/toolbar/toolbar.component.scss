@@ -1,10 +1,18 @@
 .mat-toolbar.mat-primary {
-  background: linear-gradient(90deg, rgba(100,37,136,1) 21%, rgba(23,4,91,1) 100%, rgba(23,4,91,1) 100%);
-  color: #fff;
+  //background: linear-gradient(90deg, rgba(100,37,136,1) 21%, rgba(23,4,91,1) 100%, rgba(23,4,91,1) 100%);
+  color: white;
+  background: repeating-linear-gradient(
+    -50deg,
+    #222,
+    #3155712b 10px,
+    #333 10px,
+    #333 20px
+  );
 }
 
 .mat-toolbar-row, .mat-toolbar-single-row {
   justify-content: space-between;
+  padding: 0;
 
   .toolbar-logo-container {
     display: flex;

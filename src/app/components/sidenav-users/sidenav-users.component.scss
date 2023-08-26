@@ -1,8 +1,9 @@
 .content-box {
   box-sizing: border-box;
   position: relative;
-  display: flex;
   flex-wrap: wrap;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .user-card {
