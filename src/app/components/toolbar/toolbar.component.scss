@@ -1,15 +1,3 @@
-.mat-toolbar.mat-primary {
-  //background: linear-gradient(90deg, rgba(100,37,136,1) 21%, rgba(23,4,91,1) 100%, rgba(23,4,91,1) 100%);
-  color: white;
-  background: repeating-linear-gradient(
-    -50deg,
-    #222,
-    #3155712b 10px,
-    #333 10px,
-    #333 20px
-  );
-}
-
 .mat-toolbar-row, .mat-toolbar-single-row {
   justify-content: space-between;
   padding: 0;
@@ -31,4 +19,36 @@
 .toolbar-btn-container {
   display: flex;
   align-items: center;
+}
+
+.color-picker {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgb(87, 87, 87);
+}
+
+.option-1-background {
+  background: repeating-linear-gradient(
+    -50deg,
+    #222,
+    #3155712b 10px,
+    #333 10px,
+    #333 20px
+  );
+  color: white;
+}
+
+.option-2-background {
+  background: linear-gradient(
+    90deg,
+    rgba(100,37,136,1) 21%,
+    rgba(23,4,91,1) 100%,
+    rgba(23,4,91,1) 100%
+  );
+  color: white;
+}
+
+.option-3-background {
+  background: #E91E63;
+  color: white;
 }

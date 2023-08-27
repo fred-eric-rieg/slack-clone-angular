@@ -91,8 +91,10 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
     console.log('ThreadComponent destroyed');
   }
 
-
-  // für Threads benötigt
+  // Für Threads benötigt.
+  /**
+   * The ID of the active user is identified.
+   */
   getLoggedInUser() {
     this.userSub = this.auth.user.subscribe((user: any) => {
       if (user) {
@@ -103,7 +105,10 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
   }
 
 
-  // für Threads benötigt
+  // Für Threads benötigt.
+  /**
+   * The ID of the active user needs be
+   */
   getUser() {
     this.userService.getSingleUserSnapshot(this.userId).then((onSnapshot) => {
       this.activeUser = onSnapshot.data() as User;
@@ -114,6 +119,10 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
 
 
   // für Threads benötigt
+  /**
+   * Only messages of the active user with matching IDs are loaded.
+   * The ID of the creator of the message (creatorId) and the ID of the active user (userId) have to match.
+   */
   async loadMessagesByActiveUser() {
     const messageCollection = collection(this.firestore, 'messages');
     const messageQuery = query(messageCollection, where('creatorId', '==', this.activeUser.userId));

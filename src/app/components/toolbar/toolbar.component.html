@@ -1,21 +1,22 @@
 <div class="toolbar-container">
 
-  <mat-toolbar color="primary">
+  <mat-toolbar [ngClass]="{
+    'option-1-background': selectedOption === '1',
+    'option-2-background': selectedOption === '2',
+    'option-3-background': selectedOption === '3'
+  }">
 
     <mat-toolbar-row>
 
       <div class="toolbar-logo-container">
-
         <button (click)="toggleSidenav()" mat-icon-button>
           <mat-icon>swap_horiz</mat-icon>
         </button>
-
       </div>
 
       <app-search (searchEvent)="onSearchText($event)"></app-search>
 
       <div>
-
         <button mat-icon-button (click)="openDialogHelp()">
           <mat-icon>help</mat-icon>
         </button>
@@ -24,10 +25,17 @@
           <img src="assets/img/profile.png">
         </button>
 
+        <!-- Dialog-menu-->
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="openUserProfile()">My Profile</button>
           <button mat-menu-item (click)="openDialogLegal()">Legal</button>
           <button mat-menu-item routerLink="" (click)="logoutUser()">Logout</button>
+          <!-- Change color of toolbar -->
+          <mat-radio-group [(ngModel)]="selectedOption" class="color-picker" aria-label="Select an option">
+            <mat-radio-button value="1">Theme 1</mat-radio-button>
+            <mat-radio-button value="2">Theme 2</mat-radio-button>
+            <mat-radio-button value="3">Theme 3</mat-radio-button>
+          </mat-radio-group>
         </mat-menu>
 
       </div>

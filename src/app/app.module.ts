@@ -24,6 +24,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
+
 
 /** Librarys */
 
@@ -127,6 +129,7 @@ import { ThreadsComponent } from './components/channels/threads/threads.componen
     MatProgressSpinnerModule,
     BrowserAnimationsModule,
     MatSnackBarModule,
+    MatRadioModule,
     FormsModule,
     MatListModule,
     MatSelectModule,

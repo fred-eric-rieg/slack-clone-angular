@@ -8,8 +8,14 @@ mat-card {
   padding: 8px;
   margin: 8px;
   display: flex;
-  width: 50vw;
 }
+
+.message-content {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /**
 * Message styles
 **/

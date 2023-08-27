@@ -19,6 +19,7 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
   sidenavOpen: boolean = true;
   userProfileOpen: boolean = false;
+  selectedOption: string = '2'; // Change toolbar-color
 
 
   constructor(
