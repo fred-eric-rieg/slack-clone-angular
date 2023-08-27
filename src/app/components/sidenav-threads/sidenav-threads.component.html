@@ -1,12 +1,17 @@
 <div class="content-box">
-
     <div *ngFor="let textmessage of allThreadMessages">
       <mat-card>
-        <div class="message-content">
-          {{ textmessage.text }}
+        <div class="message-container">
+          <img src="{{ getUserProfile(textmessage) }}" alt="profile picture">
+          <mat-card-title>
+            {{ getUserName(textmessage.creatorId) }}
+          </mat-card-title>
+          <div class="message-content">
+            {{ textmessage.text }}
+          </div>
         </div>
         <!--
-        <div class="message-container">
+        <div class="editor-container">
           <quill-editor theme="snow" (onEditorChanged)="collectContent($event)" style="height: 120px;"
               [modules]="config" [placeholder]="placeholder">
           </quill-editor>

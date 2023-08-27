@@ -10,6 +10,18 @@ mat-card {
   display: flex;
 }
 
+.message-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+
+  img {
+    height: 40px;
+    width: 40px;
+  }
+}
+
 .message-content {
   white-space: normal;
   overflow: hidden;
@@ -19,7 +31,8 @@ mat-card {
 /**
 * Message styles
 **/
-.message-container {
+/*
+.editor-container {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -50,5 +63,5 @@ mat-card {
           color: rgb(165, 165, 165);
       }
   }
-
 }
+*/

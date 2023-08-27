@@ -16,7 +16,7 @@ import { SearchService } from 'src/app/shared/services/search.service';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { ThreadService } from 'src/app/shared/services/thread.service';
 import { MessageService } from 'src/app/shared/services/message.service';
-import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
+// import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 
 
 @Component({
@@ -26,43 +26,16 @@ import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 })
 export class SidenavThreadsComponent implements OnInit, OnDestroy {
 
-  activeUser!: User; // für theads benötigt
-  collectedContent!: any; // für Editor benötigt
-
-  // Quill editor config ??
-  config = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['code-block'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['emoji'],
-      ['link'],
-      ['image'],
-    ],
-    'emoji-toolbar': true,
-    'emoji-textarea': false,
-    'emoji-shortname': true,
-    keyboard: {
-      bindings: {
-        short_enter: {
-          key: 13,
-          shortKey: true,
-          handler: () => {
-            this.sendMessage();
-          },
-        },
-      },
-    },
-  };
-
-  placeholder = 'Write a message...';
-  searchResults!: string[];
-  searchSub!: Subscription;
-  threadMessage$!: Observable<any>; // für Threads benötigt
-  allThreadMessages!: Array<any>; // für Threads benötigt
-  userSub!: Subscription;
-  userId: string = '';
-
+  activeUser!: User; // threads + user info
+  user = new User(); // threads + user info
+  allUsers: User[] = []; // threads + user info
+  userSub!: Subscription; // threads + user info
+  userId: string = ''; // threads + user info
+  threadMessage$!: Observable<any>; // treads
+  allThreadMessages!: Array<any>; // treads
+  searchResults!: string[]; // search
+  searchSub!: Subscription; // search
+  // collectedContent!: any; // editor
 
   constructor(
     private userService: UserService,
@@ -72,13 +45,18 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
     private channelService: ChannelService,
     private firestore: Firestore,
     private auth: AngularFireAuth,
-  ) {}
+  ) {
+    // get user info (displayName + profilePicture)
+    this.userSub = this.userService.allUsers$.subscribe((users: User[]) => {
+      this.allUsers = users;
+    });
+  }
 
 
   ngOnInit(): void {
-    this.getLoggedInUser(); // für Threads benötigt
+    this.getLoggedInUser(); // threads
 
-    // Search filter (import from searchService)
+    // search
     this.searchResults = this.searchService.getSearchResults();
     this.searchSub = this.searchService.searchResultsChanged.subscribe((results: string[]) => {
       this.searchResults = results;
@@ -86,40 +64,54 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
   }
 
 
-  // ??
   ngOnDestroy(): void {
-    console.log('ThreadComponent destroyed');
+    // console.log('ThreadComponent destroyed');
+    this.userSub.unsubscribe();
   }
 
-  // Für Threads benötigt.
   /**
+   * Threads + user info.
    * The ID of the active user is identified.
    */
   getLoggedInUser() {
     this.userSub = this.auth.user.subscribe((user: any) => {
       if (user) {
         this.userId = user.uid;
-        this.getUser();
+        this.getUserInfo();
       }
     });
   }
 
 
-  // Für Threads benötigt.
-  /**
-   * The ID of the active user needs be
-   */
-  getUser() {
+  // Threads + user info.
+  getUserInfo() {
     this.userService.getSingleUserSnapshot(this.userId).then((onSnapshot) => {
       this.activeUser = onSnapshot.data() as User;
-      console.log('activeUser fetched:', this.activeUser);
+      // console.log('activeUser fetched:', this.activeUser);
       this.loadMessagesByActiveUser();
     });
   }
 
 
-  // für Threads benötigt
+  // Threads + user info.
+  getUserName(userId: string) {
+    for (let i = 0; i < this.allUsers.length; i++) {
+      if (this.allUsers[i].userId === userId) {
+        return this.allUsers[i].displayName;
+      }
+    }
+    return 'Unknown';
+  }
+
+
+  getUserProfile(message: Message) {
+    let user = this.allUsers.find(user => user.userId === message.creatorId);
+    return user?.profilePicture != '' ? user?.profilePicture : '/../../assets/img/profile.png';
+  }
+
+
   /**
+   * Threads + user info.
    * Only messages of the active user with matching IDs are loaded.
    * The ID of the creator of the message (creatorId) and the ID of the active user (userId) have to match.
    */
@@ -127,26 +119,22 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
     const messageCollection = collection(this.firestore, 'messages');
     const messageQuery = query(messageCollection, where('creatorId', '==', this.activeUser.userId));
     const messageSnapshot = await getDocs(messageQuery);
-
-    console.log('Active User ID:', this.activeUser.userId);
-
+    // console.log('Active User ID:', this.activeUser.userId);
     this.allThreadMessages = messageSnapshot.docs.map(doc => {
       const messageData = doc.data();
-      console.log('Message creatorId:', messageData['creatorId']);
+      // console.log('Message creatorId:', messageData['creatorId']);
       return messageData;
     });
   }
 
 
-  // Einstellungen für Editor ??
-  /**
-   * Filles collectedContent with the current content in the editor.
-   * @param event
-   */
+  // Editor.
+  /*
   async collectContent(event: EditorChangeContent | EditorChangeSelection) {
     event.event === 'text-change' ? this.collectedContent = event.html : null;
   }
 
   sendMessage() {}
+  */
 
 }
