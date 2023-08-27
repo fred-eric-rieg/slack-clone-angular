@@ -22,7 +22,7 @@
         </button>
 
         <button mat-icon-button [matMenuTriggerFor]="menu" #menuTrigger>
-          <img src="assets/img/profile.png">
+          <img [src]="user.profilePicture || 'assets/img/profile.png'" alt="profile picture">
         </button>
 
         <!-- Dialog-menu-->

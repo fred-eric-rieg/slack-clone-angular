@@ -8,6 +8,8 @@ import { ChannelService } from 'src/app/shared/services/channel.service';
 import { SearchService } from './../../shared/services/search.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { UserService } from 'src/app/shared/services/user.service';
+import { User } from 'src/models/user.class';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -19,29 +21,47 @@ export class ToolbarComponent implements OnDestroy, OnInit {
 
   sidenavOpen: boolean = true;
   userProfileOpen: boolean = false;
-  selectedOption: string = '2'; // Change toolbar-color
-
+  selectedOption: string = '1'; // Change toolbar-color
+  userId: string = '';
+  user: User = new User();
+  userSub!: Subscription;
 
   constructor(
     public dialog: MatDialog,
-    public asService: AngularFireAuth,
     private sidenavService: SidenavService,
     public channelService: ChannelService,
     public searchService: SearchService,
     private authService: AuthService,
-    private userService: UserService
-  ) { }
+    private userService: UserService,
+    private auth: AngularFireAuth,
+  ) {}
 
 
   ngOnInit(): void {
     this.sidenavService.openSidenav.subscribe((response) => {
       this.sidenavOpen = response;
     });
+
+    this.getLoggedInUser();
   }
 
 
   ngOnDestroy(): void {
-    console.log('ToolbarComponent destroyed');
+    this.userSub.unsubscribe();
+  }
+
+
+  getLoggedInUser() {
+    this.userSub = this.auth.user.subscribe((user: any) => {
+      user ? (this.userId = user.uid, this.getUser()) : null;
+    });
+  }
+
+
+  getUser() {
+    this.userService.getSingleUserSnapshot(this.userId).then((user) => {
+      this.user = new User(user.data());
+    });
   }
 
 
@@ -88,5 +108,4 @@ export class ToolbarComponent implements OnDestroy, OnInit {
     this.userService.unsubscribe(); // Unsubscribe form Change-Listener to prevent memory leaks.
     this.authService.logout();
   }
-
 }
