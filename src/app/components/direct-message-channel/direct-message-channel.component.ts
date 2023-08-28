@@ -6,7 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { Subscription, take } from 'rxjs';
 import { ChatService } from 'src/app/shared/services/chat.service';
-import { MessageService } from 'src/app/shared/services/message.service';
 import { SearchService } from 'src/app/shared/services/search.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { Channel } from 'src/models/channel.class';
@@ -80,7 +79,6 @@ export class DirectMessageChannelComponent implements OnInit {
     public userService: UserService,
     private fs: Firestore,
     private searchService: SearchService,
-    private messageService: MessageService,
   ) {
     this.msgCollection = collection(this.fs, 'messages');
     this.handleSearchbar();
@@ -229,7 +227,7 @@ export class DirectMessageChannelComponent implements OnInit {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
       let message = new Message({messageId: '', creatorId: this.loggedUser(), crationDate: new Timestamp(now, 0), text: this.collectedContent});
-      let messageId = await this.messageService.createMessage(message)
+      let messageId = await this.chatService.createMessage(message)
       await this.chatService.addMessageToChat(this.chat, messageId);
       message.messageId = messageId;
       this.messages.push(message);

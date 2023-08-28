@@ -28,6 +28,12 @@ export class ChatService implements OnInit {
 
   }
 
+
+  createMessage(message: any) {
+    // Hier einfügen
+    return "HIer muss die Message id rein"
+  }
+
   returnCurrentUserChats(userId: string) {
     const docRef = doc(this.userChatCollection, userId);
     return docSnapshots(docRef);
