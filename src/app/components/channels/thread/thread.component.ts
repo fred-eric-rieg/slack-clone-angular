@@ -9,8 +9,8 @@ import { Channel } from 'src/models/channel.class';
 import { Message } from 'src/models/message.class';
 import { Thread } from 'src/models/thread.class';
 import { User } from 'src/models/user.class';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-thread',
@@ -66,7 +66,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
     private userService: UserService,
     public channelService: ChannelService,
     private route: ActivatedRoute,
-    private router: Router
+    private location: Location
   ) {
 
   }
@@ -184,7 +184,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
   }
 
 
-  closeThread() {
-    this.router.navigate([`dashboard/channel/${this.channelService.channelId}`]);
+  closeThread(): void {
+    this.location.back();
   }
 }
