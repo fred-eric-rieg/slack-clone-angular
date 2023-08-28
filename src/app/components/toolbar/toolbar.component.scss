@@ -30,17 +30,23 @@
 
 .option-1-background {
   background: repeating-linear-gradient(
-    -50deg,
-    #222,
-    #3155712b 10px,
-    #333 10px,
-    #333 20px
+    180deg,
+    #0f0f0f,
+    #333435 10px,
+    #0f0f0f 10px,
+    #333435 20px
   );
   color: white;
 }
 
 .option-2-background {
-  background: linear-gradient(90deg, rgb(19, 19, 19) 30%, rgba(8,7,7,1) 100%);
+  background: repeating-linear-gradient(
+    -55deg,
+    #222,
+    #222 10px,
+    #333 10px,
+    #333 20px
+  );
   color: white;
 }
 

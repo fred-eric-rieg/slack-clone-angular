@@ -6,10 +6,10 @@
           <mat-card-title>
             {{ getUserName(textmessage.creatorId) }}
           </mat-card-title>
-          <div class="message-content">
-            {{ textmessage.text }}
-          </div>
+          {{ textmessage.creationDate.toDate() | date : "EEE, dd. MMMM yy" }}
         </div>
+        <mat-card-content [innerHTML]="textmessage.text" class="message-content"></mat-card-content>
+
         <!--
         <div class="editor-container">
           <quill-editor theme="snow" (onEditorChanged)="collectContent($event)" style="height: 120px;"
