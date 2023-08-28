@@ -2,7 +2,7 @@
   <div *ngFor="let thread of threads" [routerLink]="openThread(thread)">
 
     <div *ngFor="let textmessage of allThreadMessages">
-      <mat-card *ngIf="thread.messages[0] == textmessage.messageId">
+      <mat-card matTooltip="Show thread" matTooltipPosition="below" *ngIf="thread.messages[0] == textmessage.messageId">
         <div class="message-container">
           <img src="{{ getUserProfile(textmessage) }}" alt="profile picture">
           <mat-card-title>

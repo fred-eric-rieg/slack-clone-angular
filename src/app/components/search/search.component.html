@@ -1,5 +1,5 @@
 <mat-form-field appearance="outline" class="form-field">
-  <mat-label>Search Channel</mat-label>
+  <mat-label>Search...</mat-label>
   <input matInput type="text"[(ngModel)]="searchTerm" (input)="search()" aria-label="Search" autocomplete="off"/>
   <mat-icon class="search-icon" *ngIf="!searchTerm">search</mat-icon>
   <mat-icon class="close-icon" *ngIf="searchTerm" (click)="clearSearch()">close</mat-icon>
