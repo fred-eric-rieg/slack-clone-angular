@@ -1,16 +1,19 @@
 <div class="content-box">
 
-    <div class="sticky-header" *ngIf="channel">
-        Thread <span># {{ channel.name }} </span>
-        <mat-icon style="position: absolute; left: 90%; cursor: pointer;" (click)="closeThread()">close</mat-icon>
+    <div *ngFor="let channel of this.channelService.allChannels$ | async">
+        <div class="sticky-header" *ngIf="channel.threads.includes(threadId)">
+            Thread <span># {{ getChannel(channel) }} </span>
+            <mat-icon style="position: absolute; left: 90%; cursor: pointer;" (click)="closeThread()">close</mat-icon>
+        </div>
     </div>
+    
 
     <div class="scroll-wrapper" #chatContainer>
 
         <!-- Every message is rendered here -->
         <div class="chat-container">
-            <div *ngIf="messages$ && users">
-                <div *ngFor="let message of messages$ | async">
+            <div *ngIf="messages && channel">
+                <div *ngFor="let message of messages">
                     <mat-card class="thread">
                         <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
                             <img src="{{ getUserProfile(message) }}" alt="profile picture">
