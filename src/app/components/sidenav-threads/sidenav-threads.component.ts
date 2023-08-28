@@ -13,9 +13,6 @@ import { Thread } from 'src/models/thread.class';
 // Services + Subscription
 import { UserService } from 'src/app/shared/services/user.service';
 import { SearchService } from 'src/app/shared/services/search.service';
-import { ChannelService } from 'src/app/shared/services/channel.service';
-import { ThreadService } from 'src/app/shared/services/thread.service';
-import { MessageService } from 'src/app/shared/services/message.service';
 // import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 
 
@@ -31,6 +28,7 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
   allUsers: User[] = []; // threads + user info
   userSub!: Subscription; // threads + user info
   userId: string = ''; // threads + user info
+  threads: Thread[] = []; // threads
   threadMessage$!: Observable<any>; // treads
   allThreadMessages!: Array<any>; // treads
   searchResults!: string[]; // search
@@ -40,9 +38,6 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private searchService: SearchService,
-    private threadService: ThreadService,
-    private messageService: MessageService,
-    private channelService: ChannelService,
     private firestore: Firestore,
     private auth: AngularFireAuth,
   ) {
@@ -118,23 +113,22 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
   async loadMessagesByActiveUser() {
     const messageCollection = collection(this.firestore, 'messages');
     const messageQuery = query(messageCollection, where('creatorId', '==', this.activeUser.userId));
-    const messageSnapshot = await getDocs(messageQuery);
-    // console.log('Active User ID:', this.activeUser.userId);
-    this.allThreadMessages = messageSnapshot.docs.map(doc => {
-      const messageData = doc.data();
-      // console.log('Message creatorId:', messageData['creatorId']);
-      return messageData;
-    });
+    this.allThreadMessages = (await getDocs(messageQuery)).docs.map(doc => doc.data() as Message);
+    this.loadThreadsViaMessages();
+
   }
 
 
-  // Editor.
-  /*
-  async collectContent(event: EditorChangeContent | EditorChangeSelection) {
-    event.event === 'text-change' ? this.collectedContent = event.html : null;
+  async loadThreadsViaMessages() {
+    const threadCollection = collection(this.firestore, 'threads');
+    let messageIds = this.allThreadMessages.map(msg => msg.messageId);
+    const threadQuery = query(threadCollection, where('messages', 'array-contains-any', messageIds));
+    this.threads = (await getDocs(threadQuery)).docs.map(doc => doc.data() as Thread).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
   }
+    
 
-  sendMessage() {}
-  */
+  openThread(thread: Thread) {
+    return `/dashboard/thread/${thread.threadId}`;
+  }
 
 }
