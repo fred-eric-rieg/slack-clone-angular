@@ -1,19 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { getAuth } from '@angular/fire/auth';
-import { Firestore, collection, doc, setDoc, query, where, collectionData, getDocs, docData } from '@angular/fire/firestore';
+import { Firestore, collection, doc, setDoc, query, where, getDocs } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 // Models
 import { Message } from 'src/models/message.class';
 import { User } from 'src/models/user.class';
-import { Channel } from 'src/models/channel.class';
 import { Thread } from 'src/models/thread.class';
 
 // Services + Subscription
 import { UserService } from 'src/app/shared/services/user.service';
 import { SearchService } from 'src/app/shared/services/search.service';
-// import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 
 
 @Component({
@@ -33,7 +31,6 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
   allThreadMessages!: Array<any>; // treads
   searchResults!: string[]; // search
   searchSub!: Subscription; // search
-  // collectedContent!: any; // editor
 
   constructor(
     private userService: UserService,
@@ -125,7 +122,7 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
     const threadQuery = query(threadCollection, where('messages', 'array-contains-any', messageIds));
     this.threads = (await getDocs(threadQuery)).docs.map(doc => doc.data() as Thread).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
   }
-    
+
 
   openThread(thread: Thread) {
     return `/dashboard/thread/${thread.threadId}`;

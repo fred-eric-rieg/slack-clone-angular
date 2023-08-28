@@ -10,6 +10,11 @@ mat-card {
   margin: 8px;
   display: flex;
   border: 1px solid rgb(87, 87, 87);
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgb(87, 87, 87, 0.9);
+}
 }
 
 .mat-mdc-card-content:last-child {
@@ -34,41 +39,3 @@ mat-card {
   text-overflow: ellipsis;
   padding-left: 54px;
 }
-
-/**
-* Message styles
-**/
-/*
-.editor-container {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  bottom: 1rem;
-  background: #303030;
-  border-top: 1px solid rgb(87, 87, 87);
-  padding: 8px 10px;
-  width: 100%;
-  height: fit-content;
-
-  .button-send {
-      background-color: transparent;
-      border: unset;
-      color: white;
-      margin-right: 0.5rem;
-      cursor: pointer;
-      z-index: 2;
-  }
-
-  .message-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .hint {
-          margin-left: 0.5rem;
-          font-size: 10px;
-          color: rgb(165, 165, 165);
-      }
-  }
-}
-*/
