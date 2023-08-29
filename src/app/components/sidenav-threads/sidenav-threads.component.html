@@ -1,11 +1,12 @@
 <div class="content-box">
-  <div *ngFor="let thread of threads" [routerLink]="openThread(thread)">
+  <mat-card *ngFor="let thread of threads" [routerLink]="openThread(thread)" matTooltip="Show thread" matTooltipPosition="below">
+
 
     <div *ngFor="let textmessage of allThreadMessages">
       <ng-container *ngIf="thread.messages.includes(textmessage.messageId)">
 
         <!-- Search function logic within ng-container. -->
-        <mat-card matTooltip="Show thread" matTooltipPosition="below" *ngIf="searchResults.length === 0
+        <div *ngIf="searchResults.length === 0
         || textmessage.text.toLowerCase().includes(searchResults[0].toLowerCase())
         ">
           <div class="message-header">
@@ -16,12 +17,12 @@
             {{ textmessage.creationDate.toDate() | date : "EEE, dd. MMMM yy" }}
           </div>
           <mat-card-content [innerHTML]="textmessage.text" class="message-content"></mat-card-content>
-          <p *ngIf="thread.messages.length > 1" class="message-content-replies">
-            {{ thread.messages.length - 1 }} {{ thread.messages.length === 2 ? 'reply' : 'replies' }}
-          </p>
-        </mat-card>
+        </div>
 
       </ng-container>
     </div>
-  </div>
+    <p *ngIf="thread.messages.length > 1" class="message-content-replies">
+      {{ thread.messages.length - 1 }} {{ thread.messages.length === 2 ? 'reply' : 'replies' }}
+    </p>
+  </mat-card>
 </div>

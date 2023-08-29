@@ -106,7 +106,7 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
   async loadMessagesByActiveUser() {
     const messageCollection = collection(this.firestore, 'messages');
     const messageQuery = query(messageCollection, where('creatorId', '==', this.activeUser.userId));
-    this.allThreadMessages = (await getDocs(messageQuery)).docs.map(doc => doc.data() as Message);
+    this.allThreadMessages = (await getDocs(messageQuery)).docs.map(doc => doc.data() as Message).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
     this.loadThreadsViaMessages();
   }
 
