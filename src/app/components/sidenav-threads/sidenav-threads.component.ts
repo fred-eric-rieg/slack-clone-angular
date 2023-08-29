@@ -108,7 +108,6 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
     const messageQuery = query(messageCollection, where('creatorId', '==', this.activeUser.userId));
     this.allThreadMessages = (await getDocs(messageQuery)).docs.map(doc => doc.data() as Message);
     this.loadThreadsViaMessages();
-
   }
 
 

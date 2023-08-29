@@ -2,7 +2,7 @@
   <div *ngFor="let thread of threads" [routerLink]="openThread(thread)">
 
     <div *ngFor="let textmessage of allThreadMessages">
-      <ng-container *ngIf="thread.messages[0] == textmessage.messageId">
+      <ng-container *ngIf="thread.messages.includes(textmessage.messageId)">
 
         <!-- Search function logic within ng-container. -->
         <mat-card matTooltip="Show thread" matTooltipPosition="below" *ngIf="searchResults.length === 0

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Firestore, Timestamp, collection, collectionData, doc, getDoc, getDocs, onSnapshot, query, setDoc, where } from '@angular/fire/firestore';
-import { Observable, map } from 'rxjs';
+import { Observable, Subscriber, map } from 'rxjs';
 import { Unsubscribe } from '@angular/fire/auth';
 
 import { Channel } from 'src/models/channel.class';
@@ -20,12 +20,16 @@ export class ChannelService {
   threads: Thread[] = [];
   messages: Message[] = [];
 
+  threadMessages$!: Observable<Message[]>;
+
   channelId!: string;
 
 
   // Setting up the query to listen for changes in the user collection.
-  private q = query(this.channelRef);
-  unsubscribe!: Unsubscribe;
+  private qChannel = query(this.channelRef);
+  private qThread = query(this.threadRef);
+  unsubscribeChannel!: Unsubscribe;
+  unsubscribeThread!: Unsubscribe;
 
 
   constructor(
@@ -38,11 +42,16 @@ export class ChannelService {
   * If a change occurs, the change is processed.
   */
   startListening() {
-    this.unsubscribe = onSnapshot(this.q, (snapshot: { docChanges: () => any[]; }) => {
+    this.unsubscribeChannel = onSnapshot(this.qChannel, (snapshot: { docChanges: () => any[]; }) => {
       snapshot.docChanges().forEach((change) => {
         change.type === "added" ? this.addNewChannel(change.doc.data()) : null;
         change.type === "modified" ? this.modifyChannel(change.doc.data()) : null;
         change.type === "removed" ? this.removeChannel(change.doc.data()) : null;
+      });
+    });
+    this.unsubscribeThread = onSnapshot(this.qThread, (snapshot: { docChanges: () => any[]; }) => {
+      snapshot.docChanges().forEach((change) => {
+        change.type === "modified" ? this.modifyThread(change.doc.data()) : null;
       });
     });
   }
@@ -63,9 +72,9 @@ export class ChannelService {
    * Updates a channel in the allChannels$ Observable.
    * @param change as any.
    */
-  private modifyChannel(change: any) {
+  private async modifyChannel(change: any) {
     console.log("Modified channel: ", change);
-    this.channelId === change.channelId ? this.refreshChannelData(change.channelId, 'channelServiceIsAksing') : null;
+    this.channelId === change.channelId ? await this.refreshChannelData(change.channelId, 'channelServiceIsAksing') : null;
     this.allChannels$.pipe(map(channels => {
       return channels.map(channel => {
         if (channel.channelId === change.channelId) {
@@ -83,6 +92,12 @@ export class ChannelService {
   private removeChannel(change: any) {
     console.log("Removed channel: ", change);
     // Wriite code to remove channel from allChannels$ Observable.
+  }
+
+
+  private async modifyThread(change: any) {
+    console.log("Modified thread: ", change);
+    this.getMessagesForThread(change.messages);
   }
 
   /**
@@ -207,8 +222,12 @@ export class ChannelService {
   }
 
 
-  getMessagesForThread(messageIds: string[]) {
+  async getMessagesForThread(messageIds: string[]) {
     const q = query(this.messageRef, where('messageId', 'in', messageIds));
+    let values = (await getDocs(q)).docs.map(doc => doc.data() as Message).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
+    this.threadMessages$ = new Observable<Message[]>(Subscriber => {
+      Subscriber.next(values);
+    });
     return getDocs(q);
   }
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { SearchService } from 'src/app/shared/services/search.service';

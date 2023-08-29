@@ -12,8 +12,8 @@
 
         <!-- Every message is rendered here -->
         <div class="chat-container">
-            <div *ngIf="messages && channel">
-                <div *ngFor="let message of messages">
+            <div *ngIf="channel">
+                <div *ngFor="let message of channelService.threadMessages$ | async">
 
                     <mat-card class="thread" *ngIf="searchResults.length === 0
                     || message.text.toLowerCase().includes(searchResults[0].toLowerCase())

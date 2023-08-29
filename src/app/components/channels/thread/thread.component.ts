@@ -30,7 +30,6 @@ export class ThreadComponent implements OnInit, OnDestroy {
   thread!: Thread;
   threadId!: string;
   messageIds!: string[];
-  messages!: Message[];
   channel!: Channel;
 
   // Subscriptions
@@ -107,19 +106,10 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
 
   async loadThread(threadId: string) {
-    this.channelService.getThread(threadId).then(thread => {
+    await this.channelService.getThread(threadId).then(thread => {
       this.thread = thread.data() as Thread;
       this.messageIds = this.thread.messages;
-      console.log("Thread: " + this.thread.threadId + " has messages: " + this.messageIds);
-      this.loadMessages();
-    });
-  }
-
-
-  async loadMessages() {
-    this.channelService.getMessagesForThread(this.messageIds).then(messages => {
-      this.messages = messages.docs.map(doc => doc.data() as Message).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
-      console.log("Messages: ", this.messages);
+      this.channelService.getMessagesForThread(this.messageIds);
     });
   }
 
