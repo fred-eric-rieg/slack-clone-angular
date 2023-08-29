@@ -4,8 +4,9 @@
     <div>
       <app-upload-form></app-upload-form>
     </div>
-    <div>
+    <div class="btn-container">
       <app-upload-details></app-upload-details>
+      <button mat-flat-button color="primary" (click)="dialogRef.close()">Close</button>
     </div>
   </mat-dialog-content>
 </main>

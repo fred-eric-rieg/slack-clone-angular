@@ -96,7 +96,7 @@ export class DialogUserComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Closes Dialog with profile information
+   * Closes Dialog with profile information.
    */
   closeDialog() {
     this.sidenavService.openUserProfile.emit(false);
