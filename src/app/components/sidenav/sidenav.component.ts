@@ -4,9 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Channel } from 'src/models/channel.class';
 import { ChannelService } from 'src/app/shared/services/channel.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Timestamp } from '@angular/fire/firestore';
 import { SidenavService } from 'src/app/shared/services/sidenav.service';
-import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 
 
@@ -34,7 +32,6 @@ export class sidenavComponent implements OnInit, OnDestroy {
     public auth: AngularFireAuth,
     private channelService: ChannelService,
     public sidenavService: SidenavService,
-    private router: Router
   ) { }
 
 
@@ -78,10 +75,14 @@ export class sidenavComponent implements OnInit, OnDestroy {
   }
 
 
-  createChannel(dialogData: string) {
+  async createChannel(dialogData: string) {
     // ggf noch den aktuellen User als Member hinzufügen
+    this.channel = new Channel();
     this.channel.name = dialogData;
-    this.channelService.setChannel(this.channel.name);
+    this.channel.creatorId = await this.auth.currentUser.then((user) => user?.uid ||'');
+    this.channel.members.push(this.channel.creatorId);
+    this.channelService.setChannel(this.channel);
+   
   }
 
 

@@ -97,8 +97,8 @@ export class ChannelService {
    * Creates a new channel in the database.
    * @param channelName as string.
    */
-  async setChannel(channelName: string) {
-    let channel = new Channel({ name: channelName });
+  async setChannel(channel: Channel) {
+    console.log('channel: ', channel);
     const docRef = doc(this.channelRef);
 
     channel.channelId = docRef.id;
@@ -269,7 +269,7 @@ export class ChannelService {
   async updateChannel(channel: Channel) {
     const docRef = doc(this.firestore, 'channels/' + channel.channelId);
 
-    setDoc(docRef, channel.toJSON(), { merge: true }).then(() => {
+    setDoc(docRef, channel, { merge: true }).then(() => {
       console.log('Channel updated: ', channel.name);
     }).catch((error) => {
       console.error('Error adding document: ', error);

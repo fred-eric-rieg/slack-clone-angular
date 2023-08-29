@@ -2,7 +2,7 @@ import { Timestamp } from "@angular/fire/firestore";
 
 export class Channel {
     channelId: string = '';
-    creationDate: Timestamp = Timestamp.now();
+    creationDate: Timestamp;
     creatorId: string = '';
     type: string = 'public';
     description: string = '';
@@ -12,7 +12,7 @@ export class Channel {
 
     constructor(obj?: any) {
         this.channelId = obj && obj.channelId || '';
-        this.creationDate = obj && obj.creationDate;
+        this.creationDate = Timestamp.now();
         this.creatorId = obj && obj.creatorId || '';
         this.type = obj && obj.type || 'public';
         this.description = obj && obj.description || '';
