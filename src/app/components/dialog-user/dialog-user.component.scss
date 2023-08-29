@@ -51,6 +51,9 @@
 }
 
 .profile-title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   position: sticky;
   top: 0;
   padding: 8px 10px;
@@ -110,15 +113,12 @@ h4 {
   }
 }
 
-.close-btn {
-  height: 35px;
-  width: 35px;
-  margin-left: auto;
-  background-color: white;
-  &:active {
-    transform: scale(0.9);
-    filter: brightness(0.9);
-  }
+.btn-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 16px;
+  margin-top: 32px;
 }
 
 @media screen and (max-width: 620px) {
@@ -143,12 +143,22 @@ h4 {
     cursor: pointer;
     border: 1px solid rgb(87, 87, 87);
     border-radius: 50px;
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 }
 
 .edit-btn {
   color: #2196F3;
   cursor: pointer;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 
 .space-between {

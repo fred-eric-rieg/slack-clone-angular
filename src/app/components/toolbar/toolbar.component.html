@@ -9,7 +9,7 @@
     <mat-toolbar-row>
 
       <div class="toolbar-logo-container">
-        <button (click)="toggleSidenav()" mat-icon-button>
+        <button (click)="toggleSidenav()" mat-icon-button matTooltip="Toggle navigation" matTooltipPosition="below">
           <mat-icon>swap_horiz</mat-icon>
         </button>
       </div>
@@ -17,12 +17,12 @@
       <app-search (searchEvent)="onSearchText($event)"></app-search>
 
       <div>
-        <button mat-icon-button (click)="openDialogHelp()">
+        <button mat-icon-button (click)="openDialogHelp()" matTooltip="Open app info" matTooltipPosition="below">
           <mat-icon>help</mat-icon>
         </button>
 
-        <button mat-icon-button [matMenuTriggerFor]="menu" #menuTrigger>
-          <img [src]="user.profilePicture || 'assets/img/profile.png'" alt="profile picture">
+        <button mat-icon-button [matMenuTriggerFor]="menu" #menuTrigger matTooltip="Open menu" matTooltipPosition="below">
+          <img class="profile-icon" [src]="user.profilePicture || 'assets/img/profile.png'" alt="profile picture">
         </button>
 
         <!-- Dialog-menu-->

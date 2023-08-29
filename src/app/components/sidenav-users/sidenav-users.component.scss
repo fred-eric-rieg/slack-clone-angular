@@ -14,6 +14,13 @@
   border: 1px solid rgb(87, 87, 87);
   border-radius: 4px;
   padding: 24px;
+  transition: transform 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
+    background-color: rgba(61, 61, 61, 0.7);
+  }
 }
 
 .nav-hl {
@@ -35,6 +42,7 @@
 .profile-pic {
   width: 40px;
   height: 40px;
+  border-radius: 4px;
 }
 
 .m-left {

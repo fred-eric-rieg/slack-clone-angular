@@ -3,17 +3,12 @@
     <div class="profile-title-container b-bottom">
       <div class="profile-title">
         <span>Profile</span>
-        <button class="close-btn" mat-mini-fab (click)="closeDialog()">
-          <mat-icon [ngStyle]="{ color: 'black' }">close</mat-icon>
-        </button>
       </div>
+      <button mat-stroked-button color="primary" (click)="closeDialog()">Close</button>
     </div>
     <div class="nav-scroll-container">
       <div class="navigation">
-        <div class="nav-hl flex-ac space-between">
-          <p class="profile-subtitle">Profile info</p>
-          <p class="edit-btn" (click)="openDialogUserEdit()">Edit</p>
-        </div>
+        <div class="nav-hl flex-ac space-between"></div>
         <!-- Profile Picture -->
         <div class="profile-pic-container">
           <img matTooltip="Edit picture" (click)="editPictureDetail()" [src]="user.profilePicture || 'assets/img/profile.png'">
@@ -58,6 +53,10 @@
           <p>Phone:</p>
           <ng-container *ngIf="user.phone; else noPhone">{{ user.phone }}</ng-container>
           <ng-template #noPhone>n/a</ng-template>
+        </div>
+        <div class="btn-container">
+          <button mat-stroked-button color="primary" (click)="closeDialog()">Cancel</button>
+          <button mat-flat-button color="primary" (click)="openDialogUserEdit()">Edit</button>
         </div>
       </div>
     </div>

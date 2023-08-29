@@ -1,19 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { getAuth } from '@angular/fire/auth';
-import { Firestore, collection, doc, setDoc, query, where, collectionData, getDocs, docData } from '@angular/fire/firestore';
+import { Firestore, collection, doc, setDoc, query, where, getDocs } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 // Models
 import { Message } from 'src/models/message.class';
 import { User } from 'src/models/user.class';
-import { Channel } from 'src/models/channel.class';
 import { Thread } from 'src/models/thread.class';
 
 // Services + Subscription
 import { UserService } from 'src/app/shared/services/user.service';
 import { SearchService } from 'src/app/shared/services/search.service';
-// import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 
 
 @Component({
@@ -23,17 +21,16 @@ import { SearchService } from 'src/app/shared/services/search.service';
 })
 export class SidenavThreadsComponent implements OnInit, OnDestroy {
 
-  activeUser!: User; // threads + user info
-  user = new User(); // threads + user info
-  allUsers: User[] = []; // threads + user info
-  userSub!: Subscription; // threads + user info
-  userId: string = ''; // threads + user info
-  threads: Thread[] = []; // threads
-  threadMessage$!: Observable<any>; // treads
-  allThreadMessages!: Array<any>; // treads
-  searchResults!: string[]; // search
-  searchSub!: Subscription; // search
-  // collectedContent!: any; // editor
+  activeUser!: User;
+  user = new User();
+  allUsers: User[] = [];
+  userSub!: Subscription;
+  userId: string = '';
+  threads: Thread[] = [];
+  threadMessage$!: Observable<any>;
+  allThreadMessages!: Array<any>;
+  searchResults!: string[];
+  searchSub!: Subscription;
 
   constructor(
     private userService: UserService,
@@ -49,7 +46,7 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.getLoggedInUser(); // threads
+    this.getLoggedInUser();
 
     // search
     this.searchResults = this.searchService.getSearchResults();
@@ -60,7 +57,6 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-    // console.log('ThreadComponent destroyed');
     this.userSub.unsubscribe();
   }
 
@@ -78,7 +74,6 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
   }
 
 
-  // Threads + user info.
   getUserInfo() {
     this.userService.getSingleUserSnapshot(this.userId).then((onSnapshot) => {
       this.activeUser = onSnapshot.data() as User;
@@ -88,7 +83,6 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
   }
 
 
-  // Threads + user info.
   getUserName(userId: string) {
     for (let i = 0; i < this.allUsers.length; i++) {
       if (this.allUsers[i].userId === userId) {
@@ -106,8 +100,7 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Threads + user info.
-   * Only messages of the active user with matching IDs are loaded.
+   * Loads all messages of the active user that match the ID via query.
    * The ID of the creator of the message (creatorId) and the ID of the active user (userId) have to match.
    */
   async loadMessagesByActiveUser() {
@@ -119,13 +112,16 @@ export class SidenavThreadsComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Loads all threads based on message ID via query.
+   */
   async loadThreadsViaMessages() {
     const threadCollection = collection(this.firestore, 'threads');
     let messageIds = this.allThreadMessages.map(msg => msg.messageId);
     const threadQuery = query(threadCollection, where('messages', 'array-contains-any', messageIds));
     this.threads = (await getDocs(threadQuery)).docs.map(doc => doc.data() as Thread).sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
   }
-    
+
 
   openThread(thread: Thread) {
     return `/dashboard/thread/${thread.threadId}`;

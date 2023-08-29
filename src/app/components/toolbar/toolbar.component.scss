@@ -1,6 +1,5 @@
 .mat-toolbar-row, .mat-toolbar-single-row {
   justify-content: space-between;
-  padding: 0;
 
   .toolbar-logo-container {
     display: flex;
@@ -9,11 +8,9 @@
 }
 
 .profile-icon {
-  width: 35px;
-  height: 35px;
-  border: 5.5px solid white;
-  border-radius: 10px;
-  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  border-radius: 4px;
 }
 
 .toolbar-btn-container {
