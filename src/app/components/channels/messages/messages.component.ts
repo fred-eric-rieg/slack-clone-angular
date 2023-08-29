@@ -1,6 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { SearchService } from 'src/app/shared/services/search.service';
+import { Component, Input } from '@angular/core';
 import { Message } from 'src/models/message.class';
 import { Thread } from 'src/models/thread.class';
 import { User } from 'src/models/user.class';
@@ -10,31 +8,15 @@ import { User } from 'src/models/user.class';
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss']
 })
-export class MessagesComponent implements OnInit, OnDestroy {
+export class MessagesComponent {
 
   @Input() users!: User[];
   @Input() message!: Message;
   @Input() thread!: Thread;
 
 
-  // Subscriptions
-  searchSub!: Subscription;
-
-  searchResults!: string[];
-
   constructor(
-    private searchService: SearchService,
   ) { }
-
-
-  ngOnInit(): void {
-    this.handleSearchbar();
-  }
-
-
-  ngOnDestroy(): void {
-    this.searchSub.unsubscribe();
-  }
 
   /**
    * Used in HTML component.
@@ -43,15 +25,6 @@ export class MessagesComponent implements OnInit, OnDestroy {
    */
   countThreadMessages(thread: Thread) {
     return thread.messages.length - 1;
-  }
-
-
-  handleSearchbar() {
-    // Search filter (import from searchService)
-    this.searchResults = this.searchService.getSearchResults();
-    this.searchSub = this.searchService.searchResultsChanged.subscribe((results: string[]) => {
-      this.searchResults = results;
-    });
   }
 
   /**
@@ -67,6 +40,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
     }
     return 'Unknown';
   }
+
 
   getUserProfile(message: Message) {
     let user = this.users.find(user => user.userId === message.creatorId);

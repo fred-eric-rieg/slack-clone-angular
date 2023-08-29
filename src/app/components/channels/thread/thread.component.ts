@@ -11,6 +11,7 @@ import { Thread } from 'src/models/thread.class';
 import { User } from 'src/models/user.class';
 import { Subscription } from 'rxjs';
 import { Location } from '@angular/common';
+import { SearchService } from 'src/app/shared/services/search.service';
 
 @Component({
   selector: 'app-thread',
@@ -35,6 +36,9 @@ export class ThreadComponent implements OnInit, OnDestroy {
   // Subscriptions
   userSub!: Subscription;
   paramsSub!: Subscription;
+  searchSub!: Subscription;
+
+  searchResults!: string[];
 
   config = {
     toolbar: [
@@ -66,7 +70,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
     private userService: UserService,
     public channelService: ChannelService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private searchService: SearchService
   ) {
 
   }
@@ -88,6 +93,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
     this.userSub = this.userService.allUsers$.subscribe(users => {
       this.users = users;
     });
+
+    this.handleSearchbar();
   }
 
 
@@ -95,6 +102,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
     console.log('ThreadComponent destroyed');
     this.paramsSub.unsubscribe();
     this.userSub.unsubscribe();
+    this.searchSub.unsubscribe();
   }
 
 
@@ -186,5 +194,14 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   closeThread(): void {
     this.location.back();
+  }
+
+
+  handleSearchbar() {
+    // Search filter (import from searchService)
+    this.searchResults = this.searchService.getSearchResults();
+    this.searchSub = this.searchService.searchResultsChanged.subscribe((results: string[]) => {
+      this.searchResults = results;
+    });
   }
 }

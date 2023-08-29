@@ -14,7 +14,11 @@
         <div class="chat-container">
             <div *ngIf="messages && channel">
                 <div *ngFor="let message of messages">
-                    <mat-card class="thread">
+
+                    <mat-card class="thread" *ngIf="searchResults.length === 0
+                    || message.text.toLowerCase().includes(searchResults[0].toLowerCase())
+                    || getUserName(message.creatorId)?.toLowerCase()!.includes(searchResults[0].toLowerCase())">
+
                         <div style="display:flex; flex-direction: row; align-items: center; gap:1rem">
                             <img src="{{ getUserProfile(message) }}" alt="profile picture">
                             <mat-card-title>
@@ -25,6 +29,7 @@
                         </div>
                         <mat-card-content [innerHTML]="message.text"></mat-card-content>
                     </mat-card>
+                    
                 </div>
             </div>
         </div>

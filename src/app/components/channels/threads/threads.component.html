@@ -8,14 +8,19 @@
                 <div *ngIf="thread.messages[0] === message.messageId">
 
 
-                    <mat-card class="thread" [routerLink]="openThread(thread)">
+                    <mat-card class="thread" [routerLink]="openThread(thread)" *ngIf="searchResults.length === 0
+                    || message.text.toLowerCase().includes(searchResults[0].toLowerCase())
+                    || getUserName(message.creatorId)?.toLowerCase()!.includes(searchResults[0].toLowerCase())">
+
                         <app-messages [message]="message" [users]="users"></app-messages>
                         <p *ngIf="thread.messages.length > 1">{{thread.messages.length - 1}} replie(s)</p>
+                        
                     </mat-card>
 
                 </div>
             </div>
         </div>
+
     </div>
 
 </div>
