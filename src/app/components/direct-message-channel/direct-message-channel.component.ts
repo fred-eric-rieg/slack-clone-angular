@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { getAuth } from '@angular/fire/auth';
 import { set } from '@angular/fire/database';
-import { CollectionReference, DocumentData, Firestore, Timestamp, collection, getDocs } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, Timestamp, collection, doc, getDocs, setDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { Subscription, take } from 'rxjs';
@@ -228,8 +228,9 @@ export class DirectMessageChannelComponent implements OnInit {
   async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
-      let message = new Message({messageId: '', creatorId: this.loggedUser(), crationDate: new Timestamp(now, 0), text: this.collectedContent});
-      let messageId = await this.messageService.createMessage(message)
+      console.log(now);
+      let message = new Message({messageId: '', creatorId: this.loggedUser(), creationDate: new Timestamp(now, 0), text: this.collectedContent});
+      let messageId = await this.createMessage(message)
       await this.chatService.addMessageToChat(this.chat, messageId);
       message.messageId = messageId;
       this.messages.push(message);
@@ -249,6 +250,24 @@ export class DirectMessageChannelComponent implements OnInit {
     } else {
       return 'Zta41sUcC7rLGHbpMmn4';
     }
+  }
+
+  /**
+   * Takes in a message object and creates a new message in the database and sets the messageId to the document id.
+   * @param message a message object
+   */
+  async createMessage(message: Message) {
+    const messageCollection = collection(this.fs, 'messages');
+    const messageDocument = doc(messageCollection);
+    message.messageId = messageDocument.id;
+
+    setDoc(messageDocument, message.toJSON()).then(() => {
+      console.log('Message created successfully!');
+    }).catch((error: any) => {
+      console.log(error);
+    });
+
+    return messageDocument.id;
   }
 
   /**
