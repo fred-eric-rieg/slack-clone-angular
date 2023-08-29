@@ -16,6 +16,9 @@
             {{ textmessage.creationDate.toDate() | date : "EEE, dd. MMMM yy" }}
           </div>
           <mat-card-content [innerHTML]="textmessage.text" class="message-content"></mat-card-content>
+          <p *ngIf="thread.messages.length > 1" class="message-content-replies">
+            {{ thread.messages.length - 1 }} {{ thread.messages.length === 2 ? 'reply' : 'replies' }}
+          </p>
         </mat-card>
 
       </ng-container>

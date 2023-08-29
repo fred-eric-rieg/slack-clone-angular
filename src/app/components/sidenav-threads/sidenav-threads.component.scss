@@ -31,6 +31,7 @@ mat-card {
   img {
     height: 40px;
     width: 40px;
+    border-radius: 4px;
   }
 }
 
@@ -40,3 +41,11 @@ mat-card {
   text-overflow: ellipsis;
   padding-left: 54px;
 }
+
+.message-content-replies {
+  margin-top: 16px;
+  color: #2196F3;
+}
+
+
+
