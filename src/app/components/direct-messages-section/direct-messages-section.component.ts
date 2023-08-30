@@ -81,7 +81,6 @@ export class DirectMessagesSectionComponent implements OnInit {
         const chatData: any = await this.chatService.returnQueryChatData(chatId);
         this.allChats.push(chatData);
       })
-      console.log(this.allChats);
       //await this.setNameFirstUser();
     }
   }

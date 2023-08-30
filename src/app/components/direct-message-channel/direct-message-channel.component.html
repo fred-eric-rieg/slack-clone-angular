@@ -16,7 +16,7 @@
   <div class="person" *ngFor="let member of members">{{ member }}</div>
 </div>
 <div class="container" *ngIf="!isLoading">
-  <div class="chat-window">
+  <div class="chat-window" #chatContainer>
     <div *ngFor="let msg of messages" class="msg-window">
       <!-- Search filter: specify below which elements to search for. -->
       <main

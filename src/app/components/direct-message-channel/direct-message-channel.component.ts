@@ -1,15 +1,12 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { getAuth } from '@angular/fire/auth';
-import { set } from '@angular/fire/database';
-import { CollectionReference, DocumentData, Firestore, Timestamp, collection, doc, getDocs, setDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, Timestamp, collection, doc, docData, getDocs, setDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { Subscription, take } from 'rxjs';
 import { ChatService } from 'src/app/shared/services/chat.service';
-import { MessageService } from 'src/app/shared/services/message.service';
 import { SearchService } from 'src/app/shared/services/search.service';
 import { UserService } from 'src/app/shared/services/user.service';
-import { Channel } from 'src/models/channel.class';
 import { Chat } from 'src/models/chat.class';
 import { Message } from 'src/models/message.class';
 import { User } from 'src/models/user.class';
@@ -20,6 +17,8 @@ import { User } from 'src/models/user.class';
   styleUrls: ['./direct-message-channel.component.scss']
 })
 export class DirectMessageChannelComponent implements OnInit {
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
+
   allUsers: User[] = [];
   private msgCollection!: CollectionReference<DocumentData>;
   chatId: string = '';
@@ -79,8 +78,7 @@ export class DirectMessageChannelComponent implements OnInit {
     private chatService: ChatService,
     public userService: UserService,
     private fs: Firestore,
-    private searchService: SearchService,
-    private messageService: MessageService,
+    private searchService: SearchService
   ) {
     this.msgCollection = collection(this.fs, 'messages');
     this.handleSearchbar();
@@ -97,13 +95,18 @@ export class DirectMessageChannelComponent implements OnInit {
         this.memberIds.push(...data['members']);
         this.messageIds.push(...data['messages']);
         this.chat.members.push(...data['members']);
+
+        for (const message of data['messages']) {
+          this.subscribeToMessage(message);
+        }
       })
       this.getMemberNames();
       this.getAllMessages().then((msgs) => {
         this.chatService.returnQueryChatData(this.chatId)
-          .then((chatMsgs: any) => {
-            msgs.forEach((msg: any) => {
-              if (chatMsgs[0]['messages'].includes(msg.messageId)) {
+        .then((chatMsgs: any) => {
+          this.messages = [];
+          msgs.forEach((msg: any) => {
+            if (chatMsgs[0]['messages'].includes(msg.messageId)) {
                 this.messages.push(msg);
               }
             });
@@ -114,6 +117,15 @@ export class DirectMessageChannelComponent implements OnInit {
       setTimeout(() => {
         this.isLoading = false;
       }, 600);
+    });
+  }
+
+  subscribeToMessage(messageId: string) {
+    this.messages = [];
+    const messageDoc = doc(this.msgCollection, messageId);
+    docData(messageDoc).pipe(take(1)).subscribe((msg: any) => {
+      console.log("MSG: " + msg.text);
+      this.messages.push(msg);
     });
   }
 
@@ -228,12 +240,12 @@ export class DirectMessageChannelComponent implements OnInit {
   async sendMessage() {
     if (this.collectedContent != null && this.collectedContent != '') {
       let now = new Date().getTime() / 1000;
-      console.log(now);
       let message = new Message({messageId: '', creatorId: this.loggedUser(), creationDate: new Timestamp(now, 0), text: this.collectedContent});
       let messageId = await this.createMessage(message)
       await this.chatService.addMessageToChat(this.chat, messageId);
-      message.messageId = messageId;
-      this.messages.push(message);
+      // this.messages = [];
+      // message.messageId = messageId;
+      // this.messages.push(message);
     }
     var element = document.getElementsByClassName("ql-editor");
     element[0].innerHTML = "";
@@ -262,7 +274,6 @@ export class DirectMessageChannelComponent implements OnInit {
     message.messageId = messageDocument.id;
 
     setDoc(messageDocument, message.toJSON()).then(() => {
-      console.log('Message created successfully!');
     }).catch((error: any) => {
       console.log(error);
     });
@@ -278,6 +289,12 @@ export class DirectMessageChannelComponent implements OnInit {
     if (event.event === 'text-change') {
       this.collectedContent = event.html;
     }
+  }
+
+  scrollDown() {
+    setTimeout(() => {
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    }, 100);
   }
 
 
