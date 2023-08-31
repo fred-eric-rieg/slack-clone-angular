@@ -1,5 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Subscription, take } from 'rxjs';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { UserService } from 'src/app/shared/services/user.service';
@@ -22,6 +23,7 @@ export class NewChatComponent implements OnDestroy {
     private userService: UserService,
     private chatService: ChatService,
     private snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.getAllUsers();
   }
@@ -104,10 +106,12 @@ export class NewChatComponent implements OnDestroy {
       const chatId = this.generateRandomId();
       if (userExists === true){
         this.chatService.updateUserChatData(chatId);
+        this.router.navigate(['dashboard/chat/' + chatId]);
       } else this.chatService.setUserChatData(chatId);
       this.chatService.setChatData(chatId, users);
       this.chatService.setOtherUserChatData(chatId, users);
       this.addedUsers = [];
+      this.router.navigate(['dashboard/chat/' + chatId]);
     } else this.snackBar.open("Add atleast one member to chat", "OK", {
       duration: 5000,
     });
