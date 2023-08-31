@@ -9,8 +9,10 @@ import { update } from '@angular/fire/database';
   providedIn: 'root'
 })
 export class ChatService implements OnInit {
-  private userChatCollection: CollectionReference<DocumentData>;
-  private chatCollection!: CollectionReference<DocumentData>;
+  userChatCollection = collection(this.firestore, 'userChats');
+  chatCollection = collection(this.firestore, 'chats');
+
+  allChats$ = collectionData(this.chatCollection);
   // allChats: Array<string>;
   chat!: Chat;
   currentUserId: any;
@@ -20,8 +22,7 @@ export class ChatService implements OnInit {
     private firestore: Firestore,
     private userService: UserService,
   ) {
-    this.userChatCollection = collection(this.firestore, 'userChats');
-    this.chatCollection = collection(this.firestore, 'chats');
+    
   }
 
   ngOnInit(): void {
