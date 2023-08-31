@@ -26,12 +26,19 @@ export class NewChatComponent implements OnDestroy {
     private router: Router
   ) {
     this.getAllUsers();
+    this.addCurrentUser();
   }
 
 
   ngOnDestroy(): void {
     // this.userSub.unsubscribe();
     // this.userSub2.unsubscribe();
+  }
+
+
+  async addCurrentUser() {
+    let currentUser = await this.userService.returnUserData(this.userService.currentUser);
+    this.addedUsers.push(currentUser);
   }
 
   /**
@@ -100,17 +107,17 @@ export class NewChatComponent implements OnDestroy {
    * create a new chat with all added users
    * @param users added Users as Object
    */
-  async createNewChat(users: any) {
+  async createNewChat() {
+    console.log(this.addedUsers)
     const userExists = await this.checkCurrentUserChats();
-    if (users.length >= 1) {
+    if (this.addedUsers.length >= 1) {
       const chatId = this.generateRandomId();
       if (userExists === true){
         this.chatService.updateUserChatData(chatId);
         this.router.navigate(['dashboard/chat/' + chatId]);
       } else this.chatService.setUserChatData(chatId);
-      this.chatService.setChatData(chatId, users);
-      this.chatService.setOtherUserChatData(chatId, users);
-      this.addedUsers = [];
+      this.chatService.setChatData(chatId, this.addedUsers);
+      this.chatService.setOtherUserChatData(chatId, this.addedUsers);
       this.router.navigate(['dashboard/chat/' + chatId]);
     } else this.snackBar.open("Add atleast one member to chat", "OK", {
       duration: 5000,

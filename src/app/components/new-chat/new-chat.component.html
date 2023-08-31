@@ -3,15 +3,17 @@
       <div class="added-partners">
         <span>Send to: </span>
         <div class="added-box">
-          <div class="partner" *ngFor="let user of addedUsers; let i = index">
-            <span>{{user.displayName}}</span>
-            <mat-icon (click)="removeUser(i)">close</mat-icon>
+          <div *ngFor="let user of addedUsers; let i = index">
+            <div class="partner" *ngIf="i > 0">
+              <span>{{user.displayName}}</span>
+              <mat-icon (click)="removeUser(i)">close</mat-icon>
+            </div>
           </div>
         </div>
       </div>
       <div class="toolbox">
         <input type="text" placeholder="search for a chat partner" (keyup)="onInput($event)">
-        <button mat-raised-button color="primary" (click)="createNewChat(addedUsers)">Create chat</button>
+        <button mat-raised-button color="primary" (click)="createNewChat()">Create chat</button>
       </div>
     </div>
     <div class="user" *ngFor="let user of filtredUsers" (click)="addUser(user.userId)">
