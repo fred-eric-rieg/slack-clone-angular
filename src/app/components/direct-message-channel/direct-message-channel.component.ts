@@ -124,7 +124,6 @@ export class DirectMessageChannelComponent implements OnInit {
     this.messages = [];
     const messageDoc = doc(this.msgCollection, messageId);
     docData(messageDoc).pipe(take(1)).subscribe((msg: any) => {
-      console.log("MSG: " + msg.text);
       this.messages.push(msg);
     });
   }
