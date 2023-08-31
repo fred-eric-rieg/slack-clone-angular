@@ -87,3 +87,14 @@ img {
 *::-webkit-scrollbar-thumb:active {
   background-color: #E91E63;
 }
+
+@media screen and (width < 400px) {
+  img {
+    max-width: 200px;
+  }
+
+  .mat-drawer-content {
+    overflow: unset !important;
+    overflow-x: hidden;
+  }
+}
