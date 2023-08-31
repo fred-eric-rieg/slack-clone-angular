@@ -1,10 +1,7 @@
 <div class="user-direct-msg-container">
   <div (click)="toggleDropdown()" class="direct-msg-hl flex-ac">
-    <mat-icon
-      [ngClass]="collapsed ? 'rotate90' : ''"
-      style="transition: all 125ms ease-in-out"
-      fontIcon="arrow_drop_down"
-    >
+    <mat-icon [ngClass]="collapsed ? 'rotate90' : ''" style="transition: all 125ms ease-in-out"
+      fontIcon="arrow_drop_down">
     </mat-icon>
     <span>Direct Messages</span>
   </div>
@@ -26,23 +23,23 @@
         <p>Create new chat</p>
       </div>
     </div> -->
-    <div >
-      <div
-        *ngFor="let chat of allChats; let i = index"
-        class="user-direct-msg flex-ac"
-        [routerLink]="['chat/' + chat[0].chatId]"
-        routerLinkActive="activeLink"
-      >
-        <img src="{{ getChatUserImage(chat[0].members) || '/../../assets/img/profile.png' }}" />
-        <span>{{ setNameFirstUser(chat[0].members) }}</span>
-        <div class="extra-members" *ngIf="chat[0].members.length > 1">
-          +{{ chat[0].members.length  - 1 }}
+    <div *ngFor="let chat of chatService.allChats$ | async; let i = index">
+
+      <div *ngIf="chat['members'].includes(this.currentUserId)">
+        <div class="user-direct-msg flex-ac" [routerLink]="['chat/' + chat['chatId']]" routerLinkActive="activeLink">
+          <img src="{{ getChatUserImage(chat['members']) || '/../../assets/img/profile.png' }}" />
+          <span>{{ setNameFirstUser(chat['members']) }}</span>
+          <div class="extra-members" *ngIf="chat['members'].length > 1">
+            +{{ chat['members'].length - 1 }}
+          </div>
         </div>
       </div>
-      <div class="channelitem channel flex-ac" [routerLink]="'create-chat'">
-        <mat-icon class="add-item" fontIcon="add"></mat-icon>
-        <p>Create new chat</p>
-      </div>
+
+    </div>
+
+    <div class="channelitem channel flex-ac" [routerLink]="'create-chat'">
+      <mat-icon class="add-item" fontIcon="add"></mat-icon>
+      <p>Create new chat</p>
     </div>
     <!--  -->
   </div>

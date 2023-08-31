@@ -69,6 +69,8 @@ export class DirectMessagesSectionComponent implements OnInit {
       this.chatIds = snap.get('chatIds');
       this.getChatDataById(this.chatIds);
     })
+
+    
   }
 
   /////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +90,7 @@ export class DirectMessagesSectionComponent implements OnInit {
   setNameFirstUser(memberId: string) {
     let name: string = '';
     this.allUsers.forEach((user: any) => {
-      if (user.userId === memberId[0]) {
+      if (user.userId === memberId[1]) {
         name = user.displayName
       }
     });
@@ -103,7 +105,7 @@ export class DirectMessagesSectionComponent implements OnInit {
   getChatUserImage(memberId: string) {
     let img = '';
     this.allUsers.forEach((user: any) => {
-      if (user.userId === memberId[0]) {
+      if (user.userId === memberId[1]) {
         img = user.profilePicture
       }
     });
