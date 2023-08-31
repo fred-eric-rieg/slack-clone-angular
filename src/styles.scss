@@ -48,6 +48,10 @@ body {
   top: -300px !important;
 }
 
+img {
+  max-width: 300px;
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: #E91E63 #303030;
