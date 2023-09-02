@@ -8,7 +8,7 @@ import { update } from '@angular/fire/database';
 @Injectable({
   providedIn: 'root'
 })
-export class ChatService implements OnInit {
+export class ChatService {
   userChatCollection = collection(this.firestore, 'userChats');
   chatCollection = collection(this.firestore, 'chats');
 
@@ -21,19 +21,7 @@ export class ChatService implements OnInit {
   constructor(
     private firestore: Firestore,
     private userService: UserService,
-  ) {
-    
-  }
-
-  ngOnInit(): void {
-
-  }
-
-
-  createMessage(message: any) {
-    // Hier einfügen
-    return "HIer muss die Message id rein"
-  }
+  ) { }
 
   returnCurrentUserChats(userId: string) {
     const docRef = doc(this.userChatCollection, userId);
