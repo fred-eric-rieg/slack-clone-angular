@@ -7,14 +7,14 @@
   </div>
 
   <div *ngIf="!collapsed">
-    <div *ngFor="let chat of chatService.allChats$ | async; let i = index">
+    <div *ngFor="let chat of chatService.allChats$ | async">
 
       <div *ngIf="chat['members'].includes(this.currentUserId)">
         <div class="user-direct-msg flex-ac" [routerLink]="['chat/' + chat['chatId']]" routerLinkActive="activeLink">
           <img src="{{ getChatUserImage(chat['members']) || '/../../assets/img/profile.png' }}" />
           <span>{{ setNameFirstUser(chat['members']) }}</span>
-          <div class="extra-members" *ngIf="chat['members'].length > 1">
-            +{{ chat['members'].length - 1 }}
+          <div class="extra-members" *ngIf="chat['members'].length > 2">
+            +{{ chat['members'].length - 2 }}
           </div>
         </div>
       </div>

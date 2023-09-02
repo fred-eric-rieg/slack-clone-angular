@@ -1,9 +1,11 @@
 import { Injectable, OnInit } from '@angular/core';
-import { CollectionReference, DocumentData, DocumentReference, Firestore, Timestamp, arrayUnion, collectionData, doc, docData, docSnapshots, getDocs, onSnapshot, setDoc, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, DocumentReference, Firestore, Timestamp, arrayUnion, collectionData, doc, docData, docSnapshots, getDoc, getDocs, onSnapshot, setDoc, updateDoc } from '@angular/fire/firestore';
 import { collection } from '@firebase/firestore';
 import { UserService } from './user.service';
 import { Chat } from 'src/models/chat.class';
 import { update } from '@angular/fire/database';
+import { Subject } from 'rxjs';
+import { Message } from 'src/models/message.class';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +13,14 @@ import { update } from '@angular/fire/database';
 export class ChatService {
   userChatCollection = collection(this.firestore, 'userChats');
   chatCollection = collection(this.firestore, 'chats');
+  msgCollection = collection(this.firestore, 'messages');
 
   allChats$ = collectionData(this.chatCollection);
-  // allChats: Array<string>;
   chat!: Chat;
   currentUserId: any;
   userChatRef!: any;
+
+  private chatContentSubject = new Subject<Chat>();
 
   constructor(
     private firestore: Firestore,
@@ -38,6 +42,32 @@ export class ChatService {
     return chatIds;
   }
 
+  /**
+   * //TODO - check if this function is still needed
+   * @param chatId as string
+   * @returns chat object
+   */
+  startListeningToChat(chatId: string, callback: (chat: Chat) => void) {
+    const docRef = doc(this.chatCollection, chatId);
+    onSnapshot(docRef, (doc) => {
+      this.chat = new Chat(doc.data());
+      callback(this.chat);
+    })
+  }
+
+  // TODO - check if this function is still needed
+  async returnMsgContent(msgId: string, callback: (msg: any) => void) {
+    const docRef = doc(this.msgCollection, msgId);
+    await getDoc(docRef).then((doc) => {
+      const msg = new Message(doc.data());
+      callback(msg);
+    });
+  }
+
+  async getMsgData(msgId: string) {
+    const docRef = doc(this.msgCollection, msgId);
+    return await getDoc(docRef);
+  }
 
   /** returns fs document data for a specific chat id */
   returnChatData(chatId: string) {
