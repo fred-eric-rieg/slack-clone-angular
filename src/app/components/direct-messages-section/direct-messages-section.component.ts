@@ -88,9 +88,11 @@ export class DirectMessagesSectionComponent implements OnInit {
   }
 
   setNameFirstUser(memberId: string) {
+    let index = memberId[0] === this.currentUserId ? 1 : 0;
     let name: string = '';
+
     this.allUsers.forEach((user: any) => {
-      if (user.userId === memberId[1]) {
+      if (user.userId === memberId[index]) {
         name = user.displayName
       }
     });
@@ -103,9 +105,11 @@ export class DirectMessagesSectionComponent implements OnInit {
    * @returns the profile image url of the user
    */
   getChatUserImage(memberId: string) {
+    let index = memberId[0] === this.currentUserId ? 1 : 0;
     let img = '';
+    
     this.allUsers.forEach((user: any) => {
-      if (user.userId === memberId[1]) {
+      if (user.userId === memberId[index]) {
         img = user.profilePicture
       }
     });
