@@ -14,11 +14,10 @@
 <!--  -->
 
 <div *ngIf="chatData$">
-  <div class="chat-partners">
-    <div *ngIf="chatData$ != undefined">
-      <div class="person" *ngFor="let member of chatData$['members']">
-        {{ getChatUserName(member) }}
-      </div>
+  <div class="chat-partners" *ngIf="chatData$ != undefined">
+    <div style="font-size: 12px">Chat-Members:</div>
+    <div class="person" *ngFor="let member of chatData$['members']">
+      {{ getChatUserName(member) }}
     </div>
   </div>
   <div class="container" *ngIf="!isLoading">
@@ -29,7 +28,9 @@
         <main
           *ngIf="
             searchResults.length === 0 ||
-            getChatMsgText(msgId).toLowerCase()?.includes(searchResults[0].toLowerCase()) ||
+            getChatMsgText(msgId)
+              .toLowerCase()
+              ?.includes(searchResults[0].toLowerCase()) ||
             getUserName(getChatMsgCreator(msgId))
               .toLowerCase()
               .includes(searchResults[0].toLowerCase())
@@ -50,12 +51,17 @@
                 <div class="head">
                   <span>{{ getChatUserName(getChatMsgCreator(msgId)) }}</span>
                   <span>
-                    {{ getChatMsgDate(msgId).toDate() | date : "EEE, dd. MMMM yy" }} at
-                    {{ formatDateTime(getChatMsgDate(msgId)) }}</span
+                    {{
+                      getChatMsgDate(msgId).toDate() | date : "EEE, dd. MMMM yy"
+                    }}
+                    at {{ formatDateTime(getChatMsgDate(msgId)) }}</span
                   >
                 </div>
                 <div class="msg">
-                  <div class="msg-txt" [innerHTML]="getChatMsgText(msgId)"></div>
+                  <div
+                    class="msg-txt"
+                    [innerHTML]="getChatMsgText(msgId)"
+                  ></div>
                 </div>
               </div>
             </div>
@@ -63,7 +69,7 @@
         </main>
       </div>
     </div>
-  
+
     <!-- CHAT INPUT -->
     <div class="message-container">
       <quill-editor
@@ -75,7 +81,7 @@
       >
       </quill-editor>
       <div class="message-bottom">
-        <p class="hint">Send with command/ctrl & enter.</p>
+        <p class="hint">Send with COMMAND / CTRL & ENTER.</p>
         <button class="button-send" (click)="sendMessage()">
           <mat-icon matTooltip="send">send</mat-icon>
         </button>
@@ -83,4 +89,3 @@
     </div>
   </div>
 </div>
-

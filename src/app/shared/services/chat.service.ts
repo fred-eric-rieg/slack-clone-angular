@@ -47,26 +47,12 @@ export class ChatService {
    * @param chatId as string
    * @returns chat object
    */
-  startListeningToChat(chatId: string, callback: (chat: Chat) => void) {
+  startListeningToChat(chatId: string, callback: (chat: Chat) => any) {
     const docRef = doc(this.chatCollection, chatId);
     onSnapshot(docRef, (doc) => {
       this.chat = new Chat(doc.data());
       callback(this.chat);
     })
-  }
-
-  // TODO - check if this function is still needed
-  async returnMsgContent(msgId: string, callback: (msg: any) => void) {
-    const docRef = doc(this.msgCollection, msgId);
-    await getDoc(docRef).then((doc) => {
-      const msg = new Message(doc.data());
-      callback(msg);
-    });
-  }
-
-  async getMsgData(msgId: string) {
-    const docRef = doc(this.msgCollection, msgId);
-    return await getDoc(docRef);
   }
 
   /** returns fs document data for a specific chat id */

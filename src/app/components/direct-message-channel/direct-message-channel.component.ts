@@ -18,16 +18,14 @@ import { User } from 'src/models/user.class';
 })
 export class DirectMessageChannelComponent implements OnInit {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
+  private msgCollection!: CollectionReference<DocumentData>;
 
   allUsers: User[] = [];
   allMsgs: Message[] = [];
-  private msgCollection!: CollectionReference<DocumentData>;
-  chatId2: any = this.route.params;
   chatId: string = '';
   memberIds: Array<string> = [];
   members: Array<string> = [];
   messageIds: any = [];
-  messages: Array<any> = [];
   isLoading: boolean = false;
   currentUserId: any;
 
@@ -88,47 +86,6 @@ export class DirectMessageChannelComponent implements OnInit {
     this.handleSearchbar();
   }
 
-  //   async ngOnInit(): Promise<any> {
-  //     await this.getCurrentUserId();
-  //     this.allUsers = await this.getAllUsers();
-  //     this.paramsSub = this.route.params.subscribe((params) => {
-  //       this.chatService.startListeningToChat(params['id'], (chat) => {
-  //         this.chatData$ = chat;
-  //         console.log(this.chatData$['messages']);
-  //       });
-  //       this.isLoading = true;
-  //       this.resetAllVariables();
-  //       this.chatId = params['id'];
-  //       this.chat.chatId = this.chatId;
-  //       this.chatSub = this.chatService.returnChatData(this.chatId).subscribe(data => {
-  //         this.memberIds.push(...data['members']);
-  //         this.messageIds.push(...data['messages']);
-  //         this.chat.members.push(...data['members']);
-
-  //         for (const message of data['messages']) {
-  //           this.subscribeToMessage(message);
-  //         }
-  //     })
-  //     this.getMemberNames();
-  //     this.getAllMessages().then((msgs) => {
-  //       this.chatService.returnQueryChatData(this.chatId)
-  //       .then((chatMsgs: any) => {
-  //         this.messages = [];
-  //         msgs.forEach((msg: any) => {
-  //           if (chatMsgs[0]['messages'].includes(msg.messageId)) {
-  //               this.messages.push(msg);
-  //             }
-  //           });
-  //           this.sortMessagesByDate();
-  //         });
-  //     });
-  //     // Cheat
-  //     setTimeout(() => {
-  //       this.isLoading = false;
-  //     }, 600);
-  //   });
-  // }
-
   async ngOnInit(): Promise<any> {
     await this.getCurrentUserId();
     this.allUsers = await this.getAllUsers();
@@ -139,29 +96,14 @@ export class DirectMessageChannelComponent implements OnInit {
         this.allMsgs = await this.getAllMsgs();
         this.chatData$ = chats;
         this.messageIds = chats['messages'];
+        this.scrollDown();
       });
-    });
-  }
-
-  subscribeToMessage(messageId: string) {
-    this.messages = [];
-    const messageDoc = doc(this.msgCollection, messageId);
-    docData(messageDoc).pipe(take(1)).subscribe((msg: any) => {
-      this.messages.push(msg);
-    });
-  }
-
-  getMsgData(msgId: string) {
-    const test = this.chatService.getMsgData(msgId);
-    test.then((data) => {
-      return data.data();
     });
   }
 
   ngOnDestroy(): void {
     this.searchSub.unsubscribe();
     this.paramsSub.unsubscribe();
-    // this.chatSub.unsubscribe();
   }
 
   /**
@@ -196,16 +138,6 @@ export class DirectMessageChannelComponent implements OnInit {
       })
   }
 
-  resetAllVariables() {
-    //this.allUsers = [];
-    this.chatId = '';
-    this.memberIds = [];
-    this.members = [];
-    this.messageIds = [];
-    this.messages = [];
-  }
-
-
   /**
    * get all members of the chat
    * and push them into the members array
@@ -223,16 +155,6 @@ export class DirectMessageChannelComponent implements OnInit {
     }, 600)
   }
 
-  async getAllMessages() {
-    const allMessages: any = [];
-    const querySnapshot = await getDocs(this.msgCollection);
-    querySnapshot.forEach((doc) => {
-      allMessages.push(doc.data());
-    })
-    return allMessages;
-
-  }
-
   formatDateTime(timestamp: any) {
     let date = new Date(timestamp.seconds * 1000);
     let hours = date.getHours() % 12 || 12;
@@ -244,15 +166,7 @@ export class DirectMessageChannelComponent implements OnInit {
   }
 
   /**
-   * Sorts the messages by date.
-   */
-  sortMessagesByDate() {
-    this.messages.sort((a, b) => a.creationDate.seconds - b.creationDate.seconds);
-  }
-
-
-  /**
-   * get the username of the user
+   * get the username by the userId
    * @param userId as string
    * @returns username of the user
    */
@@ -264,12 +178,12 @@ export class DirectMessageChannelComponent implements OnInit {
       }
     });
     return name;
-  }  
-  
+  }
+
   /**
-   * get chat message as object
+   * get chat message by message Id 
    * @param msgId as string
-   * @returns object of the message
+   * @returns creatorId of the message
    */
   getChatMsgCreator(msgId: string) {
     let message = new Message();
@@ -326,9 +240,7 @@ export class DirectMessageChannelComponent implements OnInit {
       let messageId = await this.createMessage(message)
       await this.chatService.addMessageToChat(this.chat, messageId);
       this.allMsgs = await this.getAllMsgs();
-      // this.messages = [];
-      // message.messageId = messageId;
-      // this.messages.push(message);
+      this.scrollDown(); // Scroll down to the latest message
     }
     var element = document.getElementsByClassName("ql-editor");
     element[0].innerHTML = "";

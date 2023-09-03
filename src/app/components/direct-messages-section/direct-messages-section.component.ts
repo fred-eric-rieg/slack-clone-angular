@@ -33,7 +33,6 @@ export class DirectMessagesSectionComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.allUsers = await this.getAllUsers();
     await this.getCurrentUserId();
-    await this.getCurrentUserChats();
   }
 
 
@@ -63,29 +62,9 @@ export class DirectMessagesSectionComponent implements OnInit {
     })
   }
   
-  async getCurrentUserChats() {
-    this.chatSub = this.chatService.returnCurrentUserChats(this.currentUserId)
-    .subscribe(snap => {
-      this.chatIds = snap.get('chatIds');
-      this.getChatDataById(this.chatIds);
-    })
-
-    
-  }
 
   /////////////////////////////////////////////////////////////////////////////////
 
-
-  async getChatDataById(chatIds: Array<string>) {
-    this.allChats = [];
-    if (chatIds != undefined) {
-      chatIds.forEach(async (chatId: string) => {
-        const chatData: any = await this.chatService.returnQueryChatData(chatId);
-        this.allChats.push(chatData);
-      })
-      //await this.setNameFirstUser();
-    }
-  }
 
   setNameFirstUser(memberId: string) {
     let index = memberId[0] === this.currentUserId ? 1 : 0;
