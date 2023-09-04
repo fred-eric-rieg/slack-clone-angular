@@ -1,5 +1,5 @@
 <div class="load-wrapper" *ngIf="isLoading">
-  <div class="lds-roller">
+  <!-- <div class="lds-roller">
     <div></div>
     <div></div>
     <div></div>
@@ -8,7 +8,8 @@
     <div></div>
     <div></div>
     <div></div>
-  </div>
+  </div> -->
+  <img class="loading-logo" src="assets/img/logo.png" alt="logo" />
 </div>
 
 <!--  -->
@@ -16,13 +17,15 @@
 <div *ngIf="chatData$ && !isLoading">
   <div class="chat-partners" *ngIf="chatData$ != undefined">
     <div style="font-size: 12px">Chat-Members:</div>
-    <div class="person" *ngFor="let member of chatData$['members']">
-      {{ getChatUserName(member) }}
+    <div *ngFor="let member of chatData$['members']">
+      <div class="person" *ngIf="member !== currentUserId">
+        {{ getChatUserName(member) }}
+      </div>
     </div>
   </div>
   <div class="container" *ngIf="!isLoading">
     <div class="chat-window" #chatContainer>
-      <div *ngFor="let msgId of chatData$['messages']" class="msg-window">
+      <div *ngFor="let msgId of chatData$['messages']">
         <!-- {{getChatMsg(msgId, 'text')}} -->
         <!-- Search filter: specify below which elements to search for. -->
         <main
@@ -36,32 +39,35 @@
               .includes(searchResults[0].toLowerCase())
           "
         >
-          <div class="chat-box">
-            <div class="msg-box">
-              <div class="profileImg">
-                <img
-                  src="{{
-                    getChatUserImage(getChatMsgCreator(msgId)) ||
-                      '/../../assets/img/profile.png'
-                  }}"
-                  alt="Avatar"
-                />
-              </div>
-              <div class="msg-infos">
-                <div class="head">
-                  <span>{{ getChatUserName(getChatMsgCreator(msgId)) }}</span>
-                  <span>
-                    {{
-                      getChatMsgDate(msgId).toDate() | date : "EEE, dd. MMMM yy"
-                    }}
-                    at {{ formatDateTime(getChatMsgDate(msgId)) }}</span
-                  >
+          <div class="msg-window">
+            <div class="chat-box">
+              <div class="msg-box">
+                <div class="profileImg">
+                  <img
+                    src="{{
+                      getChatUserImage(getChatMsgCreator(msgId)) ||
+                        '/../../assets/img/profile.png'
+                    }}"
+                    alt="Avatar"
+                  />
                 </div>
-                <div class="msg">
-                  <div
-                    class="msg-txt"
-                    [innerHTML]="getChatMsgText(msgId)"
-                  ></div>
+                <div class="msg-infos">
+                  <div class="head">
+                    <span>{{ getChatUserName(getChatMsgCreator(msgId)) }}</span>
+                    <span>
+                      {{
+                        getChatMsgDate(msgId).toDate()
+                          | date : "EEE, dd. MMMM yy"
+                      }}
+                      at {{ formatDateTime(getChatMsgDate(msgId)) }}</span
+                    >
+                  </div>
+                  <div class="msg">
+                    <div
+                      class="msg-txt"
+                      [innerHTML]="getChatMsgText(msgId)"
+                    ></div>
+                  </div>
                 </div>
               </div>
             </div>

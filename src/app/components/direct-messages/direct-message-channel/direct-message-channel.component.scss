@@ -143,6 +143,20 @@ a {
     justify-content: center;
     align-items: center;
     height: 90vh;
+    .loading-logo {
+      width: 6rem;
+      height: 6rem;
+      animation: spin infinite linear 2s;
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(359deg);
+    }
   }
 
   .lds-roller {

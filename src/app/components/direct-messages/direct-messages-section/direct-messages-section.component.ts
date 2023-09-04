@@ -21,7 +21,7 @@ export class DirectMessagesSectionComponent implements OnInit {
   currentUserId: any;
 
   // Subscriptions
-  chatSub!: Subscription;
+  // chatSub!: Subscription;
   userSub!: Subscription;
 
   constructor(
@@ -40,10 +40,10 @@ export class DirectMessagesSectionComponent implements OnInit {
 
 
   ngOnDestroy(): void {
-    this.chatSub.unsubscribe();
-    if (this.userSub != undefined) {
-      this.userSub.unsubscribe();
-    }
+    // this.chatSub.unsubscribe();
+    // if (this.userSub != undefined) {
+    //   this.userSub.unsubscribe();
+    // }
   }
 
   async getAllUsers() {
