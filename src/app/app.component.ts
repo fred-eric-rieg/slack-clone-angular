@@ -12,14 +12,15 @@ export class AppComponent implements OnInit {
   constructor(private fireAuth: AngularFireAuth) {}
 
   ngOnInit() {
-    this.fireAuth.onAuthStateChanged(user => {
-      if (user) {
-        // Benutzer ist eingeloggt
-        console.log('Benutzer ist eingeloggt:', user);
-      } else {
-        // Benutzer ist ausgeloggt
-        console.log('Benutzer ist ausgeloggt');
-      }
-    });
+  //   this.fireAuth.onAuthStateChanged(user => {
+  //     if (user) {
+  //       // Benutzer ist eingeloggt
+  //       console.log('Benutzer ist eingeloggt:', user);
+  //     } else {
+  //       // Benutzer ist ausgeloggt
+  //       console.log('Benutzer ist ausgeloggt');
+  //     }
+  //   });
+  // }
   }
 }
