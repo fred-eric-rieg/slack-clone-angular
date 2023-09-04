@@ -26,7 +26,7 @@ export class DirectMessageChannelComponent implements OnInit {
   memberIds: Array<string> = [];
   members: Array<string> = [];
   messageIds: any = [];
-  isLoading: boolean = false;
+  isLoading: boolean = true;
   currentUserId: any;
 
   chatData$: any;
@@ -90,14 +90,33 @@ export class DirectMessageChannelComponent implements OnInit {
     await this.getCurrentUserId();
     this.allUsers = await this.getAllUsers();
     this.paramsSub = this.route.params.subscribe((params) => {
-      this.getMemberNames();
-      this.chat.chatId = params['id'];
-      this.chatService.startListeningToChat(params['id'], async (chats) => {
-        this.allMsgs = await this.getAllMsgs();
-        this.chatData$ = chats;
-        this.messageIds = chats['messages'];
-        this.scrollDown();
+      this.isLoading = true;
+      this.initializeChat(params['id']);
+    });
+  }
+
+  /**
+   * initialize the chat with the chatId (params from the url)
+   * promise to wait for the listener to be ready and then set loading spinner to false
+   * @param chatId as string
+   */
+  initializeChat(chatId: string) {
+    this.getMemberNames();
+    this.chat.chatId = chatId;
+    const waitForListener = async () => {
+      return new Promise<void>((resolve, reject) => {
+        this.chatService.startListeningToChat(chatId, async (chats) => {
+          this.allMsgs = await this.getAllMsgs();
+          this.chatData$ = chats;
+          this.messageIds = chats['messages'];
+          this.scrollDown();
+          resolve();
+        });
       });
+    };
+    
+    waitForListener().then(() => {
+      this.isLoading = false;
     });
   }
 

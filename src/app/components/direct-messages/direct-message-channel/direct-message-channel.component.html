@@ -13,7 +13,7 @@
 
 <!--  -->
 
-<div *ngIf="chatData$">
+<div *ngIf="chatData$ && !isLoading">
   <div class="chat-partners" *ngIf="chatData$ != undefined">
     <div style="font-size: 12px">Chat-Members:</div>
     <div class="person" *ngFor="let member of chatData$['members']">
