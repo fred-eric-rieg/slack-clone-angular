@@ -61,6 +61,20 @@ export class AuthService {
   }
 
 
+  isLoggedIn(): boolean {
+    let isLoggedIn = false;
+    this.fireAuth.onAuthStateChanged(user => {
+      if (user) {
+        isLoggedIn = true;
+      } else {
+        isLoggedIn = false;
+      }
+    });
+
+    console.log("IST EINGELOGGT DER XXXXX", isLoggedIn);
+    return isLoggedIn;
+  }
+
   /**
    * This function logs out the user from firebase.
    */
