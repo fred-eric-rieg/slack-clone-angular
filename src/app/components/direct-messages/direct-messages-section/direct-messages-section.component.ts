@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CollectionReference, DocumentData } from '@angular/fire/firestore';
 import { Observable, Subscription, take } from 'rxjs';
 import { ChatService } from 'src/app/shared/services/chat.service';
+import { SidenavService } from 'src/app/shared/services/sidenav.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { User } from 'src/models/user.class';
 
@@ -15,6 +16,7 @@ export class DirectMessagesSectionComponent implements OnInit {
   allUsers: User[] = [];
   allChats: any[] = [];
   collapsed: boolean = false;
+  sidenavOpen: boolean = true;
   chatIds: Array<string> = [];
   currentUserId: any;
 
@@ -25,6 +27,7 @@ export class DirectMessagesSectionComponent implements OnInit {
   constructor(
     private userService: UserService,
     public chatService: ChatService,
+    private sidenavService: SidenavService,
   ) {
     //this.currentUserId = this.userService.currentUser;
     // this.getCurrentUserChats();
@@ -97,6 +100,15 @@ export class DirectMessagesSectionComponent implements OnInit {
 
   toggleDropdown() {
     this.collapsed = !this.collapsed;
+  }
+
+  /**
+   * toggle the sidenav if the screen size is less than 768px
+   */
+  toggleSidenav() {
+    if (window.innerWidth < 768) {
+      this.sidenavService.openSidenav.emit(!this.sidenavOpen);
+    }
   }
 
 }

@@ -7,7 +7,7 @@
   </div>
 
   <div *ngIf="!collapsed">
-    <div *ngFor="let chat of chatService.allChats$ | async">
+    <div *ngFor="let chat of chatService.allChats$ | async"  (click)="toggleSidenav()">
 
       <div *ngIf="chat['members'].includes(this.currentUserId)">
         <div class="user-direct-msg flex-ac" [routerLink]="['chat/' + chat['chatId']]" routerLinkActive="activeLink">

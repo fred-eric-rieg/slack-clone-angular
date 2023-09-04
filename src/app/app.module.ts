@@ -57,9 +57,9 @@ import { DialogPictureEditComponent } from './components/dialog-picture-edit/dia
 /** Components for File Storage */
 import { UploadFormComponent } from './components/upload-form/upload-form.component';
 import { UploadDetailsComponent } from './components/upload-details/upload-details.component';
-import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
-import { DirectMessagesSectionComponent } from './components/direct-messages-section/direct-messages-section.component';
-import { NewChatComponent } from './components/new-chat/new-chat.component';
+import { DirectMessageChannelComponent } from './components/direct-messages/direct-message-channel/direct-message-channel.component';
+import { DirectMessagesSectionComponent } from './components/direct-messages/direct-messages-section/direct-messages-section.component';
+import { NewChatComponent } from './components/direct-messages/new-chat/new-chat.component';
 
 /** Services */
 import { AuthService } from './shared/services/auth.service';
