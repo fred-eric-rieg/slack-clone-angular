@@ -9,12 +9,12 @@
     <div class="nav-scroll-container">
       <div class="navigation">
         <!-- Threads -->
-        <div class="nav-hl flex-ac" [routerLink]="'channel-threads/'">
+        <div class="nav-hl flex-ac" [routerLink]="'channel-threads/'" (click)="toggleSidenav()">
           <mat-icon font-icon>comment</mat-icon>
           <p>Threads</p>
         </div>
         <!-- Users -->
-        <div class="nav-hl flex-ac" [routerLink]="'channel-users/'">
+        <div class="nav-hl flex-ac" [routerLink]="'channel-users/'" (click)="toggleSidenav()">
           <mat-icon font-icon>supervisor_account</mat-icon>
           <p>Users</p>
         </div>
