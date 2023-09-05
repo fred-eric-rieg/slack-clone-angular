@@ -61,7 +61,7 @@ export class ChannelService {
    * @param change as any.
    */
   private async addNewChannel(change: any) {
-    console.log("New channel: ", change);
+    // console.log("New channel: ", change);
     this.channelId === change.channelId ? await this.refreshChannelData(change.channelId, 'channelServiceIsAksing') : null;
     this.allChannels$.pipe(map(channels => {
       return [...channels, new Channel(change)]

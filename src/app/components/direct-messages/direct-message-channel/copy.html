@@ -13,7 +13,8 @@
 
 <!--  -->
 <div class="chat-partners">
-  <div class="person" *ngFor="let member of members">{{ member }}</div>
+  <div class="person" *ngFor="let member of members">
+    {{ member }}</div>
 </div>
 <div class="container" *ngIf="!isLoading">
   <div class="chat-window" #chatContainer>
@@ -52,6 +53,9 @@
               <div class="msg">
                 <div class="msg-txt" [innerHTML]="msg.text">
                   <!-- {{msg.text}} -->
+                </div>
+                <div>
+                  {{chatData$}}
                 </div>
               </div>
             </div>

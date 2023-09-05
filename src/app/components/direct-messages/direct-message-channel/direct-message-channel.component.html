@@ -1,0 +1,97 @@
+<div class="load-wrapper" *ngIf="isLoading">
+  <!-- <div class="lds-roller">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div> -->
+  <img class="loading-logo" src="assets/img/logo.png" alt="logo" />
+</div>
+
+<!--  -->
+
+<div *ngIf="chatData$ && !isLoading">
+  <div class="chat-partners" *ngIf="chatData$ != undefined">
+    <div style="font-size: 12px">Chat-Members:</div>
+    <div *ngFor="let member of chatData$['members']">
+      <div class="person" *ngIf="member !== currentUserId">
+        {{ getChatUserName(member) }}
+      </div>
+    </div>
+  </div>
+  <div class="container" *ngIf="!isLoading">
+    <div class="chat-window" #chatContainer>
+      <div *ngFor="let msgId of chatData$['messages']">
+        <!-- {{getChatMsg(msgId, 'text')}} -->
+        <!-- Search filter: specify below which elements to search for. -->
+        <main
+          *ngIf="
+            searchResults.length === 0 ||
+            getChatMsgText(msgId)
+              .toLowerCase()
+              ?.includes(searchResults[0].toLowerCase()) ||
+            getUserName(getChatMsgCreator(msgId))
+              .toLowerCase()
+              .includes(searchResults[0].toLowerCase())
+          "
+        >
+          <div class="msg-window">
+            <div class="chat-box">
+              <div class="msg-box">
+                <div class="profileImg">
+                  <img
+                    src="{{
+                      getChatUserImage(getChatMsgCreator(msgId)) ||
+                        '/../../assets/img/profile.png'
+                    }}"
+                    alt="Avatar"
+                  />
+                </div>
+                <div class="msg-infos">
+                  <div class="head">
+                    <span>{{ getChatUserName(getChatMsgCreator(msgId)) }}</span>
+                    <span>
+                      {{
+                        getChatMsgDate(msgId).toDate()
+                          | date : "EEE, dd. MMMM yy"
+                      }}
+                      at {{ formatDateTime(getChatMsgDate(msgId)) }}</span
+                    >
+                  </div>
+                  <div class="msg">
+                    <div
+                      class="msg-txt"
+                      [innerHTML]="getChatMsgText(msgId)"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- CHAT INPUT -->
+    <div class="message-container">
+      <quill-editor
+        theme="snow"
+        (onEditorChanged)="collectContent($event)"
+        style="height: 150px"
+        [modules]="config"
+        [placeholder]="placeholder"
+      >
+      </quill-editor>
+      <div class="message-bottom">
+        <p class="hint">Send with COMMAND / CTRL & ENTER.</p>
+        <button class="button-send" (click)="sendMessage()">
+          <mat-icon matTooltip="send">send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

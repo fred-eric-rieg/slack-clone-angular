@@ -1,39 +1,31 @@
 import { Injectable, OnInit } from '@angular/core';
-import { CollectionReference, DocumentData, DocumentReference, Firestore, Timestamp, arrayUnion, collectionData, doc, docData, docSnapshots, getDocs, onSnapshot, setDoc, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, DocumentReference, Firestore, Timestamp, arrayUnion, collectionData, doc, docData, docSnapshots, getDoc, getDocs, onSnapshot, setDoc, updateDoc } from '@angular/fire/firestore';
 import { collection } from '@firebase/firestore';
 import { UserService } from './user.service';
 import { Chat } from 'src/models/chat.class';
 import { update } from '@angular/fire/database';
+import { Subject } from 'rxjs';
+import { Message } from 'src/models/message.class';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChatService implements OnInit {
+export class ChatService {
   userChatCollection = collection(this.firestore, 'userChats');
   chatCollection = collection(this.firestore, 'chats');
+  msgCollection = collection(this.firestore, 'messages');
 
   allChats$ = collectionData(this.chatCollection);
-  // allChats: Array<string>;
   chat!: Chat;
   currentUserId: any;
   userChatRef!: any;
 
+  private chatContentSubject = new Subject<Chat>();
+
   constructor(
     private firestore: Firestore,
     private userService: UserService,
-  ) {
-    
-  }
-
-  ngOnInit(): void {
-
-  }
-
-
-  createMessage(message: any) {
-    // Hier einfügen
-    return "HIer muss die Message id rein"
-  }
+  ) { }
 
   returnCurrentUserChats(userId: string) {
     const docRef = doc(this.userChatCollection, userId);
@@ -50,6 +42,18 @@ export class ChatService implements OnInit {
     return chatIds;
   }
 
+  /**
+   * //TODO - check if this function is still needed
+   * @param chatId as string
+   * @returns chat object
+   */
+  startListeningToChat(chatId: string, callback: (chat: Chat) => any) {
+    const docRef = doc(this.chatCollection, chatId);
+    onSnapshot(docRef, (doc) => {
+      this.chat = new Chat(doc.data());
+      callback(this.chat);
+    })
+  }
 
   /** returns fs document data for a specific chat id */
   returnChatData(chatId: string) {

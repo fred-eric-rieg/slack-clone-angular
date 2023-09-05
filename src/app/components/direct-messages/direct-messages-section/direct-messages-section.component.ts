@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CollectionReference, DocumentData } from '@angular/fire/firestore';
 import { Observable, Subscription, take } from 'rxjs';
 import { ChatService } from 'src/app/shared/services/chat.service';
+import { SidenavService } from 'src/app/shared/services/sidenav.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { User } from 'src/models/user.class';
 
@@ -15,16 +16,18 @@ export class DirectMessagesSectionComponent implements OnInit {
   allUsers: User[] = [];
   allChats: any[] = [];
   collapsed: boolean = false;
+  sidenavOpen: boolean = true;
   chatIds: Array<string> = [];
   currentUserId: any;
 
   // Subscriptions
-  chatSub!: Subscription;
+  // chatSub!: Subscription;
   userSub!: Subscription;
 
   constructor(
     private userService: UserService,
     public chatService: ChatService,
+    private sidenavService: SidenavService,
   ) {
     //this.currentUserId = this.userService.currentUser;
     // this.getCurrentUserChats();
@@ -33,15 +36,14 @@ export class DirectMessagesSectionComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.allUsers = await this.getAllUsers();
     await this.getCurrentUserId();
-    await this.getCurrentUserChats();
   }
 
 
   ngOnDestroy(): void {
-    this.chatSub.unsubscribe();
-    if (this.userSub != undefined) {
-      this.userSub.unsubscribe();
-    }
+    // this.chatSub.unsubscribe();
+    // if (this.userSub != undefined) {
+    //   this.userSub.unsubscribe();
+    // }
   }
 
   async getAllUsers() {
@@ -63,34 +65,16 @@ export class DirectMessagesSectionComponent implements OnInit {
     })
   }
   
-  async getCurrentUserChats() {
-    this.chatSub = this.chatService.returnCurrentUserChats(this.currentUserId)
-    .subscribe(snap => {
-      this.chatIds = snap.get('chatIds');
-      this.getChatDataById(this.chatIds);
-    })
-
-    
-  }
 
   /////////////////////////////////////////////////////////////////////////////////
 
 
-  async getChatDataById(chatIds: Array<string>) {
-    this.allChats = [];
-    if (chatIds != undefined) {
-      chatIds.forEach(async (chatId: string) => {
-        const chatData: any = await this.chatService.returnQueryChatData(chatId);
-        this.allChats.push(chatData);
-      })
-      //await this.setNameFirstUser();
-    }
-  }
-
   setNameFirstUser(memberId: string) {
+    let index = memberId[0] === this.currentUserId ? 1 : 0;
     let name: string = '';
+
     this.allUsers.forEach((user: any) => {
-      if (user.userId === memberId[1]) {
+      if (user.userId === memberId[index]) {
         name = user.displayName
       }
     });
@@ -103,9 +87,11 @@ export class DirectMessagesSectionComponent implements OnInit {
    * @returns the profile image url of the user
    */
   getChatUserImage(memberId: string) {
+    let index = memberId[0] === this.currentUserId ? 1 : 0;
     let img = '';
+    
     this.allUsers.forEach((user: any) => {
-      if (user.userId === memberId[1]) {
+      if (user.userId === memberId[index]) {
         img = user.profilePicture
       }
     });
@@ -114,6 +100,15 @@ export class DirectMessagesSectionComponent implements OnInit {
 
   toggleDropdown() {
     this.collapsed = !this.collapsed;
+  }
+
+  /**
+   * toggle the sidenav if the screen size is less than 768px
+   */
+  toggleSidenav() {
+    if (window.innerWidth < 768) {
+      this.sidenavService.openSidenav.emit(!this.sidenavOpen);
+    }
   }
 
 }

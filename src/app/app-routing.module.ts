@@ -8,8 +8,8 @@ import { ChannelComponent } from './components/channels/channel/channel.componen
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { DialogUserComponent } from './components/dialog-user/dialog-user.component';
-import { DirectMessageChannelComponent } from './components/direct-message-channel/direct-message-channel.component';
-import { NewChatComponent } from './components/new-chat/new-chat.component';
+import { DirectMessageChannelComponent } from './components/direct-messages/direct-message-channel/direct-message-channel.component';
+import { NewChatComponent } from './components/direct-messages/new-chat/new-chat.component';
 import { ThreadComponent } from './components/channels/thread/thread.component';
 import { SidenavThreadsComponent } from './components/sidenav-threads/sidenav-threads.component';
 import { SidenavUsersComponent } from './components/sidenav-users/sidenav-users.component';
@@ -24,10 +24,10 @@ const routes: Routes = [
       { path: 'user/:id', component: DialogUserComponent, canActivate: [AuthGuard] },
       { path: 'chat/:id', component: DirectMessageChannelComponent, canActivate: [AuthGuard] },
       { path: 'create-chat', component: NewChatComponent, canActivate: [AuthGuard] },
-      { path: 'thread/:id', component: ThreadComponent, canActivate: [AuthGuard] }
+      { path: 'thread/:id', component: ThreadComponent, canActivate: [AuthGuard] },
+      { path: 'sidenav', component: sidenavComponent, canActivate: [AuthGuard] },
     ], canActivate: [AuthGuard]
   },
-  { path: 'sidenav', component: sidenavComponent, canActivate: [AuthGuard] },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'sign-up', component: SignUpComponent },
 ];

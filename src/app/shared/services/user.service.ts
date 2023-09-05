@@ -45,7 +45,7 @@ export class UserService {
    * @param change as any.
    */
   private addNewUser(change: any) {
-    console.log("New user: ", change);
+    // console.log("New user: ", change);
     this.allUsers$.pipe(map(users => {
       return [...users, new User(change)];
     }));

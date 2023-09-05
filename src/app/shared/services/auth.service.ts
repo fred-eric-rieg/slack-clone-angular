@@ -61,6 +61,24 @@ export class AuthService {
   }
 
 
+  //TODO - Aktuell wird immer true zurückgegeben
+  // Muss noch gefixt werden
+  isLoggedIn(): any {
+    let isLoggedIn = true;
+    this.fireAuth.onAuthStateChanged(user => {
+      if (user) {
+        console.log("User is logged in");
+        isLoggedIn = true;
+      } else {
+        console.log("User is not logged in");
+        isLoggedIn = false;
+      }
+      return isLoggedIn;
+    });
+
+    console.log("IST EINGELOGGT: ", isLoggedIn);
+  }
+
   /**
    * This function logs out the user from firebase.
    */
