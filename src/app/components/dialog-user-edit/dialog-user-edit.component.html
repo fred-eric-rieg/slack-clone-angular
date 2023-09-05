@@ -1,4 +1,4 @@
-<div class="dialog-container">
+<div class="dialog-container" *ngIf="user">
   <!-- Show progress bar if loading. Input fields and buttons are disabled when loading. -->
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
   <!-- Input fields to edit profile info -->

@@ -1,4 +1,4 @@
-<mat-drawer-container [class.d-none]="!userDialogOpen">
+<mat-drawer-container [class.d-none]="!userDialogOpen" *ngIf="user">
   <mat-drawer mode="side" opened class="profile-container">
     <div class="profile-title-container b-bottom">
       <div class="profile-title">

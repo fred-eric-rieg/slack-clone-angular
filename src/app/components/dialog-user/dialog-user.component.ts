@@ -19,13 +19,14 @@ import { Subscription } from 'rxjs';
 export class DialogUserComponent implements OnInit, OnDestroy {
 
   userId: string = '';
-  user: User = new User();
+  user!: User;
   userDialogOpen = false;
   imgUrl: string = '';
 
   // Subscriptions
   userSub!: Subscription;
   sidenavSub!: Subscription;
+  allUsersSub!: Subscription;
 
 
   constructor(
@@ -48,22 +49,18 @@ export class DialogUserComponent implements OnInit, OnDestroy {
     console.log('DialogUserComponent destroyed');
     this.userSub.unsubscribe();
     this.sidenavSub.unsubscribe();
+    this.allUsersSub.unsubscribe();
   }
 
 
   getLoggedInUser() {
     this.userSub = this.auth.user.subscribe((user: any) => {
-      user ? (this.userId = user.uid, this.getUser()) : null;
+      user ? this.userId = user.uid : null;
     });
-  }
-
-
-  /**
-   * Fetches the current logged-in user from the database according to the userId.
-   */
-  getUser() {
-    this.userService.getSingleUserSnapshot(this.userId).then((user) => {
-      this.user = new User(user.data());
+    this.allUsersSub = this.userService.allUsers$.subscribe((users) => {
+      console.log('users: ', users)
+      let user = users.find((user) => user.userId === this.userId);
+      user ? this.user = user : null;
     });
   }
 
@@ -80,7 +77,7 @@ export class DialogUserComponent implements OnInit, OnDestroy {
    */
   openDialogUserEdit() {
     const dialog = this.dialog.open(DialogUserEditComponent);
-    dialog.componentInstance.user = new User(this.user.toJson());
+    dialog.componentInstance.user = this.user;
     dialog.componentInstance.userId = this.userId;
   }
 
@@ -90,7 +87,7 @@ export class DialogUserComponent implements OnInit, OnDestroy {
    */
   editPictureDetail() {
     const dialog = this.dialog.open(DialogPictureEditComponent);
-    dialog.componentInstance.user = new User(this.user.toJson());
+    dialog.componentInstance.user = this.user;
     dialog.componentInstance.userId = this.userId;
   }
 
