@@ -4,8 +4,8 @@ a {
 
   .container {
     width: 100%;
-    height: calc(100svh - 125px);
-    overflow-y: auto;
+    height: calc(100svh - 126px);
+    overflow-y: hidden;
     position: relative;
   }
   
@@ -31,6 +31,22 @@ a {
 
     &:hover {
       background-color: #252525;
+    }
+  }
+
+  .slideContent {
+    animation: slideUp 250ms ease-in-out normal forwards;
+    overflow: hidden !important;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
   
