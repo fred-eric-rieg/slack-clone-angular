@@ -30,12 +30,10 @@
     display: flex;
     flex-direction: column;
     position: absolute;
-    bottom: 1rem;
     background: #303030;
     border-top: 1px solid rgb(87, 87, 87);
-    padding: 8px 10px;
+    padding: 10px;
     width: 100%;
-    height: fit-content;
 
     .button-send {
         background-color: transparent;
@@ -49,11 +47,12 @@
     .message-bottom {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: baseline;
+        padding: 0 15px;
 
         .hint {
             margin-left: 0.5rem;
-            font-size: 10px;
+            font-size: 11px;
             color: rgb(165, 165, 165);
         }
     }

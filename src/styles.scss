@@ -44,6 +44,14 @@ body {
   border: 1px solid #303030;
 }
 
+.ql-toolbar.ql-snow {
+  background: rgb(165, 165, 165);
+}
+
+.ql-editor.ql-blank::before {
+  font-size: 20px;
+}
+
 #emoji-palette {
   top: -300px !important;
 }
