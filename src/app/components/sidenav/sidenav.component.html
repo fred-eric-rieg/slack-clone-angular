@@ -9,12 +9,12 @@
     <div class="nav-scroll-container">
       <div class="navigation">
         <!-- Threads -->
-        <div class="nav-hl flex-ac" [routerLink]="'channel-threads/'" (click)="toggleSidenav()">
+        <div class="nav-hl flex-ac" [routerLink]="'channel-threads/'" (click)="toggleSidenav()" routerLinkActive="active-link">
           <mat-icon font-icon>comment</mat-icon>
           <p>Threads</p>
         </div>
         <!-- Users -->
-        <div class="nav-hl flex-ac" [routerLink]="'channel-users/'" (click)="toggleSidenav()">
+        <div class="nav-hl flex-ac" [routerLink]="'channel-users/'" (click)="toggleSidenav()" routerLinkActive="active-link">
           <mat-icon font-icon>supervisor_account</mat-icon>
           <p>Users</p>
         </div>
@@ -30,7 +30,7 @@
 
         <div *ngIf="!channelsCollapsed" class="channel-dropdown-menu">
 
-          <div *ngFor="let channel of allChannels$ | async" class="flex-ac channel" [routerLink]="'channel/' + channel.channelId" (click)="toggleSidenav()">
+          <div *ngFor="let channel of allChannels$ | async" class="flex-ac channel" [routerLink]="'channel/' + channel.channelId" (click)="toggleSidenav()" routerLinkActive="active-link">
             <mat-icon>numbers</mat-icon>
             <p>{{ channel.name }}</p>
           </div>

@@ -7,6 +7,11 @@
   display: none;
 }
 
+.active-link {
+  border-radius: 5px;
+  background-color: rgb(35, 33, 39);
+}
+
 .logo {
   display: flex;
   align-items: center;
