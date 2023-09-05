@@ -19,9 +19,11 @@ mat-toolbar, mat-toolbar-row {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    
 }
 
 .router-container { //NOTE: Width 100%
+    overflow-y: hidden;
     width: 100%;
     box-sizing: border-box;
     position: relative;

@@ -15,7 +15,7 @@
 <!--  -->
 
 <div *ngIf="chatData$ && !isLoading">
-  <div class="chat-partners" *ngIf="chatData$ != undefined">
+  <div class="chat-partners " *ngIf="chatData$ != undefined">
     <div style="font-size: 12px">Chat-Members:</div>
     <div *ngFor="let member of chatData$['members']">
       <div class="person" *ngIf="member !== currentUserId">
@@ -23,7 +23,7 @@
       </div>
     </div>
   </div>
-  <div class="container" *ngIf="!isLoading">
+  <div class="container slideContent" *ngIf="!isLoading">
     <div class="chat-window" #chatContainer>
       <div *ngFor="let msgId of chatData$['messages']">
         <!-- {{getChatMsg(msgId, 'text')}} -->
