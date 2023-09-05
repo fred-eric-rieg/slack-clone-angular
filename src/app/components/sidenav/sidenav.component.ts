@@ -18,7 +18,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
   channelsCollapsed = false;
   messagesCollapsed = false;
 
-  sidenavOpened = true;
+  sidenavOpen: boolean = true;
 
   channel: Channel = new Channel();
   allChannels$!: Observable<Channel[]>;
@@ -59,7 +59,7 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
   handleSidenavVisibility() {
     this.sidenavService.openSidenav.subscribe((response) => {
-      this.sidenavOpened = response;
+      this.sidenavOpen = response;
     });
   }
 
@@ -93,5 +93,15 @@ export class sidenavComponent implements OnInit, OnDestroy {
 
   toggleMessagesDropdown() {
     this.messagesCollapsed = !this.messagesCollapsed;
+  }
+
+
+  /**
+   * toggle the sidenav if the screen size is less than 768px
+   */
+  toggleSidenav() {
+    if (window.innerWidth < 768) {
+      this.sidenavService.openSidenav.emit(!this.sidenavOpen);
+    }
   }
 }

@@ -1,4 +1,4 @@
-<mat-drawer-container [ngClass]="{'hidden-sidenav': !sidenavOpened}">
+<mat-drawer-container [ngClass]="{'hidden-sidenav': !sidenavOpen}">
   <mat-drawer mode="side" opened>
     <div class="server-name">
       <div class="logo">
@@ -30,7 +30,7 @@
 
         <div *ngIf="!channelsCollapsed" class="channel-dropdown-menu">
 
-          <div *ngFor="let channel of allChannels$ | async" class="flex-ac channel" [routerLink]="'channel/' + channel.channelId">
+          <div *ngFor="let channel of allChannels$ | async" class="flex-ac channel" [routerLink]="'channel/' + channel.channelId" (click)="toggleSidenav()">
             <mat-icon>numbers</mat-icon>
             <p>{{ channel.name }}</p>
           </div>
